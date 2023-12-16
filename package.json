@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettify": "prettier --write ."
+    "prettify": "prettier --write .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.1.9",
@@ -25,13 +26,11 @@
     "@mui/material": "^5.15.0",
     "@mui/material-nextjs": "^5.15.0",
     "@stomp/stompjs": "^7.0.0",
-    "@types/node": "^18.11.18",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
     "axios": "^1.6.2",
     "cm6-theme-material-dark": "^0.2.0",
     "cm6-theme-solarized-dark": "^0.2.0",
     "codemirror": "^6.0.1",
+    "husky": "^8.0.3",
     "i": "^0.3.7",
     "next": "^14.0.4",
     "npm": "^10.2.5",
@@ -43,7 +42,6 @@
     "react-icons": "^4.12.0",
     "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.1",
-    "typescript": "^5.2.2",
     "xterm": "^5.3.0",
     "y-codemirror.next": "^0.3.2",
     "yjs": "^13.6.4",
@@ -51,9 +49,17 @@
   },
   "devDependencies": {
     "@iconify/react": "^4.1.0",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
     "@types/sockjs-client": "^1.5.4",
-    "eslint": "8.56.0",
-    "eslint-config-next": "14.0.4",
-    "prettier": "^3.1.1"
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
   }
 }

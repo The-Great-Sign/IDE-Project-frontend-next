@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 'use client';
 
 import * as Y from 'yjs';
@@ -5,7 +6,7 @@ import { yCollab } from 'y-codemirror.next';
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { python } from '@codemirror/lang-python';
-import { javascript } from '@codemirror/lang-javascript';
+// import { javascript } from '@codemirror/lang-javascript';
 import { useCallback, useEffect, useState } from 'react';
 import LiveblocksProvider from '@liveblocks/yjs';
 import { TypedLiveblocksProvider, useRoom, useSelf } from '@/liveblocks.config';
@@ -39,7 +40,9 @@ export function CollaborativeEditor() {
     }
 
     // Create Yjs provider and document
+    // eslint-disable-next-line prefer-const
     ydoc = new Y.Doc();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     provider = new LiveblocksProvider(room as any, ydoc);
     const ytext = ydoc.getText('codemirror');
     const undoManager = new Y.UndoManager(ytext);
