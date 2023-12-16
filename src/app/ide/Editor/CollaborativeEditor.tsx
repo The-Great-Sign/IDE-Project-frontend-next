@@ -4,13 +4,15 @@ import * as Y from "yjs";
 import { yCollab } from "y-codemirror.next";
 import { EditorView, basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
+import { python } from "@codemirror/lang-python";
 import { javascript } from "@codemirror/lang-javascript";
 import { useCallback, useEffect, useState } from "react";
 import LiveblocksProvider from "@liveblocks/yjs";
 import { TypedLiveblocksProvider, useRoom, useSelf } from "@/liveblocks.config";
 import styles from "./CollaborativeEditor.module.css";
-import { Avatars } from "@/components/Avatars";
-import { Toolbar } from "@/components/Toolbar";
+import { Avatars } from "@/app/ide/Editor/Avatars";
+import { Undo } from "@/app/ide/Editor/Undo";
+import { materialDark } from "cm6-theme-material-dark";
 
 // Collaborative code editor with undo/redo, live cursors, and live avatars
 export function CollaborativeEditor() {
@@ -55,8 +57,10 @@ export function CollaborativeEditor() {
       doc: ytext.toString(),
       extensions: [
         basicSetup,
-        javascript(),
+        python(),
+        // javascript(),
         yCollab(ytext, provider.awareness, { undoManager }),
+        materialDark,
       ],
     });
 
@@ -76,9 +80,7 @@ export function CollaborativeEditor() {
   return (
     <div className={styles.container}>
       <div className={styles.editorHeader}>
-        <div>
-          {yUndoManager ? <Toolbar yUndoManager={yUndoManager} /> : null}
-        </div>
+        <div>{yUndoManager ? <Undo yUndoManager={yUndoManager} /> : null}</div>
         <Avatars />
       </div>
       <div className={styles.editorContainer} ref={ref}></div>

@@ -1,11 +1,11 @@
 import * as Y from "yjs";
-import styles from "./Toolbar.module.css";
+import styles from "./Undo.module.css";
 
 type Props = {
   yUndoManager: Y.UndoManager;
 };
 
-export function Toolbar({ yUndoManager }: Props) {
+export function Undo({ yUndoManager }: Props) {
   return (
     <div className={styles.toolbar}>
       <button

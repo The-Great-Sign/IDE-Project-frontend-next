@@ -1,12 +1,17 @@
-import { Room } from "@/app/Room";
-import { CollaborativeEditor } from "@/components/CollaborativeEditor";
+"use client";
 
-export default function Home() {
+import MainHeader from "@/components/MainHeader/MainHeader";
+import { MainContainer } from "./page.style";
+
+const App = () => {
   return (
-    <main>
-      <Room>
-        <CollaborativeEditor />
-      </Room>
-    </main>
+    <>
+      <MainHeader />
+      <MainContainer>
+        <h2>대박징조 DJIDE PROJECT</h2>
+      </MainContainer>
+    </>
   );
-}
+};
+
+export default App;
