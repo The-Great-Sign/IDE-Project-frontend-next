@@ -9,6 +9,7 @@ export function Loading() {
         alt="Loading"
         width={100}
         height={100}
+        priority={true}
       />
     </div>
   );

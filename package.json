@@ -1,6 +1,6 @@
 {
-  "name": "@liveblocks-examples/nextjs-yjs-codemirror",
-  "description": "This example shows how to build a collaborative text editor with Liveblocks, Yjs, CodeMirror, and Next.js.",
+  "name": "djide-project",
+  "description": "DJIDE Project Fronted",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,18 @@
     "start": "next start",
     "lint": "next lint",
     "prettify": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged",
+    "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo "
+  },
+  "lint-staged": {
+    "src/**/*.+(ts|tsx)": [
+      "eslint --fix"
+    ],
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ],
+    "*.js": "eslint --cache --fix"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.1.9",
@@ -30,7 +41,6 @@
     "cm6-theme-material-dark": "^0.2.0",
     "cm6-theme-solarized-dark": "^0.2.0",
     "codemirror": "^6.0.1",
-    "husky": "^8.0.3",
     "i": "^0.3.7",
     "next": "^14.0.4",
     "npm": "^10.2.5",
@@ -59,6 +69,8 @@
     "eslint-config-next": "^14.0.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
   }
