@@ -1,11 +1,11 @@
-import { createClient } from "@liveblocks/client";
-import { createRoomContext } from "@liveblocks/react";
-import LiveblocksProvider from "@liveblocks/yjs";
+import { createClient } from '@liveblocks/client';
+import { createRoomContext } from '@liveblocks/react';
+import LiveblocksProvider from '@liveblocks/yjs';
 
 // Try changing the lostConnectionTimeout value to increase
 // or reduct the time it takes to reconnect
 const client = createClient({
-  authEndpoint: "/api/liveblocks-auth",
+  authEndpoint: '/api/liveblocks-auth',
 });
 
 // Presence represents the properties that exist on every user in the Room
@@ -38,7 +38,7 @@ type UserMeta = {
 };
 
 export type UserAwareness = {
-  user?: UserMeta["info"];
+  user?: UserMeta['info'];
 };
 
 export type AwarenessList = [number, UserAwareness][];

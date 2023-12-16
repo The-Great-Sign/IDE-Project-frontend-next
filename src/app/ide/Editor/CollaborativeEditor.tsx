@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import * as Y from "yjs";
-import { yCollab } from "y-codemirror.next";
-import { EditorView, basicSetup } from "codemirror";
-import { EditorState } from "@codemirror/state";
-import { python } from "@codemirror/lang-python";
-import { javascript } from "@codemirror/lang-javascript";
-import { useCallback, useEffect, useState } from "react";
-import LiveblocksProvider from "@liveblocks/yjs";
-import { TypedLiveblocksProvider, useRoom, useSelf } from "@/liveblocks.config";
-import styles from "./CollaborativeEditor.module.css";
-import { Avatars } from "@/app/ide/Editor/Avatars";
-import { Undo } from "@/app/ide/Editor/Undo";
-import { materialDark } from "cm6-theme-material-dark";
+import * as Y from 'yjs';
+import { yCollab } from 'y-codemirror.next';
+import { EditorView, basicSetup } from 'codemirror';
+import { EditorState } from '@codemirror/state';
+import { python } from '@codemirror/lang-python';
+import { javascript } from '@codemirror/lang-javascript';
+import { useCallback, useEffect, useState } from 'react';
+import LiveblocksProvider from '@liveblocks/yjs';
+import { TypedLiveblocksProvider, useRoom, useSelf } from '@/liveblocks.config';
+import styles from './CollaborativeEditor.module.css';
+import { Avatars } from '@/app/ide/Editor/Avatars';
+import { Undo } from '@/app/ide/Editor/Undo';
+import { materialDark } from 'cm6-theme-material-dark';
 
 // Collaborative code editor with undo/redo, live cursors, and live avatars
 export function CollaborativeEditor() {
@@ -21,7 +21,7 @@ export function CollaborativeEditor() {
   const [yUndoManager, setYUndoManager] = useState<Y.UndoManager>();
 
   // Get user info from Liveblocks authentication endpoint
-  const userInfo = useSelf((me) => me.info);
+  const userInfo = useSelf(me => me.info);
 
   const ref = useCallback((node: HTMLElement | null) => {
     if (!node) return;
@@ -41,15 +41,15 @@ export function CollaborativeEditor() {
     // Create Yjs provider and document
     ydoc = new Y.Doc();
     provider = new LiveblocksProvider(room as any, ydoc);
-    const ytext = ydoc.getText("codemirror");
+    const ytext = ydoc.getText('codemirror');
     const undoManager = new Y.UndoManager(ytext);
     setYUndoManager(undoManager);
 
     // Attach user info to Yjs
-    provider.awareness.setLocalStateField("user", {
+    provider.awareness.setLocalStateField('user', {
       name: userInfo.name,
       color: userInfo.color,
-      colorLight: userInfo.color + "80", // 6-digit hex code at 50% opacity
+      colorLight: userInfo.color + '80', // 6-digit hex code at 50% opacity
     });
 
     // Set up CodeMirror and extensions

@@ -1,11 +1,11 @@
-import { AiFillFolderOpen, AiOutlineFile } from "react-icons/ai";
-import { NodeRendererProps } from "react-arborist";
-import { MdArrowRight, MdArrowDropDown } from "react-icons/md";
-import { MdEdit } from "react-icons/md";
-import { RxCross2 } from "react-icons/rx";
-import { FileDiv, NodeContainer } from "./FileTree.styles";
-import { NodeData } from "@/types/IDE/FileTree/FileDataTypes";
-import React from "react";
+import { AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
+import { NodeRendererProps } from 'react-arborist';
+import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
+import { FileDiv, NodeContainer } from './FileTree.styles';
+import { NodeData } from '@/types/IDE/FileTree/FileDataTypes';
+import React from 'react';
 
 export const Node = ({
   node,
@@ -25,7 +25,7 @@ export const Node = ({
           </>
         ) : (
           <>
-            <span style={{ margin: "0px 3px" }}>
+            <span style={{ margin: '0px 3px' }}>
               {node.isOpen ? <MdArrowDropDown /> : <MdArrowRight />}
             </span>
             <AiFillFolderOpen size="18px" />
@@ -44,11 +44,11 @@ export const Node = ({
             <input
               type="text"
               defaultValue={node.data.name}
-              onFocus={(e) => e.currentTarget.select()}
+              onFocus={e => e.currentTarget.select()}
               onBlur={() => node.reset()}
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === "Escape") node.reset();
-                if (e.key === "Enter") node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                if (e.key === 'Escape') node.reset();
+                if (e.key === 'Enter') node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
               }}
               autoFocus
             />

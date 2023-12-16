@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { Room } from "@/app/ide/Room";
-import { CollaborativeEditor } from "@/app/ide/Editor/CollaborativeEditor";
+import { Room } from '@/app/ide/Room';
+import { CollaborativeEditor } from '@/app/ide/Editor/CollaborativeEditor';
 import {
   ContentContainer,
   IDEContainer,
   IDEContentCode,
   Section,
-} from "./page.style";
-import IDEHeader from "./Header/IDEHeader";
+} from './page.style';
+import IDEHeader from './Header/IDEHeader';
 
-import FileTree from "./FileTree/FileTree";
-import TerminalTest from "./Terminal/TerminalTest";
-import Chatting from "./Chatting/Chatting";
-import Toolbar from "./Toolbar/Toolbar";
+import FileTree from './FileTree/FileTree';
+import TerminalTest from './Terminal/TerminalTest';
+import Chatting from './Chatting/Chatting';
+import Toolbar from './Toolbar/Toolbar';
 
 const Ide = () => {
   return (

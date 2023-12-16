@@ -1,12 +1,12 @@
 import { Resizable } from 're-resizable';
-import { TerminalContainer} from './TerminalTest.style';
+import { TerminalContainer } from './TerminalTest.style';
 
 const TerminalTest = () => {
   return (
     <Resizable
       defaultSize={{
         height: '300px', // 초기 높이 설정
-        width: '100%', 
+        width: '100%',
       }}
       enable={{
         top: true, // 위쪽으로만 리사이징 가능
@@ -18,7 +18,7 @@ const TerminalTest = () => {
         bottomLeft: false,
         topLeft: false,
       }}
-      >
+    >
       <TerminalContainer>
         Terminal Test
         {/* <Terminal/> */}

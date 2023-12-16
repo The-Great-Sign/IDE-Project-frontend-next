@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { ReactNode, useMemo } from "react";
-import { RoomProvider } from "@/liveblocks.config";
-import { useSearchParams } from "next/navigation";
-import { ClientSideSuspense } from "@liveblocks/react";
-import { Loading } from "@/app/Loading";
+import { ReactNode, useMemo } from 'react';
+import { RoomProvider } from '@/liveblocks.config';
+import { useSearchParams } from 'next/navigation';
+import { ClientSideSuspense } from '@liveblocks/react';
+import { Loading } from '@/app/Loading';
 
 export function Room({ children }: { children: ReactNode }) {
-  const roomId = useOverrideRoomId("nextjs-yjs-codemirror");
+  const roomId = useOverrideRoomId('nextjs-yjs-codemirror');
 
   return (
     <RoomProvider
@@ -29,7 +29,7 @@ export function Room({ children }: { children: ReactNode }) {
  */
 function useOverrideRoomId(roomId: string) {
   const params = useSearchParams();
-  const roomIdParam = params.get("roomId");
+  const roomIdParam = params.get('roomId');
 
   const overrideRoomId = useMemo(() => {
     return roomIdParam ? `${roomId}-${roomIdParam}` : roomId;

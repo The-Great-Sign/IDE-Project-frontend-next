@@ -1,5 +1,5 @@
-import * as Y from "yjs";
-import styles from "./Undo.module.css";
+import * as Y from 'yjs';
+import styles from './Undo.module.css';
 
 type Props = {
   yUndoManager: Y.UndoManager;

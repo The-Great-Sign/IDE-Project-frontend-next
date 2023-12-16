@@ -1,5 +1,5 @@
-import { LoginSignUpDiv } from "./LoginSignUpLink.style";
-import StyledLink from "../../../styles/StyledLink";
+import { LoginSignUpDiv } from './LoginSignUpLink.style';
+import StyledLink from '../../../styles/StyledLink';
 
 const LoginSignUpLink = () => {
   return (

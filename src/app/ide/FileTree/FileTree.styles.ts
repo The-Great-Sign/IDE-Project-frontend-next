@@ -1,5 +1,5 @@
-import { styled } from "styled-components";
-import { FONTS } from "@/constants/fonts";
+import { styled } from 'styled-components';
+import { FONTS } from '@/constants/fonts';
 
 export const FileTreeConatiner = styled.div`
   width: 100%;
@@ -43,7 +43,7 @@ export const NodeContainer = styled.div`
   }
 
   .node-text {
-    margin: "0px 3px";
+    margin: '0px 3px';
   }
 `;
 

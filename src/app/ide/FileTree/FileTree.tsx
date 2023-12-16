@@ -1,16 +1,16 @@
-import { FileTreeConatiner } from "./FileTree.styles";
-import { Tree } from "react-arborist";
-import { Node } from "./Node";
-import CreateFile from "./CreateFile";
-import { Resizable } from "re-resizable";
-import { data } from "@/constants/tempFileTreeData";
+import { FileTreeConatiner } from './FileTree.styles';
+import { Tree } from 'react-arborist';
+import { Node } from './Node';
+import CreateFile from './CreateFile';
+import { Resizable } from 're-resizable';
+import { data } from '@/constants/tempFileTreeData';
 
 const FileTree = () => {
   return (
     <Resizable
       defaultSize={{
-        width: "300px",
-        height: "100%", // 초기 높이 설정
+        width: '300px',
+        height: '100%', // 초기 높이 설정
       }}
       enable={{
         top: false, // 위쪽으로만 리사이징 가능
@@ -26,7 +26,7 @@ const FileTree = () => {
       <FileTreeConatiner>
         <CreateFile />
         <Tree className="react-aborist" data={data}>
-          {(nodeProps) => <Node {...nodeProps} />}
+          {nodeProps => <Node {...nodeProps} />}
         </Tree>
       </FileTreeConatiner>
     </Resizable>

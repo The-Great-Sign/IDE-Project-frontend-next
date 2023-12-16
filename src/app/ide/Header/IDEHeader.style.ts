@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import { FONTS } from "@/constants/fonts";
-import { AiOutlineComment } from "react-icons/ai";
+import styled from 'styled-components';
+import { FONTS } from '@/constants/fonts';
+import { AiOutlineComment } from 'react-icons/ai';
 import {
   HeaderContainer,
   Logo,
-} from "@/components/MainHeader/MainHeader.style";
+} from '@/components/MainHeader/MainHeader.style';
 
 export const IDEHeaderContainer = styled(HeaderContainer)`
   height: 48px;
