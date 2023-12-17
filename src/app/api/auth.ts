@@ -1,4 +1,4 @@
-import useTokenStore from '../store/useTokenStore';
+import useTokenStore from '@/store/useTokenStore';
 import axiosInstance from './axiosInstance';
 
 function isTokenExpired() {
