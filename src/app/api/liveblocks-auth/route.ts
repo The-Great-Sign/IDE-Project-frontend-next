@@ -4,6 +4,10 @@ import { NextRequest } from 'next/server';
 // Authenticating your Liveblocks application
 // https://liveblocks.io/docs/rooms/authentication/access-token-permissions/nextjs
 
+// [TO DO] 클라이언트가 접속을 하면 모든 사용자의 정보를 알아야하는건지,
+// 본인의 정보만 알면 되는건지 알아오기
+// HTTP
+
 const API_KEY = process.env.LIVEBLOCKS_SECRET_KEY;
 
 const liveblocks = new Liveblocks({
