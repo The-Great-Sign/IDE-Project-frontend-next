@@ -1,4 +1,4 @@
-import useTokenStore from '@/store/useTokenStore';
+import useTokenStore from '../../store/useTokenStore';
 import { refreshToken } from './auth';
 import axiosInstance from './axiosInstance';
 
