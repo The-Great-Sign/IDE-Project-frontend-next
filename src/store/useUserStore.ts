@@ -12,7 +12,7 @@ const name = names[randInt];
 const randId = Math.floor(Math.random() * 100);
 
 interface UserState {
-  id: number | null;
+  id: number;
   name: string;
   imageUrl: string | null;
   cursorColor: string;
