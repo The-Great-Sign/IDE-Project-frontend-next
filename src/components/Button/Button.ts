@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { FONTS } from '@/constants/fonts';
 
 export const BigButton = styled(Button)`
