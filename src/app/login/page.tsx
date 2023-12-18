@@ -8,7 +8,7 @@ import {
   AiOutlineGoogle,
 } from 'react-icons/ai';
 import { ButtonBox, LoginBox, LoginConatiner, Logo } from './Login.style';
-import { BigButton } from '@/components/Button/Button';
+import { BigButton } from '../../components/Button/Button';
 
 const LoginPage = () => {
   return (

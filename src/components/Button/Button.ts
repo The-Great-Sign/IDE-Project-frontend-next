@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import styled from 'styled-components';
-import { FONTS } from '@/constants/fonts';
+import { FONTS } from '../../constants/fonts';
 
 export const BigButton = styled(Button)`
   width: 25.25rem;
