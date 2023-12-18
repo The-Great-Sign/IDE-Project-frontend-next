@@ -1,3 +1,4 @@
+import useCurrentOpenFile from '@/store/useCurrentOpenFile';
 import { NodeData } from '@/types/IDE/FileTree/FileDataTypes';
 import { NodeApi } from 'react-arborist';
 
@@ -10,5 +11,5 @@ export const findNowFilePath = (node: NodeApi<NodeData> | null) => {
       node = node.parent;
     }
   }
-  return filePath;
+  useCurrentOpenFile.getState().setFiles(filePath);
 };
