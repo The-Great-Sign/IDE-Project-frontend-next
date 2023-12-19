@@ -1,6 +1,7 @@
 import { useOthers, useSelf } from '@/liveblocks.config';
 
 import { AvatarImage, Avatars, AvatarDiv } from './Avatars.styles';
+import { COLORS } from '@/constants/colors';
 
 export function UserAvatars() {
   const users = useOthers();
@@ -10,31 +11,36 @@ export function UserAvatars() {
     <Avatars>
       {users.map(({ connectionId, info }) => {
         return (
-          <Avatar key={connectionId} picture={info.picture} name={info.name} />
+          <Other key={connectionId} picture={info.picture} name={info.name} />
         );
       })}
 
       {currentUser && (
         <div className="relative ml-8 first:ml-0">
-          <Avatar
-            picture={currentUser.info.picture}
-            name={currentUser.info.name}
-          />
+          <Me picture={currentUser.info.picture} name={currentUser.info.name} />
         </div>
       )}
     </Avatars>
   );
 }
 
-export function Avatar({ picture, name }: { picture: string; name: string }) {
+export function Other({ picture, name }: { picture: string; name: string }) {
   return (
-    <AvatarDiv>
+    <AvatarDiv data-tooltip={name}>
+      <AvatarImage src={picture} alt="avatar" width={42} height={42} />
+    </AvatarDiv>
+  );
+}
+
+export function Me({ picture, name }: { picture: string; name: string }) {
+  return (
+    <AvatarDiv data-tooltip={name}>
       <AvatarImage
         src={picture}
-        data-tooltip={name}
         alt="avatar"
         width={42}
         height={42}
+        style={{ border: `1.6px solid ${COLORS.primary}` }}
       />
     </AvatarDiv>
   );

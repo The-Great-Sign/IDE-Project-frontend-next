@@ -97,14 +97,6 @@ export function CollaborativeEditor() {
           <FileInfo>현재 열린 파일.py</FileInfo>
           <FileClose>x</FileClose>
         </FileTab>
-        <FileTab>
-          <FileInfo>현재 열린 파일.py</FileInfo>
-          <FileClose>x</FileClose>
-        </FileTab>
-        <FileTab>
-          <FileInfo>현재 열린 파일.py</FileInfo>
-          <FileClose>x</FileClose>
-        </FileTab>
       </EditorTab>
       <Editor ref={ref}></Editor>
     </EditorContainer>
