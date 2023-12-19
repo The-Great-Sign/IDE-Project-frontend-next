@@ -6,6 +6,9 @@ import { RxCross2 } from 'react-icons/rx';
 import { FileDiv, NodeContainer } from './FileTree.styles';
 import { NodeData } from '@/types/IDE/FileTree/FileDataTypes';
 import React from 'react';
+import axiosInstance from '@/app/api/axiosInstance';
+import useCurrentOpenFile from '@/store/useCurrentOpenFile';
+import { findNowFilePath } from '@/utils/fileTreeUtils';
 
 export const Node = ({
   node,
@@ -13,6 +16,29 @@ export const Node = ({
   dragHandle,
   tree,
 }: NodeRendererProps<NodeData>) => {
+  const handleOpenFile = async () => {
+    try {
+      findNowFilePath(node);
+      const filePath = useCurrentOpenFile.getState().files;
+      const { data } = await axiosInstance.post('/api/projects', {
+        //여기에 현재 파일 경로 보내기
+        //그리고 생성한 프로젝트 아이디 담아 보내기
+        name: filePath,
+        description: 'description',
+        programmingLanguage: 'PYTHON',
+        password: 'password',
+      });
+
+      //응답받은 filename, content 담아두기
+      useCurrentOpenFile.getState().setContent(data.results.id);
+      //설정 후 렌더링 필요
+
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <NodeContainer className="node-container" style={style} ref={dragHandle}>
       <FileDiv
@@ -35,6 +61,7 @@ export const Node = ({
         {/* node text */}
         <span
           className="node-text"
+          onClick={handleOpenFile}
           onDoubleClick={(e: React.MouseEvent<HTMLSpanElement>) => {
             e.preventDefault();
             node.edit();
