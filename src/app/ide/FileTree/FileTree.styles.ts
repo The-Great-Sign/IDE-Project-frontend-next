@@ -1,14 +1,15 @@
 import { styled } from 'styled-components';
 import { FONTS } from '@/constants/fonts';
+import { COLORS } from '@/constants/colors';
 
 export const FileTreeConatiner = styled.div`
   width: 100%;
   box-sizing: border-box;
   flex-direction: column;
   padding: 15px;
-  border-top: 2px solid #002884;
-  border-right: 2px solid #002884;
-  border-left: 2px solid #002884;
+  border-top: 1px solid ${COLORS.primary};
+  border-right: 1px solid ${COLORS.primary};
+  border-left: 1px solid ${COLORS.primary};
   align-items: center;
   height: calc(100vh - 51px);
   overflow: hidden;

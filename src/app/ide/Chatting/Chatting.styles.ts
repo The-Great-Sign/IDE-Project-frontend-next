@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/colors';
 import { styled } from 'styled-components';
 
 export const ChattingContainer = styled.div`
@@ -7,5 +8,6 @@ export const ChattingContainer = styled.div`
   position: absolute;
   right: 0;
   box-sizing: border-box;
-  border-left: 2px solid #002884;
+  border-left: 1px solid ${COLORS.primary};
+  border-top: 1px solid ${COLORS.primary};
 `;

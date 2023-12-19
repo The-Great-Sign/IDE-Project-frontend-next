@@ -1,5 +1,5 @@
 import { Resizable } from 're-resizable';
-import { ChattingContainer } from './Chatting.style';
+import { ChattingContainer } from './Chatting.styles';
 
 const Chatting = () => {
   return (
