@@ -1,5 +1,5 @@
-export interface NodeData {
+export interface FileNodeType {
   id: string;
   name: string;
-  children?: NodeData[];
+  children?: FileNodeType[];
 }
