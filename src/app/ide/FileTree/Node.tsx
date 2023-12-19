@@ -4,18 +4,21 @@ import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
 import { FileDiv, NodeContainer } from './FileTree.styles';
-import { NodeData } from '@/types/IDE/FileTree/FileDataTypes';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import useCurrentOpenFile from '@/store/useCurrentOpenFile';
 import { findNowFilePath } from '@/utils/fileTreeUtils';
+import { useFileTreeStore } from '@/store/useFileTreeStore';
+import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 
 export const Node = ({
   node,
   style,
   dragHandle,
   tree,
-}: NodeRendererProps<NodeData>) => {
+}: NodeRendererProps<FileNodeType>) => {
+  const { updateNodeName } = useFileTreeStore();
+
   const handleOpenFile = async () => {
     try {
       findNowFilePath(node);
@@ -87,7 +90,10 @@ export const Node = ({
               onBlur={() => node.reset()}
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
-                if (e.key === 'Enter') node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                if (e.key === 'Enter') {
+                  updateNodeName(node.id, e.currentTarget.value);
+                  node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                }
               }}
               autoFocus
             />
