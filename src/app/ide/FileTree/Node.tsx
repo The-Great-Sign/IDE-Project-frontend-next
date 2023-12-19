@@ -20,7 +20,7 @@ export const Node = ({
     try {
       findNowFilePath(node);
       const filePath = useCurrentOpenFile.getState().files;
-      const { data } = await axiosInstance.post('/api/projects', {
+      const { data } = await axiosInstance.post('/api/files', {
         //여기에 현재 파일 경로 보내기
         //그리고 생성한 프로젝트 아이디 담아 보내기
         name: filePath,
