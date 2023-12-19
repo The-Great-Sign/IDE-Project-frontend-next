@@ -1,7 +1,21 @@
+import { useState } from 'react';
 import { Resizable } from 're-resizable';
-import { ChattingContainer } from './Chatting.style';
+import {
+  ChattingContainer,
+  ChattingHeader,
+  ChattingTab,
+} from './Chatting.styles';
+import GeneralChatting from './GeneralChatting';
+import AIChatting from './AIChatting';
 
 const Chatting = () => {
+  const [activeTab, setActiveTab] = useState<string>('채팅');
+
+  const handleClick = (tab: string) => {
+    // true: 채팅, false: AI
+    setActiveTab(tab);
+  };
+
   return (
     <Resizable
       defaultSize={{
@@ -21,7 +35,24 @@ const Chatting = () => {
       minWidth={'140px'}
       maxWidth={'400px'}
     >
-      <ChattingContainer>Chatting</ChattingContainer>
+      <ChattingContainer>
+        <ChattingHeader>
+          {/* {`채팅 (${CurrentUsers})`} */}
+          <ChattingTab
+            onClick={() => handleClick('채팅')}
+            $isActive={activeTab === '채팅'}
+          >
+            채팅
+          </ChattingTab>
+          <ChattingTab
+            onClick={() => handleClick('AI✨')}
+            $isActive={activeTab === 'AI✨'}
+          >
+            AI✨
+          </ChattingTab>
+        </ChattingHeader>
+        {activeTab === '채팅' ? <GeneralChatting /> : <AIChatting />}
+      </ChattingContainer>
     </Resizable>
   );
 };

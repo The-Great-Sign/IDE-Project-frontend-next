@@ -1,6 +1,6 @@
 import StyledLink from '../../../styles/StyledLink';
 import CurrentUser from './CurrentUser';
-import { IDEHeaderContainer, IDELogo } from './IDEHeader.style';
+import { IDEHeaderContainer, IDELogo } from './IDEHeader.styles';
 
 const IDEHeader = () => {
   return (

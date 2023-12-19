@@ -1,15 +1,49 @@
-import { FileTreeConatiner } from './FileTree.styles';
-import { Tree } from 'react-arborist';
+import {
+  CreateFileDiv,
+  FileButton,
+  FileTreeConatiner,
+} from './FileTree.styles';
+import {
+  CreateHandler,
+  NodeRendererProps,
+  Tree,
+  TreeApi,
+} from 'react-arborist';
 import { Node } from './Node';
-import CreateFile from './CreateFile';
 import { Resizable } from 're-resizable';
-import { data } from '@/constants/tempFileTreeData';
+import { AiOutlineFileAdd, AiOutlineFolderAdd } from 'react-icons/ai';
+import { useFileTreeStore } from '@/store/useFileTreeStore';
+import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
+import { useRef } from 'react';
+import { useTreeNodeStore } from '@/store/useTreeNodeStroe';
+import { v4 as uuidv4 } from 'uuid';
 
 const FileTree = () => {
+  const { fileTree, setFileTree } = useFileTreeStore();
+  const newNodeName = useTreeNodeStore(state => state.newNodeName);
+
+  const treeRef = useRef<TreeApi<FileNodeType>>(null);
+  const { addNode } = useFileTreeStore();
+
+  const onCreate: CreateHandler<FileNodeType> = ({ parentId, type, index }) => {
+    const newUUID = uuidv4();
+    const newNode: FileNodeType = {
+      id: `${index}-${newUUID}`,
+      name: newNodeName,
+      ...(type === 'internal' && { children: [] }),
+    };
+
+    addNode(newNode, parentId);
+    const newFileTree = [...fileTree, newNode];
+    setFileTree(newFileTree);
+
+    return newNode;
+  };
+
   return (
     <Resizable
       defaultSize={{
-        width: '300px',
+        width: '330px',
         height: '100%', // 초기 높이 설정
       }}
       enable={{
@@ -24,9 +58,29 @@ const FileTree = () => {
       }}
     >
       <FileTreeConatiner>
-        <CreateFile />
-        <Tree className="react-aborist" data={data}>
-          {nodeProps => <Node {...nodeProps} />}
+        <CreateFileDiv>
+          <FileButton
+            onClick={() => treeRef.current?.createLeaf()}
+            title="New File..."
+          >
+            <AiOutlineFileAdd size="22px" />
+          </FileButton>
+          <FileButton
+            onClick={() => treeRef.current?.createInternal()}
+            title="New Folder..."
+          >
+            <AiOutlineFolderAdd size="22px" />
+          </FileButton>
+        </CreateFileDiv>
+        <Tree
+          className="react-aborist"
+          onCreate={onCreate}
+          ref={treeRef}
+          data={fileTree}
+        >
+          {nodeProps => (
+            <Node {...(nodeProps as NodeRendererProps<FileNodeType>)} />
+          )}
         </Tree>
       </FileTreeConatiner>
     </Resizable>

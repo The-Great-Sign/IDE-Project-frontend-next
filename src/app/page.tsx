@@ -1,7 +1,7 @@
 'use client';
 
 import MainHeader from '@/components/MainHeader/MainHeader';
-import { MainContainer } from './page.style';
+import { MainContainer } from './page.styles';
 
 const App = () => {
   return (

@@ -7,7 +7,7 @@ import {
   IDEContainer,
   IDEContentCode,
   Section,
-} from './page.style';
+} from './page.styles';
 import IDEHeader from './Header/IDEHeader';
 
 import FileTree from './FileTree/FileTree';

@@ -14,7 +14,7 @@ import {
   ToolbarContainer,
 } from './Toolbar.style';
 import { IconContext } from 'react-icons';
-import { UserProfile } from '../Header/IDEHeader.style';
+import { UserProfile } from '../Header/IDEHeader.styles';
 
 const Toolbar = () => {
   const user = { name: '지원' };
