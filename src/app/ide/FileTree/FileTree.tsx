@@ -9,7 +9,7 @@ const FileTree = () => {
   return (
     <Resizable
       defaultSize={{
-        width: '300px',
+        width: '330px',
         height: '100%', // 초기 높이 설정
       }}
       enable={{

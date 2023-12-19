@@ -3,25 +3,25 @@ import { FONTS } from '@/constants/fonts';
 
 export const FileTreeConatiner = styled.div`
   width: 100%;
-  background: #d9d9d9;
   box-sizing: border-box;
   flex-direction: column;
+  padding: 15px;
   border-top: 2px solid #002884;
   border-right: 2px solid #002884;
   border-left: 2px solid #002884;
   align-items: center;
   height: calc(100vh - 51px);
-  background: #000;
   overflow: hidden;
 `;
 
 export const NodeContainer = styled.div`
   display: flex;
+
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
   font-size: ${FONTS.sm};
-  padding: 5px 0;
+
   cursor: pointer;
 
   .file-actions {
@@ -35,7 +35,7 @@ export const NodeContainer = styled.div`
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.2);
   }
 
   &:hover .file-actions {
@@ -66,8 +66,9 @@ export const FileButton = styled.button`
   background: none;
   border-radius: 5px;
   cursor: pointer;
+  padding: 5px;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.2);
   }
 `;
