@@ -1,7 +1,8 @@
+import { COLORS } from '@/constants/colors';
 import { styled } from 'styled-components';
 
 export const TerminalContainer = styled.div`
-  border-top: #002884;
+  border-top: 1px solid ${COLORS.primary};
   height: 100%;
   width: 100%;
 `;

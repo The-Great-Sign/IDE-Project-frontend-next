@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import styles from './Undo.module.css';
+import { UndoRedoBtn, UndoRedoContainer } from './Undo.styles';
 
 type Props = {
   yUndoManager: Y.UndoManager;
@@ -7,30 +7,22 @@ type Props = {
 
 export function Undo({ yUndoManager }: Props) {
   return (
-    <div className={styles.toolbar}>
-      <button
-        className={styles.button}
-        onClick={() => yUndoManager.undo()}
-        aria-label="undo"
-      >
+    <UndoRedoContainer>
+      <UndoRedoBtn onClick={() => yUndoManager.undo()} aria-label="undo">
         <UndoIcon />
-      </button>
-      <button
-        className={styles.button}
-        onClick={() => yUndoManager.redo()}
-        aria-label="redo"
-      >
+      </UndoRedoBtn>
+      <UndoRedoBtn onClick={() => yUndoManager.redo()} aria-label="redo">
         <RedoIcon />
-      </button>
-    </div>
+      </UndoRedoBtn>
+    </UndoRedoContainer>
   );
 }
 
 export function UndoIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="20"
+      height="20"
       viewBox="0 0 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -58,8 +50,8 @@ export function UndoIcon() {
 export function RedoIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="20"
+      height="20"
       viewBox="0 0 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

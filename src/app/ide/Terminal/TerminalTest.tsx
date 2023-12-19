@@ -1,5 +1,5 @@
 import { Resizable } from 're-resizable';
-import { TerminalContainer } from './TerminalTest.style';
+import { TerminalContainer } from './TerminalTest.styles';
 
 const TerminalTest = () => {
   return (

@@ -1,4 +1,4 @@
-import { ProjectView } from './Project.style';
+import { ProjectView } from './Project.styles';
 
 const MyProject = () => {
   return (
