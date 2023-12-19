@@ -1,4 +1,4 @@
-import { AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
+import { AiFillFolder, AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
 import { NodeRendererProps } from 'react-arborist';
 import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
@@ -47,14 +47,26 @@ export const Node = ({
       >
         {node.isLeaf ? (
           <>
-            <AiOutlineFile size="18px" />
+            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 16px' }} />
           </>
         ) : (
           <>
-            <span style={{ margin: '0px 3px' }}>
-              {node.isOpen ? <MdArrowDropDown /> : <MdArrowRight />}
-            </span>
-            <AiFillFolderOpen size="18px" />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {node.isOpen ? (
+                <>
+                  <MdArrowDropDown />
+                  <AiFillFolderOpen
+                    size="18px"
+                    style={{ margin: '0 2px 0 0 ' }}
+                  />
+                </>
+              ) : (
+                <>
+                  <MdArrowRight />{' '}
+                  <AiFillFolder size="18px" style={{ margin: '0 2px 0 0' }} />
+                </>
+              )}
+            </div>
           </>
         )}
 
