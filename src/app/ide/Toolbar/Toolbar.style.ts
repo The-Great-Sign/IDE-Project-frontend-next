@@ -8,7 +8,6 @@ export const ToolbarContainer = styled.div`
   width: 48px;
   height: calc(100vh - 450px);
   padding-bottom: 400px;
-  background: #000;
 `;
 
 export const ToolBarIconDiv = styled.div`

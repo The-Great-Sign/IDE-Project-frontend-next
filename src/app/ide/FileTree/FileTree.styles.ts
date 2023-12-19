@@ -68,7 +68,7 @@ export const FileButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
-  color: white;
+
   &:hover {
     background: rgba(0, 0, 0, 0.2);
   }

@@ -5,6 +5,7 @@ import {
 } from './FileTree.styles';
 import {
   CreateHandler,
+  DeleteHandler,
   NodeRendererProps,
   Tree,
   TreeApi,
@@ -19,7 +20,7 @@ import { useTreeNodeStore } from '@/store/useTreeNodeStroe';
 import { v4 as uuidv4 } from 'uuid';
 
 const FileTree = () => {
-  const { fileTree, setFileTree } = useFileTreeStore();
+  const { fileTree, setFileTree, deleteNode } = useFileTreeStore();
   const newNodeName = useTreeNodeStore(state => state.newNodeName);
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
@@ -38,6 +39,10 @@ const FileTree = () => {
     setFileTree(newFileTree);
 
     return newNode;
+  };
+
+  const onDelete: DeleteHandler<FileNodeType> = ({ ids }) => {
+    deleteNode(ids[0]);
   };
 
   return (
@@ -75,6 +80,7 @@ const FileTree = () => {
         <Tree
           className="react-aborist"
           onCreate={onCreate}
+          onDelete={onDelete}
           ref={treeRef}
           data={fileTree}
         >

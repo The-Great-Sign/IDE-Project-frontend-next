@@ -12,4 +12,22 @@ export const findNowFilePath = (node: NodeApi<FileNodeType> | null) => {
     }
   }
   useCurrentOpenFile.getState().setFiles(filePath);
+
+  return filePath;
+};
+
+export const removeNodeById = (
+  nodes: FileNodeType[],
+  nodeId: string | null
+) => {
+  return nodes.reduce((acc: FileNodeType[], node: FileNodeType) => {
+    if (node.id !== nodeId) {
+      const newNode = { ...node };
+      if (node.children) {
+        newNode.children = removeNodeById(node.children, nodeId);
+      }
+      acc.push(newNode);
+    }
+    return acc;
+  }, []);
 };
