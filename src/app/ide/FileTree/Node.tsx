@@ -108,7 +108,12 @@ export const Node = ({
           <button onClick={() => node.edit()} title="Rename...">
             <MdEdit />
           </button>
-          <button onClick={() => tree.delete(node.id)} title="Delete">
+          <button
+            onClick={() => {
+              tree.delete(node.id);
+            }}
+            title="Delete"
+          >
             <RxCross2 />
           </button>
         </div>
