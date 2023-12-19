@@ -16,12 +16,7 @@ interface UserState {
   name: string;
   imageUrl: string | null;
   cursorColor: string;
-  setUser: (
-    id: number,
-    name: string,
-    imageUrl: string,
-    cursorColor: string
-  ) => void;
+  setUser: (id: number, name: string, imageUrl: string) => void;
   isLoggedIn: boolean;
   toggleLogin: () => void;
 }
@@ -31,8 +26,7 @@ const useUserStore = create<UserState>(set => ({
   name: name,
   imageUrl: null,
   cursorColor: hex,
-  setUser: (id, name, imageUrl, cursorColor) =>
-    set({ id, name, imageUrl, cursorColor }),
+  setUser: (id, name, imageUrl) => set({ id, name, imageUrl }),
   isLoggedIn: false,
   toggleLogin: () => set(state => ({ isLoggedIn: !state.isLoggedIn })),
 }));
