@@ -1,13 +1,13 @@
 import { useOthers, useSelf } from '@/liveblocks.config';
-import styles from './Avatars.module.css';
-import Image from 'next/image';
 
-export function Avatars() {
+import { AvatarImage, Avatars, AvatarDiv } from './Avatars.styles';
+
+export function UserAvatars() {
   const users = useOthers();
   const currentUser = useSelf();
 
   return (
-    <div className={styles.avatars}>
+    <Avatars>
       {users.map(({ connectionId, info }) => {
         return (
           <Avatar key={connectionId} picture={info.picture} name={info.name} />
@@ -22,21 +22,20 @@ export function Avatars() {
           />
         </div>
       )}
-    </div>
+    </Avatars>
   );
 }
 
 export function Avatar({ picture, name }: { picture: string; name: string }) {
   return (
-    <div className={styles.avatar} data-tooltip={name}>
-      <Image
+    <AvatarDiv>
+      <AvatarImage
         src={picture}
-        className={styles.avatar_picture}
         data-tooltip={name}
         alt="avatar"
         width={42}
         height={42}
       />
-    </div>
+    </AvatarDiv>
   );
 }

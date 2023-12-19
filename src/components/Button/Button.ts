@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import styled from 'styled-components';
 import { FONTS } from '../../constants/fonts';
+import { COLORS } from '@/constants/colors';
 
 export const BigButton = styled(Button)`
   width: 25.25rem;
@@ -10,7 +11,7 @@ export const BigButton = styled(Button)`
   justify-content: center;
   align-items: center;
   vertical-align: center;
-  background: #404eed;
+  background: ${COLORS.primary};
   color: white;
   border-radius: 5px;
   border: none;

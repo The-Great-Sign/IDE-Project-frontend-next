@@ -7,7 +7,7 @@ import {
   AiOutlineGithub,
   AiOutlineGoogle,
 } from 'react-icons/ai';
-import { ButtonBox, LoginBox, LoginConatiner, Logo } from './Login.style';
+import { ButtonBox, LoginBox, LoginConatiner, Logo } from './Login.styles';
 import { BigButton } from '../../components/Button/Button';
 import axiosInstance from '../api/axiosInstance';
 import useTokenStore from '../../store/useTokenStore';

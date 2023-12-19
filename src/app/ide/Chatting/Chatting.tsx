@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Resizable } from 're-resizable';
-import GeneralChatting from './GeneralChatting';
-import AIChatting from './AIChatting';
 import {
+  ChattingContainer,
   ChattingContainer,
   ChattingHeader,
   ChattingTab,
-} from './Chatting.style';
+} from './Chatting.styles';
+import GeneralChatting from './GeneralChatting';
+import AIChatting from './AIChatting';
 
 const Chatting = () => {
   const [activeTab, setActiveTab] = useState<string>('채팅');
