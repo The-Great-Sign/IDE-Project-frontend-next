@@ -6,7 +6,7 @@ import {
   ChattingInputForm,
   ChattingInput,
   ChattingSendButton,
-} from './Chatting.style';
+} from './Chatting.styles';
 
 const AIChatting = () => {
   return (

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Resizable } from 're-resizable';
 import {
   ChattingContainer,
-  ChattingContainer,
   ChattingHeader,
   ChattingTab,
 } from './Chatting.styles';
