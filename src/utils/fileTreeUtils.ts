@@ -1,8 +1,8 @@
 import useCurrentOpenFile from '@/store/useCurrentOpenFile';
-import { NodeData } from '@/types/IDE/FileTree/FileDataTypes';
+import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { NodeApi } from 'react-arborist';
 
-export const findNowFilePath = (node: NodeApi<NodeData> | null) => {
+export const findNowFilePath = (node: NodeApi<FileNodeType> | null) => {
   let filePath = '';
   while (node!.data.id !== '__REACT_ARBORIST_INTERNAL_ROOT__') {
     const newFile = '/' + node!.data.name;
