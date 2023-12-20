@@ -1,4 +1,3 @@
-import { useFileStore } from '@/store/useFileStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { NodeApi } from 'react-arborist';
 
@@ -11,7 +10,6 @@ export const findNowFilePath = (node: NodeApi<FileNodeType> | null) => {
       node = node.parent;
     }
   }
-  useFileStore.getState().setFilePath(filePath);
 
   return filePath;
 };
