@@ -104,10 +104,9 @@ export const Node = ({
         onClick={() => node.isInternal && node.toggle()}
         isNodeDirty={node.data.isDirty}
       >
-        {/* 파일 저장안한 상태 표시하기 */}
-
         {node.isLeaf ? (
           <>
+            {/* 파일 저장안한 상태 표시하기 */}
             {node.data.isDirty ? (
               <IsDirty></IsDirty>
             ) : (
