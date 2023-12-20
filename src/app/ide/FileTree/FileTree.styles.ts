@@ -43,6 +43,10 @@ export const NodeContainer = styled.div`
     display: block;
   }
 
+  .file-actions button {
+    color: ${COLORS.primary};
+  }
+
   .node-text {
     margin: '0px 3px';
   }
@@ -68,6 +72,7 @@ export const FileButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
+  color: ${COLORS.primary};
 
   &:hover {
     background: rgba(0, 0, 0, 0.2);
