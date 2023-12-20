@@ -10,6 +10,7 @@ import { findNowFilePath } from '@/utils/fileTreeUtils';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
+import { useFileStore } from '@/store/useFileStore';
 
 export const Node = ({
   node,
@@ -17,11 +18,19 @@ export const Node = ({
   dragHandle,
   tree,
 }: NodeRendererProps<FileNodeType>) => {
+  const fileStore = useFileStore();
   const { updateNodeName } = useFileTreeStore();
   const { setOpenFilesIdList } = useCurrentOpenFileList();
   const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
 
   const handleOpenFile = async () => {
+    const fileId = node.id;
+    const fileName = node.data.name;
+    const fileLanguage = 'python'; // Determine language based on file extension or other logic
+
+    fileStore.openFile(fileId, fileName, fileLanguage);
+    fileStore.selectFile(fileId);
+
     try {
       const nowFilePath = findNowFilePath(node);
       const params = { projectId: projectId, filePath: nowFilePath };
@@ -29,11 +38,6 @@ export const Node = ({
       const { data } = await axiosInstance.get('/api/files', {
         params: params,
       });
-
-      //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
-
-      //열린 파일 목록 업데이트 -> 총미
-      setOpenFilesIdList(node.id);
 
       return data;
     } catch (error) {

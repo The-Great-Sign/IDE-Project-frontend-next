@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { FONTS } from '../../constants/fonts';
 import { COLORS } from '@/constants/colors';
 
@@ -27,5 +27,22 @@ export const BigButton = styled(Button)`
   span {
     font-size: ${FONTS.md};
     font-weight: 500;
+  }
+`;
+
+export const SmallButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background: ${COLORS.primary};
+  color: white;
+  font-weight: 500;
+  &:last-child {
+    background: rgb(212, 218, 250);
+    color: black;
+    &:hover {
+      background: rgb(212, 218, 250, 0.5);
+    }
   }
 `;
