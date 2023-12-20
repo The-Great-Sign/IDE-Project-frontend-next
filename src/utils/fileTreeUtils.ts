@@ -29,3 +29,16 @@ export const removeNodeById = (
     return acc;
   }, []);
 };
+
+export const isCorrectName = (inputName: string) => {
+  if (inputName === '') {
+    alert('한 글자 이상 입력하세요.');
+    return false;
+  } else if (inputName === '.' || inputName === '..') {
+    alert(
+      `${inputName}이라는 이름은 파일 또는 폴더 이름으로 올바르지 않습니다. 다른 이름을 입력하세요.`
+    );
+    return false;
+  }
+  return true;
+};

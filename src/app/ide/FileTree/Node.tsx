@@ -6,7 +6,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { FileDiv, NodeContainer } from './FileTree.styles';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
-import { findNowFilePath } from '@/utils/fileTreeUtils';
+import { findNowFilePath, isCorrectName } from '@/utils/fileTreeUtils';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
@@ -142,10 +142,13 @@ export const Node = ({
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
-                  //이때 서버로도 메시지 보내야 함. 성공시 아래 코드 실행
-                  handleCreateFileRequest(e.currentTarget.value);
-                  updateNodeName(node.id, e.currentTarget.value);
-                  node.submit(e.currentTarget.value);
+                  if (isCorrectName(e.currentTarget.value) === true) {
+                    handleCreateFileRequest(e.currentTarget.value);
+                    updateNodeName(node.id, e.currentTarget.value);
+                    node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                  } else {
+                    tree.delete(node.id);
+                  }
                 }
               }}
               autoFocus
