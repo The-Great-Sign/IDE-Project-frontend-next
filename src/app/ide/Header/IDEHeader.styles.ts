@@ -49,3 +49,8 @@ export const UserProfile = styled.div`
   font-size: ${FONTS.xs};
   overflow: hidden;
 `;
+
+export const IDEBtnDiv = styled.div`
+  display: flex;
+  gap: 15px;
+`;
