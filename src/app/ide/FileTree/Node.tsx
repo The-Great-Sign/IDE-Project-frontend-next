@@ -6,7 +6,11 @@ import { RxCross2 } from 'react-icons/rx';
 import { FileDiv, NodeContainer } from './FileTree.styles';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
-import { findNowFilePath, isCorrectName } from '@/utils/fileTreeUtils';
+import {
+  findLanguage,
+  findNowFilePath,
+  isCorrectName,
+} from '@/utils/fileTreeUtils';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
@@ -145,6 +149,9 @@ export const Node = ({
                   if (isCorrectName(e.currentTarget.value) === true) {
                     handleCreateFileRequest(e.currentTarget.value);
                     updateNodeName(node.id, e.currentTarget.value);
+                    const extendsName = e.currentTarget.value.split('.')[-1];
+                    //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
+                    findLanguage(extendsName);
                     node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
                   } else {
                     tree.delete(node.id);
