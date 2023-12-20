@@ -1,41 +1,50 @@
 import { create } from 'zustand';
+import * as Y from 'yjs';
+
+interface File {
+  id: string;
+  name: string;
+  content: string;
+  language: string;
+  yDoc: Y.Doc;
+  isOpened: boolean;
+}
 
 interface FileState {
-  id: string | null;
-  name: string | null;
-  isDirty?: boolean;
-  isOpened?: boolean;
-  language?: string;
-  filePath?: string | null;
-  content?: string | null;
-  setFilePath: (name: string) => void;
-  setToggleDirty: () => void;
-  setToggleOpen: () => void;
-  setLanguage: (lang: string) => void;
-  setContent: (content: string) => void;
+  files: File[];
+  selectedFileId: string | null;
+  openFile: (fileId: string, name: string, language: string) => void;
+  closeFile: (fileId: string) => void;
+  selectFile: (fileId: string) => void;
 }
 
 export const useFileStore = create<FileState>(set => ({
-  id: null,
-  name: null,
-  isDirty: false,
-  isOpened: false,
-  language: 'python',
-  filePath: null,
-  content: null,
-  setFilePath: (name: string) =>
-    set({
-      //해당 노드 찾아서 filePath 변경
-      filePath: name,
-    }),
-  setToggleDirty: () =>
+  files: [],
+  selectedFileId: null,
+  openFile: (fileId, name, language) => {
+    const yDoc = new Y.Doc();
+    set(state => {
+      if (state.files.some(f => f.id === fileId)) {
+        // File is already opened, so no need to add again
+        return { ...state };
+      }
+      return {
+        ...state,
+        files: [
+          ...state.files,
+          { id: fileId, name, content: '', language, yDoc, isOpened: true },
+        ],
+      };
+    });
+  },
+  closeFile: fileId => {
     set(state => ({
-      isDirty: !state.isDirty,
-    })),
-  setToggleOpen: () =>
-    set(state => ({
-      isOpened: !state.isOpened,
-    })),
-  setLanguage: (lang: string) => set({ language: lang }),
-  setContent: (content: string) => set({ content: content }),
+      files: state.files.filter(file => file.id !== fileId),
+      selectedFileId:
+        state.selectedFileId === fileId ? null : state.selectedFileId,
+    }));
+  },
+  selectFile: fileId => {
+    set({ selectedFileId: fileId });
+  },
 }));

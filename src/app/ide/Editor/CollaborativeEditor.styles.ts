@@ -47,6 +47,8 @@ export const FileTab = styled.div`
 
 export const FileInfo = styled.div`
   padding-left: 10px;
+  color: #fff;
+  font-size: 10px;
 `;
 
 export const FileClose = styled.div`

@@ -16,7 +16,7 @@ import { AiOutlineFileAdd, AiOutlineFolderAdd } from 'react-icons/ai';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
-import { useTreeNodeStore } from '@/store/useTreeNodeStroe';
+import { useTreeNodeStore } from '@/store/useTreeNodeStore';
 import { v4 as uuidv4 } from 'uuid';
 import { useFileStore } from '@/store/useFileStore';
 
