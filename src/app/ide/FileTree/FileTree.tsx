@@ -18,6 +18,7 @@ import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { useTreeNodeStore } from '@/store/useTreeNodeStroe';
 import { v4 as uuidv4 } from 'uuid';
+import { useFileStore } from '@/store/useFileStore';
 
 const FileTree = () => {
   const { fileTree, setFileTree, deleteNode } = useFileTreeStore();
@@ -32,6 +33,10 @@ const FileTree = () => {
       id: `${index}-${newUUID}`,
       name: newNodeName,
       ...(type === 'internal' && { children: [] }),
+      language: newNodeName.split('.')[-1],
+      isDirty: false,
+      isOpened: true,
+      content: useFileStore.getState().content,
     };
 
     addNode(newNode, parentId);
@@ -65,7 +70,9 @@ const FileTree = () => {
       <FileTreeConatiner>
         <CreateFileDiv>
           <FileButton
-            onClick={() => treeRef.current?.createLeaf()}
+            onClick={() => {
+              treeRef.current?.createLeaf();
+            }}
             title="New File..."
           >
             <AiOutlineFileAdd size="22px" />

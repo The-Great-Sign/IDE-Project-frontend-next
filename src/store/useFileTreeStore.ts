@@ -22,6 +22,7 @@ const data: FileNodeType[] = [
 ];
 
 interface FileTreeState {
+  file: FileNodeType | null;
   fileTree: FileNodeType[];
   setFileTree: (fileTree: FileNodeType[]) => void;
   updateNodeName: (nodeId: string, newName: string) => void;
@@ -30,6 +31,7 @@ interface FileTreeState {
 }
 
 export const useFileTreeStore = create<FileTreeState>(set => ({
+  file: null,
   fileTree: data,
   setFileTree: fileTree => set({ fileTree }),
   updateNodeName: (nodeId, newName) =>
