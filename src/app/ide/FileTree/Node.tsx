@@ -76,6 +76,23 @@ export const Node = ({
     }
   };
 
+  const handleDeleteFileRequest = async () => {
+    try {
+      const nowFilePath = findNowFilePath(node);
+      const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
+
+      console.log(projectId);
+      console.log(nowFilePath);
+      const response = await axiosInstance.delete('/api/files', {
+        data: { projectId: projectId, filePath: nowFilePath },
+      });
+
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <NodeContainer className="node-container" style={style} ref={dragHandle}>
       <FileDiv
@@ -145,8 +162,19 @@ export const Node = ({
             <MdEdit />
           </button>
           <button
-            onClick={() => {
-              tree.delete(node.id);
+            onClick={async () => {
+              try {
+                const isSuccess = await handleDeleteFileRequest();
+                if (isSuccess) {
+                  tree.delete(node.id);
+                  alert('삭제 성공');
+                } else {
+                  alert('파일 삭제에 문제가 있습니다.');
+                }
+              } catch (error) {
+                console.error('Error deleting file:', error);
+                alert('파일 삭제 중 오류가 발생했습니다.');
+              }
             }}
             title="Delete"
           >
