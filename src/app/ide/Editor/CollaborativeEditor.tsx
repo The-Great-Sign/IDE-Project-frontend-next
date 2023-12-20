@@ -1,9 +1,8 @@
 /* eslint-disable prefer-const */
 'use client';
 
-// import * as Y from 'yjs';
-import { EditorView } from 'codemirror';
 import React, { useEffect, useRef } from 'react';
+import { EditorView } from 'codemirror';
 import LiveblocksProvider from '@liveblocks/yjs';
 import { useRoom, useSelf } from '@/liveblocks.config';
 import { Editor, EditorContainer } from './CollaborativeEditor.styles';
@@ -11,15 +10,15 @@ import { createEditorState } from './CreateEditorState';
 import { useFileStore } from '@/store/useFileStore';
 
 interface CollaborativeEditorProps {
-  fileId: string;
+  fileId: string; // fileId prop 추가
 }
 
 export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   fileId,
 }) => {
-  const { selectedFileId, files } = useFileStore();
-  const selectedFile = files.find(f => f.id === selectedFileId);
+  const { files } = useFileStore();
+  const file = files.find(f => f.id === fileId);
   const room = useRoom();
   // Get user info from Liveblocks authentication endpoint
   const userInfo = useSelf(me => me.info);
@@ -37,9 +36,9 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
 
   // Set up Liveblocks Yjs provider and attach CodeMirror editor
   useEffect(() => {
-    if (!selectedFile || !editorRef.current || !room || !userInfo) return;
+    if (!file || !editorRef.current || !room || !userInfo) return;
 
-    const provider = new LiveblocksProvider(room, selectedFile.yDoc);
+    const provider = new LiveblocksProvider(room, file.yDoc);
 
     // Define a shared text type on the document
 
@@ -64,20 +63,24 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
     });
 
     const state = createEditorState(
-      selectedFile.id,
-      selectedFile.content,
-      selectedFile.language,
+      file.id,
+      file.content,
+      file.language,
       provider
     );
-    const view = new EditorView({ state, parent: editorRef.current });
+
+    const view = new EditorView({
+      state,
+      parent: editorRef.current,
+    });
 
     return () => {
       provider.destroy();
       view.destroy();
     };
-  }, [selectedFile, room, userInfo]);
+  }, [file, fileId, files, room, userInfo]);
 
-  if (!selectedFile) return null;
+  if (!file) return null;
 
   // useEffect(() => {
   //   console.log(editorContent)
@@ -88,12 +91,6 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
       {/* <EditorHeader>
         <div>{yUndoManager ? <Undo yUndoManager={yUndoManager} /> : null}</div>
       </EditorHeader> */}
-      {/* <EditorTab>
-        <FileTab>
-          <FileInfo>{fileName}</FileInfo>
-          <FileClose>x</FileClose>
-        </FileTab>
-      </EditorTab> */}
       <Editor ref={editorRef} className="editor-view"></Editor>
     </EditorContainer>
   );

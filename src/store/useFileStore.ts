@@ -1,3 +1,4 @@
+// useFileStore.ts
 import { create } from 'zustand';
 import * as Y from 'yjs';
 
@@ -22,18 +23,23 @@ export const useFileStore = create<FileState>(set => ({
   files: [],
   selectedFileId: null,
   openFile: (fileId, name, language) => {
-    const yDoc = new Y.Doc();
     set(state => {
-      if (state.files.some(f => f.id === fileId)) {
-        // File is already opened, so no need to add again
-        return { ...state };
+      const existingFile = state.files.find(f => f.id === fileId);
+      if (existingFile) {
+        return { ...state, selectedFileId: fileId };
       }
+      const yDoc = new Y.Doc();
+      const newFile = {
+        id: fileId,
+        name,
+        content: '',
+        language,
+        yDoc,
+        isOpened: true,
+      };
       return {
-        ...state,
-        files: [
-          ...state.files,
-          { id: fileId, name, content: '', language, yDoc, isOpened: true },
-        ],
+        files: [...state.files, newFile],
+        selectedFileId: fileId,
       };
     });
   },
