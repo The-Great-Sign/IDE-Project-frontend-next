@@ -149,7 +149,19 @@ export const Node = ({
               type="text"
               defaultValue={node.data.name}
               onFocus={e => e.currentTarget.select()}
-              onBlur={() => node.reset()}
+              onBlur={() => {
+                if (isCorrectName(node.data.name) === true) {
+                  handleCreateFileRequest(node.data.name);
+                  updateNodeName(node.id, node.data.name);
+                  const extendsName = node.data.name.split('.')[-1];
+                  //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
+                  findLanguage(extendsName);
+                  node.submit(node.data.name);
+                } else {
+                  node.reset();
+                  tree.delete(node.id);
+                }
+              }}
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
@@ -159,7 +171,7 @@ export const Node = ({
                     const extendsName = e.currentTarget.value.split('.')[-1];
                     //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
                     findLanguage(extendsName);
-                    node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                    node.submit(e.currentTarget.value);
                   } else {
                     tree.delete(node.id);
                   }
