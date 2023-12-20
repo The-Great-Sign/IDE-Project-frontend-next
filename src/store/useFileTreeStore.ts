@@ -10,6 +10,70 @@ const data: FileNodeType[] = [
     isDirty: false,
     isOpened: true,
     language: 'python',
+    children: [
+      {
+        id: '2',
+        name: 'hello2.py',
+        content: 'print("hello python2")',
+        isDirty: false,
+        isOpened: true,
+        language: 'python',
+      },
+      {
+        id: '3',
+        name: 'hello3.py',
+        content: 'print("hello python3")',
+        isDirty: false,
+        isOpened: true,
+        language: 'python',
+        children: [
+          {
+            id: '4',
+            name: 'hello4.py',
+            content: 'print("hello python4")',
+            isDirty: false,
+            isOpened: true,
+            language: 'python',
+            children: [
+              {
+                id: 'sdfs5',
+                name: 'hello2.py',
+                content: 'print("hello python2")',
+                isDirty: false,
+                isOpened: true,
+                language: 'python',
+              },
+              {
+                id: '32342',
+                name: 'hello3.py',
+                content: 'print("hello python3")',
+                isDirty: false,
+                isOpened: true,
+                language: 'python',
+                children: [
+                  {
+                    id: '4234234',
+                    name: 'hello4.py',
+                    content: 'print("hello python4")',
+                    isDirty: false,
+                    isOpened: true,
+                    language: 'python',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: '5',
+    name: 'hell55o.py',
+    content: 'print("hello55 python")',
+    isDirty: true,
+    isOpened: true,
+    language: 'python',
   },
 ];
 

@@ -6,7 +6,7 @@ export const FileTreeConatiner = styled.div`
   width: 100%;
   box-sizing: border-box;
   flex-direction: column;
-  padding: 15px;
+  padding: 15px 20px;
   border-top: 1px solid ${COLORS.primary};
 
   border-left: 1px solid ${COLORS.primary};
@@ -48,14 +48,18 @@ export const NodeContainer = styled.div`
   }
 
   .node-text {
-    margin: '0px 3px';
+    margin: 0px 2px;
   }
 `;
+interface FileDivProps {
+  isNodeDirty?: boolean;
+}
 
-export const FileDiv = styled.div`
+export const FileDiv = styled.div<FileDivProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: ${props => (props.isNodeDirty ? 'red' : '')};
 `;
 
 // 파일 생성
@@ -77,4 +81,17 @@ export const FileButton = styled.button`
   &:hover {
     background: rgba(0, 0, 0, 0.2);
   }
+`;
+
+export const IsDirty = styled.div`
+  margin-left: 4px;
+  width: 7px;
+  height: 7px;
+  background: red;
+  border-radius: 50%;
+  display: inline;
+`;
+
+export const IsNotDirty = styled(IsDirty)`
+  background: none;
 `;

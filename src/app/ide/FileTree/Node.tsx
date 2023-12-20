@@ -3,7 +3,7 @@ import { NodeRendererProps } from 'react-arborist';
 import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
-import { FileDiv, NodeContainer } from './FileTree.styles';
+import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import {
@@ -102,10 +102,18 @@ export const Node = ({
       <FileDiv
         className="node-content"
         onClick={() => node.isInternal && node.toggle()}
+        isNodeDirty={node.data.isDirty}
       >
+        {/* 파일 저장안한 상태 표시하기 */}
+
         {node.isLeaf ? (
           <>
-            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 16px' }} />
+            {node.data.isDirty ? (
+              <IsDirty></IsDirty>
+            ) : (
+              <IsNotDirty></IsNotDirty>
+            )}
+            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 4px' }} />
           </>
         ) : (
           <>
