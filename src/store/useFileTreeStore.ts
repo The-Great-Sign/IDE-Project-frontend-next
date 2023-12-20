@@ -5,20 +5,12 @@ import { removeNodeById } from '@/utils/fileTreeUtils';
 const data: FileNodeType[] = [
   {
     id: '1',
-    name: 'test',
-    children: [{ id: 'c1-1', name: 'test.html' }],
+    name: 'hello.py',
+    content: 'print("hello python")',
+    isDirty: false,
+    isOpened: true,
+    language: 'python',
   },
-  {
-    id: '2',
-    name: 'src',
-    children: [
-      { id: 'c2-1', name: 'App.js' },
-      { id: 'c2-2', name: 'index.js' },
-      { id: 'c2-3', name: 'styles.css' },
-    ],
-  },
-  { id: '3', name: 'package.json' },
-  { id: '4', name: 'README.md' },
 ];
 
 interface FileTreeState {

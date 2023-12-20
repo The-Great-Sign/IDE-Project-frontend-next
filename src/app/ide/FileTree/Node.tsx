@@ -9,7 +9,6 @@ import axiosInstance from '@/app/api/axiosInstance';
 import { findNowFilePath } from '@/utils/fileTreeUtils';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { useFileStore } from '@/store/useFileStore';
 import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
 
 export const Node = ({
@@ -19,26 +18,21 @@ export const Node = ({
   tree,
 }: NodeRendererProps<FileNodeType>) => {
   const { updateNodeName } = useFileTreeStore();
-  const { setContent } = useFileStore();
   const { setOpenFilesIdList } = useCurrentOpenFileList();
 
   const handleOpenFile = async () => {
     try {
       const nowFilePath = findNowFilePath(node);
+      const projectId = 'tempProjectId';
 
       const { data } = await axiosInstance.post('/api/files', {
-        //여기에 현재 파일 경로 보내기
-        //그리고 생성한 프로젝트 아이디 담아 보내기
-        name: nowFilePath,
-        description: 'description',
-        programmingLanguage: 'PYTHON',
-        password: 'password',
+        projectId: projectId,
+        filePath: nowFilePath,
       });
 
-      //응답받은 filename, content 담아두기
-      setContent('print("testPython"))');
+      //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
 
-      //열린 파일 목록 업데이트
+      //열린 파일 목록 업데이트 -> 총미
       setOpenFilesIdList(node.id);
 
       return data;
@@ -96,8 +90,9 @@ export const Node = ({
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
+                  //이때 서버로도 메시지 보내야 함. 성공시 아래 코드 실행
                   updateNodeName(node.id, e.currentTarget.value);
-                  node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                  node.submit(e.currentTarget.value);
                 }
               }}
               autoFocus

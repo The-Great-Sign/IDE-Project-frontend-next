@@ -16,32 +16,31 @@ import { AiOutlineFileAdd, AiOutlineFolderAdd } from 'react-icons/ai';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
-import { useTreeNodeStore } from '@/store/useTreeNodeStroe';
 import { v4 as uuidv4 } from 'uuid';
-import { useFileStore } from '@/store/useFileStore';
 
 const FileTree = () => {
-  const { fileTree, setFileTree, deleteNode } = useFileTreeStore();
-  const newNodeName = useTreeNodeStore(state => state.newNodeName);
+  const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
-  const { addNode } = useFileTreeStore();
 
   const onCreate: CreateHandler<FileNodeType> = ({ parentId, type, index }) => {
     const newUUID = uuidv4();
+    //새 노드 정의
     const newNode: FileNodeType = {
       id: `${index}-${newUUID}`,
-      name: newNodeName,
+      name: '',
       ...(type === 'internal' && { children: [] }),
-      language: newNodeName.split('.')[-1],
+      // language: newNodeName.split('.')[-1],
       isDirty: false,
       isOpened: true,
-      content: useFileStore.getState().content,
     };
-
+    //노드 추가 시
     addNode(newNode, parentId);
     const newFileTree = [...fileTree, newNode];
     setFileTree(newFileTree);
+    console.log(treeRef);
+
+    //초기화
 
     return newNode;
   };
