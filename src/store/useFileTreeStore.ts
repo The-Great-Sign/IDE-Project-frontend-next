@@ -37,7 +37,7 @@ const data: FileNodeType[] = [
             children: [
               {
                 id: 'sdfs5',
-                name: 'hello2.py',
+                name: 'hello5.py',
                 content: 'print("hello python2")',
                 isDirty: false,
                 isOpened: true,
@@ -45,7 +45,7 @@ const data: FileNodeType[] = [
               },
               {
                 id: '32342',
-                name: 'hello3.py',
+                name: 'hello6.py',
                 content: 'print("hello python3")',
                 isDirty: false,
                 isOpened: true,
@@ -53,7 +53,7 @@ const data: FileNodeType[] = [
                 children: [
                   {
                     id: '4234234',
-                    name: 'hello4.py',
+                    name: 'hello7.py',
                     content: 'print("hello python4")',
                     isDirty: false,
                     isOpened: true,
@@ -96,10 +96,24 @@ export const useFileTreeStore = create<FileTreeState>(set => ({
         return node.id === nodeId ? { ...node, name: newName } : node;
       }),
     })),
-  addNode: newNode =>
-    set(state => ({
-      fileTree: [...state.fileTree, newNode],
-    })),
+  addNode: (newNode: FileNodeType, parentId: string | null) =>
+    set(state => {
+      const addNodeToTree = (nodes: FileNodeType[]): FileNodeType[] =>
+        nodes.map(node =>
+          node.id === parentId
+            ? { ...node, children: [...(node.children || []), newNode] }
+            : {
+                ...node,
+                children: node.children ? addNodeToTree(node.children) : [],
+              }
+        );
+
+      return {
+        fileTree: parentId
+          ? addNodeToTree(state.fileTree)
+          : [...state.fileTree, newNode],
+      };
+    }),
   deleteNode: nodeId =>
     set(state => ({
       fileTree: removeNodeById(state.fileTree, nodeId),
