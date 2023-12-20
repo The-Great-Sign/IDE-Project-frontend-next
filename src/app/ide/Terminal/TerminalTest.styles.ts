@@ -1,5 +1,5 @@
 import { COLORS } from '@/constants/colors';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 export const TerminalContainer = styled.div`
   border-top: 1px solid ${COLORS.primary};
