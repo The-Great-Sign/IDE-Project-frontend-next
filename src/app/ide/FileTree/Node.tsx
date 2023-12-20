@@ -19,15 +19,15 @@ export const Node = ({
 }: NodeRendererProps<FileNodeType>) => {
   const { updateNodeName } = useFileTreeStore();
   const { setOpenFilesIdList } = useCurrentOpenFileList();
+  const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
 
   const handleOpenFile = async () => {
     try {
       const nowFilePath = findNowFilePath(node);
-      const projectId = 'tempProjectId';
+      const params = { projectId: projectId, filePath: nowFilePath };
 
-      const { data } = await axiosInstance.post('/api/files', {
-        projectId: projectId,
-        filePath: nowFilePath,
+      const { data } = await axiosInstance.get('/api/files', {
+        params: params,
       });
 
       //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
@@ -36,6 +36,58 @@ export const Node = ({
       setOpenFilesIdList(node.id);
 
       return data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCreateFileRequest = async (newNodeName: string) => {
+    try {
+      const nowFilePath = findNowFilePath(node) + newNodeName;
+      let responseData;
+
+      //directory or file 구별
+      if (node.isInternal) {
+        const response = await axiosInstance.post('/api/files', {
+          projectId: projectId,
+          directories: nowFilePath,
+          files: null,
+          content: 'print("Hello, World!")',
+        });
+        responseData = response.data;
+      } else {
+        const response = await axiosInstance.post('/api/files', {
+          projectId: projectId,
+          directories: null,
+          files: nowFilePath,
+          content: 'print("Hello, World!")',
+        });
+        responseData = response.data;
+      }
+
+      //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
+
+      //열린 파일 목록 업데이트 -> 총미
+      setOpenFilesIdList(node.id);
+
+      return responseData;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteFileRequest = async () => {
+    try {
+      const nowFilePath = findNowFilePath(node);
+      const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
+
+      console.log(projectId);
+      console.log(nowFilePath);
+      const response = await axiosInstance.delete('/api/files', {
+        data: { projectId: projectId, filePath: nowFilePath },
+      });
+
+      return response.data.success;
     } catch (error) {
       console.error(error);
     }
@@ -91,6 +143,7 @@ export const Node = ({
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
                   //이때 서버로도 메시지 보내야 함. 성공시 아래 코드 실행
+                  handleCreateFileRequest(e.currentTarget.value);
                   updateNodeName(node.id, e.currentTarget.value);
                   node.submit(e.currentTarget.value);
                 }
@@ -109,8 +162,19 @@ export const Node = ({
             <MdEdit />
           </button>
           <button
-            onClick={() => {
-              tree.delete(node.id);
+            onClick={async () => {
+              try {
+                const isSuccess = await handleDeleteFileRequest();
+                if (isSuccess) {
+                  tree.delete(node.id);
+                  alert('삭제 성공');
+                } else {
+                  alert('파일 삭제에 문제가 있습니다.');
+                }
+              } catch (error) {
+                console.error('Error deleting file:', error);
+                alert('파일 삭제 중 오류가 발생했습니다.');
+              }
             }}
             title="Delete"
           >
