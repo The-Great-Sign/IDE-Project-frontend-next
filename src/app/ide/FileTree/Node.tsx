@@ -6,10 +6,11 @@ import { RxCross2 } from 'react-icons/rx';
 import { FileDiv, NodeContainer } from './FileTree.styles';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
-import useCurrentOpenFile from '@/store/useCurrentOpenFile';
 import { findNowFilePath } from '@/utils/fileTreeUtils';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
+import { useFileStore } from '@/store/useFileStore';
+import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
 
 export const Node = ({
   node,
@@ -18,23 +19,27 @@ export const Node = ({
   tree,
 }: NodeRendererProps<FileNodeType>) => {
   const { updateNodeName } = useFileTreeStore();
+  const { setContent } = useFileStore();
+  const { setOpenFilesIdList } = useCurrentOpenFileList();
 
   const handleOpenFile = async () => {
     try {
-      findNowFilePath(node);
-      const filePath = useCurrentOpenFile.getState().files;
+      const nowFilePath = findNowFilePath(node);
+
       const { data } = await axiosInstance.post('/api/files', {
         //여기에 현재 파일 경로 보내기
         //그리고 생성한 프로젝트 아이디 담아 보내기
-        name: filePath,
+        name: nowFilePath,
         description: 'description',
         programmingLanguage: 'PYTHON',
         password: 'password',
       });
 
       //응답받은 filename, content 담아두기
-      useCurrentOpenFile.getState().setContent(data.results.id);
-      //설정 후 렌더링 필요
+      setContent('print("testPython"))');
+
+      //열린 파일 목록 업데이트
+      setOpenFilesIdList(node.id);
 
       return data;
     } catch (error) {

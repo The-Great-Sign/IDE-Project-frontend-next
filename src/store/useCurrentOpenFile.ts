@@ -1,20 +1,18 @@
 import { create } from 'zustand';
 
-interface CurrentOpenFileState {
-  directories: string | null;
-  files: string | null;
-  content: string | null;
-  language: string | null;
-  setFiles: (filePath: string | null) => void;
-  setContent: (content: string | null) => void;
+//현재 열린 파일 목록들
+//수정 필요
+interface CurrentOpenFileListState {
+  isShow: boolean;
+  OpenFilesIdList: string[];
+  setOpenFilesIdList: (fileId: string) => void;
 }
-const useCurrentOpenFile = create<CurrentOpenFileState>(set => ({
-  directories: null,
-  files: null,
-  content: null,
-  language: null,
-  setFiles: filePath => set({ files: filePath }),
-  setContent: newContent => set({ content: newContent }),
+const useCurrentOpenFileList = create<CurrentOpenFileListState>(set => ({
+  isShow: true,
+  OpenFilesIdList: [],
+  setOpenFilesIdList: fileId =>
+    set(state => ({
+      OpenFilesIdList: state.OpenFilesIdList.concat(fileId),
+    })),
 }));
-
-export default useCurrentOpenFile;
+export default useCurrentOpenFileList;
