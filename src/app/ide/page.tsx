@@ -7,7 +7,6 @@ import useGeneralChatStore, {
   GeneralMessageType,
 } from '@/store/useChattingStore';
 import { Room } from '@/app/ide/Room';
-// import { CollaborativeEditor } from '@/app/ide/Editor/CollaborativeEditor';
 import {
   ContentContainer,
   IDEContainer,
@@ -22,7 +21,6 @@ import { testWebsocket } from '@/app/api/websocket';
 import EditorTab from './Editor/EditorTab';
 import ShowEditor from './Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
-
 interface ReceivedMessageType {
   messageType: string;
   userNickname: string;
