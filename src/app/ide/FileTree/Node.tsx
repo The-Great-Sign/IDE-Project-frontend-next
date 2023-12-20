@@ -34,7 +34,7 @@ export const Node = ({
 
       //열린 파일 목록 업데이트 -> 총미
       setOpenFilesIdList(node.id);
-      console.log(data);
+
       return data;
     } catch (error) {
       console.error(error);
@@ -65,14 +65,11 @@ export const Node = ({
         responseData = response.data;
       }
 
-      console.log(projectId);
-      console.log(nowFilePath);
-
       //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
 
       //열린 파일 목록 업데이트 -> 총미
       setOpenFilesIdList(node.id);
-      console.log(responseData);
+
       return responseData;
     } catch (error) {
       console.error(error);
