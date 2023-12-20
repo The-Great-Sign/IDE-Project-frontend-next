@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { Resizable } from 're-resizable';
 import {
@@ -7,12 +8,17 @@ import {
 } from './Chatting.styles';
 import GeneralChatting from './GeneralChatting';
 import AIChatting from './AIChatting';
+import { Client } from '@stomp/stompjs';
 
-const Chatting = () => {
+interface ChattingProps {
+  client: Client | null;
+  users: number;
+}
+
+const Chatting: React.FC<ChattingProps> = ({ client, users }) => {
   const [activeTab, setActiveTab] = useState<string>('채팅');
 
   const handleClick = (tab: string) => {
-    // true: 채팅, false: AI
     setActiveTab(tab);
   };
 
@@ -37,12 +43,11 @@ const Chatting = () => {
     >
       <ChattingContainer>
         <ChattingHeader>
-          {/* {`채팅 (${CurrentUsers})`} */}
           <ChattingTab
-            onClick={() => handleClick('채팅')}
-            $isActive={activeTab === '채팅'}
+            onClick={() => handleClick(`채팅 (${users})`)}
+            $isActive={activeTab === `채팅 (${users})`}
           >
-            채팅
+            {`채팅 (${users})`}
           </ChattingTab>
           <ChattingTab
             onClick={() => handleClick('AI✨')}
@@ -51,7 +56,11 @@ const Chatting = () => {
             AI✨
           </ChattingTab>
         </ChattingHeader>
-        {activeTab === '채팅' ? <GeneralChatting /> : <AIChatting />}
+        {activeTab === `채팅 (${users})` ? (
+          <GeneralChatting client={client} />
+        ) : (
+          <AIChatting />
+        )}
       </ChattingContainer>
     </Resizable>
   );
