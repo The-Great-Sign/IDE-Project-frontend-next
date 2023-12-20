@@ -8,7 +8,7 @@ export const FileTreeConatiner = styled.div`
   flex-direction: column;
   padding: 15px;
   border-top: 1px solid ${COLORS.primary};
-  border-right: 1px solid ${COLORS.primary};
+
   border-left: 1px solid ${COLORS.primary};
   align-items: center;
   height: calc(100vh - 51px);

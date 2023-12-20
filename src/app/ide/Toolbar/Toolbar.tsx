@@ -15,9 +15,11 @@ import {
 } from './Toolbar.style';
 import { IconContext } from 'react-icons';
 import { UserProfile } from '../Header/IDEHeader.styles';
+import { useVisibleDiv } from '@/store/useVisibleDiv';
 
 const Toolbar = () => {
   const user = { name: '지원' };
+  const { toggleDiv } = useVisibleDiv();
   return (
     <ToolbarContainer>
       <IconContext.Provider
@@ -33,7 +35,7 @@ const Toolbar = () => {
           <ToolBarMenuDiv>
             <BiMenu />
           </ToolBarMenuDiv>
-          <ToolBarIconDiv>
+          <ToolBarIconDiv onClick={toggleDiv}>
             <AiOutlineCopy />
           </ToolBarIconDiv>
           <ToolBarIconDiv>
