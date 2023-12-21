@@ -1,5 +1,5 @@
 import { AiFillFolder, AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
-import { NodeRendererProps } from 'react-arborist';
+import { NodeApi, NodeRendererProps } from 'react-arborist';
 import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
@@ -18,7 +18,7 @@ import { FaJava, FaHtml5, FaCss3Alt, FaMarkdown } from 'react-icons/fa';
 import { IoLogoJavascript } from 'react-icons/io5';
 import { SiCplusplus } from 'react-icons/si';
 import { TbBrandPython } from 'react-icons/tb';
-import { useFileStore } from '@/store/useFileStore';
+import useHandleOpenFile from '@/app/hooks/useHandleOpenFile';
 
 export const Node = ({
   node,
@@ -26,7 +26,7 @@ export const Node = ({
   dragHandle,
   tree,
 }: NodeRendererProps<FileNodeType>) => {
-  const fileStore = useFileStore();
+  const handleOpenFile = useHandleOpenFile();
   const { updateNodeName } = useFileTreeStore();
   const { setOpenFilesIdList } = useCurrentOpenFileList();
   const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
@@ -53,29 +53,10 @@ export const Node = ({
         return <AiOutlineFile size="18px" style={{ margin: '0 2px 0 4px' }} />;
     }
   };
-  const handleOpenFile = async () => {
-    const fileId = node.id;
-    const fileName = node.data.name;
-    const fileLanguage = 'python'; // Determine language based on file extension or other logic
 
-    fileStore.openFile(fileId, fileName, fileLanguage);
-    fileStore.selectFile(fileId);
-
-    try {
-      const nowFilePath = findNowFilePath(node);
-      const params = { projectId: projectId, filePath: nowFilePath };
-
-      const { data } = await axiosInstance.get('/api/files', {
-        params: params,
-      });
-      console.log(data);
-
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
+  const onNodeClick = (node: NodeApi<FileNodeType>) => {
+    handleOpenFile(node);
   };
-
   const handleCreateFileRequest = async (newNodeName: string) => {
     try {
       const nowFilePath = findNowFilePath(node) + newNodeName;
@@ -168,7 +149,7 @@ export const Node = ({
         {/* node text */}
         <span
           className="node-text"
-          onClick={handleOpenFile}
+          onClick={() => onNodeClick(node)}
           onDoubleClick={(e: React.MouseEvent<HTMLSpanElement>) => {
             e.preventDefault();
             node.edit();
