@@ -1,4 +1,4 @@
-import { AiFillFolder, AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
+import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
 import { NodeApi, NodeRendererProps } from 'react-arborist';
 import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
@@ -14,11 +14,9 @@ import {
   findNowFilePath,
   isCorrectName,
 } from '@/utils/fileTreeUtils';
-import { FaJava, FaHtml5, FaCss3Alt, FaMarkdown } from 'react-icons/fa';
-import { IoLogoJavascript } from 'react-icons/io5';
-import { SiCplusplus } from 'react-icons/si';
-import { TbBrandPython } from 'react-icons/tb';
+
 import useHandleOpenFile from '@/app/hooks/useHandleOpenFile';
+import LanguageIcon from './LanguageIcon';
 
 export const Node = ({
   node,
@@ -30,29 +28,6 @@ export const Node = ({
   const { updateNodeName } = useFileTreeStore();
   const { setOpenFilesIdList } = useCurrentOpenFileList();
   const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
-
-  const renderIcon = (language: string) => {
-    switch (language) {
-      case 'python':
-        return <TbBrandPython size="18px" style={{ margin: '0 2px 0 4px' }} />;
-      case 'java':
-        return <FaJava size="18px" style={{ margin: '0 2px 0 4px' }} />;
-      case 'c++':
-        return <SiCplusplus size="18px" style={{ margin: '0 2px 0 4px' }} />;
-      case 'html':
-        return <FaHtml5 size="18px" style={{ margin: '0 2px 0 4px' }} />;
-      case 'javascript':
-        return (
-          <IoLogoJavascript size="18px" style={{ margin: '0 2px 0 4px' }} />
-        );
-      case 'css':
-        return <FaCss3Alt size="18px" style={{ margin: '0 2px 0 4px' }} />;
-      case 'markdown':
-        return <FaMarkdown size="18px" style={{ margin: '0 2px 0 4px' }} />;
-      default:
-        return <AiOutlineFile size="18px" style={{ margin: '0 2px 0 4px' }} />;
-    }
-  };
 
   const onNodeClick = (node: NodeApi<FileNodeType>) => {
     handleOpenFile(node);
@@ -123,7 +98,10 @@ export const Node = ({
             ) : (
               <IsNotDirty></IsNotDirty>
             )}
-            {renderIcon(findLanguage(String(node.data.name.split('.').at(-1))))}
+
+            <LanguageIcon
+              language={findLanguage(String(node.data.name.split('.').at(-1)))}
+            />
           </>
         ) : (
           <>
