@@ -6,6 +6,7 @@ import {
 import {
   CreateHandler,
   DeleteHandler,
+  MoveHandler,
   NodeRendererProps,
   Tree,
   TreeApi,
@@ -17,13 +18,14 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { findNodeById } from '@/utils/fileTreeUtils';
 
 const FileTree = () => {
   const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
-  const onCreate: CreateHandler<FileNodeType> = ({ parentId, type, index }) => {
+  const onCreate: CreateHandler<FileNodeType> = ({ type, index }) => {
     const newUUID = uuidv4();
     //새 노드 정의
     const newNode: FileNodeType = {
@@ -34,10 +36,11 @@ const FileTree = () => {
       isOpened: true,
     };
     //노드 추가 시
-    addNode(newNode, parentId);
+    const newParent = treeRef.current?.focusedNode?.id;
+    addNode(newNode, newParent);
+
     const newFileTree = [...fileTree, newNode];
     setFileTree(newFileTree);
-    console.log(treeRef);
 
     //초기화
 
@@ -46,6 +49,17 @@ const FileTree = () => {
 
   const onDelete: DeleteHandler<FileNodeType> = ({ ids }) => {
     deleteNode(ids[0]);
+  };
+
+  const onMove: MoveHandler<FileNodeType> = ({ dragIds, parentId }) => {
+    const nowFileTree = useFileTreeStore.getState().fileTree;
+    const { node, befParentId } = findNodeById(nowFileTree, dragIds[0]);
+
+    //폴더 아니고, 같은 계층에 있는 애가 아닐 때에만 이동 가능
+    if (node && !node.children && befParentId !== parentId) {
+      dragIds.map((id: string) => useFileTreeStore.getState().deleteNode(id));
+      useFileTreeStore.getState().addNode(node, parentId);
+    }
   };
 
   return (
@@ -86,6 +100,7 @@ const FileTree = () => {
           className="react-aborist"
           onCreate={onCreate}
           onDelete={onDelete}
+          onMove={onMove}
           ref={treeRef}
           data={fileTree}
         >
