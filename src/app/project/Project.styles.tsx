@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 export const ProjectView = styled.div`
   display: flex;
@@ -7,3 +7,5 @@ export const ProjectView = styled.div`
   width: 100%;
   padding: 50px;
 `;
+
+export const CreateButton = styled.button``;
