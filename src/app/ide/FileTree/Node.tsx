@@ -3,10 +3,14 @@ import { NodeRendererProps } from 'react-arborist';
 import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
-import { FileDiv, NodeContainer } from './FileTree.styles';
+import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
-import { findNowFilePath } from '@/utils/fileTreeUtils';
+import {
+  findLanguage,
+  findNowFilePath,
+  isCorrectName,
+} from '@/utils/fileTreeUtils';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
@@ -102,10 +106,17 @@ export const Node = ({
       <FileDiv
         className="node-content"
         onClick={() => node.isInternal && node.toggle()}
+        isNodeDirty={node.data.isDirty}
       >
         {node.isLeaf ? (
           <>
-            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 16px' }} />
+            {/* 파일 저장안한 상태 표시하기 */}
+            {node.data.isDirty ? (
+              <IsDirty></IsDirty>
+            ) : (
+              <IsNotDirty></IsNotDirty>
+            )}
+            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 4px' }} />
           </>
         ) : (
           <>
@@ -146,10 +157,16 @@ export const Node = ({
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
-                  //이때 서버로도 메시지 보내야 함. 성공시 아래 코드 실행
-                  handleCreateFileRequest(e.currentTarget.value);
-                  updateNodeName(node.id, e.currentTarget.value);
-                  node.submit(e.currentTarget.value);
+                  if (isCorrectName(e.currentTarget.value) === true) {
+                    handleCreateFileRequest(e.currentTarget.value);
+                    updateNodeName(node.id, e.currentTarget.value);
+                    const extendsName = e.currentTarget.value.split('.')[-1];
+                    //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
+                    findLanguage(extendsName);
+                    node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                  } else {
+                    tree.delete(node.id);
+                  }
                 }
               }}
               autoFocus

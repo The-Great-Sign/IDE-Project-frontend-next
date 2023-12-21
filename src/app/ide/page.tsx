@@ -18,9 +18,11 @@ import FileTree from './FileTree/FileTree';
 import TerminalTest from './Terminal/TerminalTest';
 import Toolbar from './Toolbar/Toolbar';
 import { testWebsocket } from '@/app/api/websocket';
+import { useVisibleDiv } from '@/store/useVisibleDiv';
 import EditorTab from './Editor/EditorTab';
 import ShowEditor from './Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
+
 interface ReceivedMessageType {
   messageType: string;
   userNickname: string;
@@ -34,6 +36,7 @@ const Ide = () => {
   const clientRef = useRef<Client | null>(null);
   const [cRef, setCRef] = useState<Client | null>(null);
   const [users, setUsers] = useState<number>(0);
+  const { isvisibleDiv } = useVisibleDiv();
 
   useEffect(() => {
     if (clientRef.current == null) {
@@ -112,7 +115,7 @@ const Ide = () => {
             <ContentContainer>
               <Toolbar />
             </ContentContainer>
-            <FileTree />
+            {isvisibleDiv ? <FileTree /> : <></>}
 
             <Section>
               <EditorTab />

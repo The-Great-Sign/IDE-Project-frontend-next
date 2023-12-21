@@ -6,9 +6,9 @@ export const FileTreeConatiner = styled.div`
   width: 100%;
   box-sizing: border-box;
   flex-direction: column;
-  padding: 15px;
+  padding: 15px 20px;
   border-top: 1px solid ${COLORS.primary};
-  border-right: 1px solid ${COLORS.primary};
+
   border-left: 1px solid ${COLORS.primary};
   align-items: center;
   height: calc(100vh - 51px);
@@ -43,15 +43,23 @@ export const NodeContainer = styled.div`
     display: block;
   }
 
+  .file-actions button {
+    color: ${COLORS.primary};
+  }
+
   .node-text {
-    margin: '0px 3px';
+    margin: 0px 2px;
   }
 `;
+interface FileDivProps {
+  isNodeDirty?: boolean;
+}
 
-export const FileDiv = styled.div`
+export const FileDiv = styled.div<FileDivProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: ${props => (props.isNodeDirty ? 'red' : '')};
 `;
 
 // 파일 생성
@@ -68,8 +76,22 @@ export const FileButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
+  color: ${COLORS.primary};
 
   &:hover {
     background: rgba(0, 0, 0, 0.2);
   }
+`;
+
+export const IsDirty = styled.div`
+  margin-left: 4px;
+  width: 7px;
+  height: 7px;
+  background: red;
+  border-radius: 50%;
+  display: inline;
+`;
+
+export const IsNotDirty = styled(IsDirty)`
+  background: none;
 `;
