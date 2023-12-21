@@ -19,30 +19,34 @@ import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { findNodeById } from '@/utils/fileTreeUtils';
+import useHandleDeleteFileRequest from '@/app/hooks/useHandleDeleteFile';
+import useHandleCreateFile from '@/app/hooks/useHandleCreateFile';
 
 const FileTree = () => {
   const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
+  const handleDeleteFileRequest = useHandleDeleteFileRequest();
+  const handleCreateFileRequest = useHandleCreateFile();
+  const nowFileTree = useFileTreeStore.getState().fileTree;
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
   const onCreate: CreateHandler<FileNodeType> = ({ type, index }) => {
     const newUUID = uuidv4();
-    //새 노드 정의
+
     const newNode: FileNodeType = {
       id: `${index}-${newUUID}`,
       name: '',
+      isFile: type !== 'internal',
       ...(type === 'internal' && { children: [] }),
       isDirty: false,
       isOpened: true,
     };
-    //노드 추가 시
+
     const newParent = treeRef.current?.focusedNode?.id;
     addNode(newNode, newParent);
 
     const newFileTree = [...fileTree, newNode];
     setFileTree(newFileTree);
-
-    //초기화
 
     return newNode;
   };
@@ -52,14 +56,25 @@ const FileTree = () => {
   };
 
   const onMove: MoveHandler<FileNodeType> = ({ dragIds, parentId }) => {
-    const nowFileTree = useFileTreeStore.getState().fileTree;
-    const { node, befParentId } = findNodeById(nowFileTree, dragIds[0]);
+    const { node, befParentId } = findNodeById(nowFileTree, dragIds[0], null);
 
-    //폴더 아니고, 같은 계층에 있는 애가 아닐 때에만 이동 가능
-    if (node && !node.children && befParentId !== parentId) {
-      dragIds.map((id: string) => useFileTreeStore.getState().deleteNode(id));
-      useFileTreeStore.getState().addNode(node, parentId);
-    }
+    const moveFile = async () => {
+      try {
+        if (node?.isFile && befParentId !== parentId) {
+          dragIds.forEach((id: string) =>
+            useFileTreeStore.getState().deleteNode(id)
+          );
+          const newNode = { ...node };
+          useFileTreeStore.getState().addNode(newNode, parentId);
+          console.log(handleDeleteFileRequest(node));
+          handleCreateFileRequest(node, node.name);
+        }
+      } catch (error) {
+        console.error('Error deleting file:', error);
+        alert('파일 삭제 중 오류가 발생했습니다.');
+      }
+    };
+    moveFile();
   };
 
   return (

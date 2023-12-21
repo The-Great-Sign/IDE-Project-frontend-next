@@ -14,6 +14,26 @@ export const findNowFilePath = (node: NodeApi<FileNodeType> | null) => {
   return filePath;
 };
 
+export const findPath = (
+  nodes: FileNodeType[],
+  targetId: string,
+  path = ''
+): string | null => {
+  for (const node of nodes) {
+    const currentPath = path + '/' + node.name;
+
+    if (node.id === targetId) {
+      return currentPath;
+    }
+
+    if (node.children) {
+      const foundPath = findPath(node.children, targetId, currentPath);
+      if (foundPath) return foundPath;
+    }
+  }
+  return null;
+};
+
 export const removeNodeById = (
   nodes: FileNodeType[],
   nodeId: string | null
@@ -72,7 +92,7 @@ interface NodeWithParent {
 export const findNodeById = (
   nodes: FileNodeType[],
   nodeId: string | null,
-  currentParentId: string | null = null
+  currentParentId: string | null
 ): NodeWithParent => {
   for (const node of nodes) {
     if (node.id === nodeId) {
