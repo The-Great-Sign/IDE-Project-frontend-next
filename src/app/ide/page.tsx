@@ -1,11 +1,11 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import Chatting from './Chatting/Chatting';
-import { Client } from '@stomp/stompjs';
-import initializeWebSocket from '@/app/api/websocket';
-import useGeneralChatStore, {
-  GeneralMessageType,
-} from '@/store/useChattingStore';
+import {
+  subscribeChatting,
+  subscribeFile,
+  subscribeTerminal,
+} from '@/app/api/websocket';
 import { Room } from '@/app/ide/Room';
 import {
   ContentContainer,
@@ -17,96 +17,38 @@ import IDEHeader from './Header/IDEHeader';
 import FileTree from './FileTree/FileTree';
 import TerminalTest from './Terminal/TerminalTest';
 import Toolbar from './Toolbar/Toolbar';
-import { testWebsocket } from '@/app/api/websocket';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
 import EditorTab from './Editor/EditorTab';
 import ShowEditor from './Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
-
-interface ReceivedMessageType {
-  messageType: string;
-  userNickname: string;
-  content: string;
-  currentUsers: number;
-}
+import useProjectStore from '@/store/useProjectStore';
+import LoadingProject from '../project/EnterProject/LoadingProject/LoadingProject';
 
 const Ide = () => {
-  const { selectedFileId } = useFileStore();
+  const execute = useProjectStore(state => state.status);
 
-  const clientRef = useRef<Client | null>(null);
-  const [cRef, setCRef] = useState<Client | null>(null);
-  const [users, setUsers] = useState<number>(0);
+  const { selectedFileId } = useFileStore();
   const { isvisibleDiv } = useVisibleDiv();
 
   useEffect(() => {
-    if (clientRef.current == null) {
-      clientRef.current = initializeWebSocket();
-    }
+    console.log('execute', execute);
+    if (execute == 'RUNNING') {
+      const client = useProjectStore.getState().cRef;
+      console.log('client', client);
+      subscribeChatting(client);
+      subscribeTerminal(client);
+      subscribeFile(client);
 
-    const client = clientRef.current;
-    if (client) {
-      client.onConnect = () => {
-        client.subscribe(
-          `/topic/project/${testWebsocket.projectId}/chat`,
-          ReceivedMessage => {
-            const { messageType, userNickname, content, currentUsers } =
-              JSON.parse(ReceivedMessage.body) as ReceivedMessageType;
-
-            let enumMessageType: GeneralMessageType;
-            switch (messageType) {
-              case 'ENTER':
-                enumMessageType = GeneralMessageType.ENTER;
-                break;
-              case 'EXIT':
-                enumMessageType = GeneralMessageType.EXIT;
-                break;
-              case 'TALK':
-                enumMessageType = GeneralMessageType.TALK;
-                break;
-              default:
-                throw new Error(`Unknown message type: ${messageType}`);
-            }
-
-            useGeneralChatStore.getState().addMessage({
-              messageType: enumMessageType,
-              userNickname,
-              content,
-              currentUsers,
-            });
-            setUsers(currentUsers);
-            console.log(`Received: ${ReceivedMessage.body}`);
-          }
-        );
-        client.subscribe(
-          `/user/queue/project/${testWebsocket.projectId}/terminal`,
-          ReceivedTerminal => {
-            console.log('terminal connected');
-            console.log(`Received: ${ReceivedTerminal.body}`);
-          }
-        );
-        client.subscribe(
-          ` /topic/project/${testWebsocket.projectId}/file`,
-          ReceivedFile => {
-            console.log('file connected');
-            console.log(`Received: ${ReceivedFile.body}`);
-          }
-        );
-        client.onStompError = frame => {
-          console.error('WebSocket Error:', frame);
-        };
+      return () => {
+        console.log('execute', execute);
+        // if (client) {
+        //   client.deactivate();
+        // }
       };
-      client.activate();
-      setCRef(client);
     }
+  }, [execute]);
 
-    return () => {
-      if (client) {
-        client.deactivate();
-      }
-    };
-  }, []);
-
-  return (
+  return execute == 'RUNNING' ? (
     <main>
       <Room>
         <IDEContainer>
@@ -122,11 +64,13 @@ const Ide = () => {
               {selectedFileId && <ShowEditor fileId={selectedFileId} />}
               <TerminalTest />
             </Section>
-            <Chatting client={cRef} users={users} />
+            <Chatting />
           </IDEContentCode>
         </IDEContainer>
       </Room>
     </main>
+  ) : (
+    <LoadingProject />
   );
 };
 
