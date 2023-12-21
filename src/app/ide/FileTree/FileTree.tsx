@@ -30,7 +30,6 @@ const FileTree = () => {
       id: `${index}-${newUUID}`,
       name: '',
       ...(type === 'internal' && { children: [] }),
-      // language: newNodeName.split('.')[-1],
       isDirty: false,
       isOpened: true,
     };

@@ -7,7 +7,6 @@ import useGeneralChatStore, {
   GeneralMessageType,
 } from '@/store/useChattingStore';
 import { Room } from '@/app/ide/Room';
-import { CollaborativeEditor } from '@/app/ide/Editor/CollaborativeEditor';
 import {
   ContentContainer,
   IDEContainer,
@@ -20,6 +19,9 @@ import TerminalTest from './Terminal/TerminalTest';
 import Toolbar from './Toolbar/Toolbar';
 import { testWebsocket } from '@/app/api/websocket';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
+import EditorTab from './Editor/EditorTab';
+import ShowEditor from './Editor/ShowEditor';
+import { useFileStore } from '@/store/useFileStore';
 
 interface ReceivedMessageType {
   messageType: string;
@@ -29,6 +31,8 @@ interface ReceivedMessageType {
 }
 
 const Ide = () => {
+  const { selectedFileId } = useFileStore();
+
   const clientRef = useRef<Client | null>(null);
   const [cRef, setCRef] = useState<Client | null>(null);
   const [users, setUsers] = useState<number>(0);
@@ -114,14 +118,13 @@ const Ide = () => {
             {isvisibleDiv ? <FileTree /> : <></>}
 
             <Section>
-              <CollaborativeEditor />
-              {/* <CodeEditor /> */}
+              <EditorTab />
+              {selectedFileId && <ShowEditor fileId={selectedFileId} />}
               <TerminalTest />
             </Section>
             <Chatting client={cRef} users={users} />
           </IDEContentCode>
         </IDEContainer>
-        {/* <MainHeader /> */}
       </Room>
     </main>
   );
