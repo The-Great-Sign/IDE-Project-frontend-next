@@ -1,23 +1,17 @@
-import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
-import { NodeApi, NodeRendererProps } from 'react-arborist';
-import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
-import { MdEdit } from 'react-icons/md';
-import { RxCross2 } from 'react-icons/rx';
-import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import React from 'react';
-import axiosInstance from '@/app/api/axiosInstance';
+
+import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
+import { MdArrowRight, MdArrowDropDown, MdEdit } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
+import { NodeApi, NodeRendererProps } from 'react-arborist';
+import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-
-import {
-  findLanguage,
-  findNowFilePath,
-  isCorrectName,
-} from '@/utils/fileTreeUtils';
-
+import { findLanguage, isCorrectName } from '@/utils/fileTreeUtils';
 import useHandleOpenFile from '@/app/hooks/useHandleOpenFile';
 import LanguageIcon from './LanguageIcon';
 import useHandleCreateFile from '@/app/hooks/useHandleCreateFile';
+import useHandleDeleteFileRequest from '@/app/hooks/useHandleDeleteFile';
 
 export const Node = ({
   node,
@@ -25,33 +19,30 @@ export const Node = ({
   dragHandle,
   tree,
 }: NodeRendererProps<FileNodeType>) => {
-  const handleOpenFile = useHandleOpenFile();
   const { updateNodeName } = useFileTreeStore();
-  const handleCreateFileRequest = useHandleCreateFile(node);
 
-  const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
+  const handleCreateFileRequest = useHandleCreateFile(node);
+  const handleOpenFile = useHandleOpenFile();
+  const handleDeleteFileRequest = useHandleDeleteFileRequest(node);
 
   const onNodeClick = (node: NodeApi<FileNodeType>) => {
     handleOpenFile(node);
   };
-
   const onCreateFile = async (newNodeName: string) => {
     await handleCreateFileRequest(newNodeName);
   };
-
-  const handleDeleteFileRequest = async () => {
+  const onDeleteFile = async () => {
     try {
-      const nowFilePath = findNowFilePath(node);
-
-      console.log(projectId);
-      console.log(nowFilePath);
-      const response = await axiosInstance.delete('/api/files', {
-        data: { projectId: projectId, filePath: nowFilePath },
-      });
-
-      return response.data.success;
+      const success = await handleDeleteFileRequest();
+      if (success) {
+        tree.delete(node.id);
+        alert('삭제 성공');
+      } else {
+        alert('파일 삭제에 문제가 있습니다.');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error deleting file:', error);
+      alert('파일 삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -136,23 +127,7 @@ export const Node = ({
           <button onClick={() => node.edit()} title="Rename...">
             <MdEdit />
           </button>
-          <button
-            onClick={async () => {
-              try {
-                const isSuccess = await handleDeleteFileRequest();
-                if (isSuccess) {
-                  tree.delete(node.id);
-                  alert('삭제 성공');
-                } else {
-                  alert('파일 삭제에 문제가 있습니다.');
-                }
-              } catch (error) {
-                console.error('Error deleting file:', error);
-                alert('파일 삭제 중 오류가 발생했습니다.');
-              }
-            }}
-            title="Delete"
-          >
+          <button onClick={onDeleteFile} title="Delete">
             <RxCross2 />
           </button>
         </div>
