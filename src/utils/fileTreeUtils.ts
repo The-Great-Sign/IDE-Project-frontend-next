@@ -123,7 +123,6 @@ export const transformToFileNodeType = (
       filePath: node.path,
     };
 
-    // 폴더 노드의 경우에만 children 속성 추가
     if (node.type === 'DIRECTORY' && node.children) {
       fileNode.children = transformToFileNodeType(node.children);
     }
