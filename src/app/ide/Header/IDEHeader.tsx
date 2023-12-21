@@ -1,5 +1,5 @@
 import { SmallButton } from '@/components/Button/Button';
-import StyledLink from '../../../styles/StyledLink';
+import StyledLink from '@/components/StyledLink/StyledLink';
 import CurrentUser from './CurrentUser';
 import {
   IDEBtnDiv,
