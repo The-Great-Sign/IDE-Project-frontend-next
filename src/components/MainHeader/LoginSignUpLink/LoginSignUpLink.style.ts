@@ -6,5 +6,5 @@ export const LoginSignUpDiv = styled.div`
   align-items: center;
   word-break: keep-all;
   justify-content: space-between;
-  margin-right: 30px;
+  padding-right: 60px;
 `;

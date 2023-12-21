@@ -1,13 +1,11 @@
 import useUserStore from '../../store/useUserStore';
-import StyledLink from '../../styles/StyledLink';
+import StyledLink from '@/components/StyledLink/StyledLink';
 import LoginSignUpLink from './LoginSignUpLink/LoginSignUpLink';
 import { HeaderContainer, Logo } from './MainHeader.style';
 import UserInfo from './UserInfo/UserInfo';
-import React from 'react';
 
 const MainHeader = () => {
   const { isLoggedIn } = useUserStore();
-
   return (
     <>
       <HeaderContainer>

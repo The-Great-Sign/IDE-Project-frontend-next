@@ -5,7 +5,7 @@ export const UserInfoDiv = styled.div`
   align-items: center;
   word-break: keep-all;
   justify-content: space-between;
-  margin-right: 20px;
+  padding-right: 60px;
 `;
 
 export const UserName = styled.p`
