@@ -25,7 +25,6 @@ export const Node = ({
   const handleOpenFile = useHandleOpenFile();
   const handleDeleteFileRequest = useHandleDeleteFileRequest(node);
 
-
   const onNodeClick = (node: NodeApi<FileNodeType>) => {
     handleOpenFile(node);
   };
@@ -65,7 +64,6 @@ export const Node = ({
             <LanguageIcon
               language={findLanguage(String(node.data.name.split('.').at(-1)))}
             />
-
           </>
         ) : (
           <>
@@ -102,7 +100,19 @@ export const Node = ({
               type="text"
               defaultValue={node.data.name}
               onFocus={e => e.currentTarget.select()}
-              onBlur={() => node.reset()}
+              onBlur={() => {
+                if (isCorrectName(node.data.name) === true) {
+                  handleCreateFileRequest(node.data.name);
+                  updateNodeName(node.id, node.data.name);
+                  const extendsName = node.data.name.split('.')[-1];
+                  //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
+                  findLanguage(extendsName);
+                  node.submit(node.data.name);
+                } else {
+                  node.reset();
+                  tree.delete(node.id);
+                }
+              }}
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
