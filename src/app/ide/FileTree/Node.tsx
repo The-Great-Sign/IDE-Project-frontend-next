@@ -1,16 +1,17 @@
-import { AiFillFolder, AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
-import { NodeRendererProps } from 'react-arborist';
-import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
-import { MdEdit } from 'react-icons/md';
-import { RxCross2 } from 'react-icons/rx';
-import { FileDiv, NodeContainer } from './FileTree.styles';
 import React from 'react';
-import axiosInstance from '@/app/api/axiosInstance';
-import { findNowFilePath } from '@/utils/fileTreeUtils';
+
+import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
+import { MdArrowRight, MdArrowDropDown, MdEdit } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
+import { NodeApi, NodeRendererProps } from 'react-arborist';
+import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
-import { useFileStore } from '@/store/useFileStore';
+import { findLanguage, isCorrectName } from '@/utils/fileTreeUtils';
+import useHandleOpenFile from '@/app/hooks/useHandleOpenFile';
+import LanguageIcon from './LanguageIcon';
+import useHandleCreateFile from '@/app/hooks/useHandleCreateFile';
+import useHandleDeleteFileRequest from '@/app/hooks/useHandleDeleteFile';
 
 export const Node = ({
   node,
@@ -18,82 +19,36 @@ export const Node = ({
   dragHandle,
   tree,
 }: NodeRendererProps<FileNodeType>) => {
-  const fileStore = useFileStore();
   const { updateNodeName } = useFileTreeStore();
-  const { setOpenFilesIdList } = useCurrentOpenFileList();
-  const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
 
-  const handleOpenFile = async () => {
-    const fileId = node.id;
-    const fileName = node.data.name;
-    const fileLanguage = 'python'; // Determine language based on file extension or other logic
+  const handleCreateFileRequest = useHandleCreateFile();
+  const handleOpenFile = useHandleOpenFile();
+  const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
-    fileStore.openFile(fileId, fileName, fileLanguage);
-    fileStore.selectFile(fileId);
+  const onNodeClick = (node: NodeApi<FileNodeType>) => {
+    handleOpenFile(node);
+  };
+  const onCreateFile = async (newNodeName: string) => {
+    const fileNode = {
+      ...node.data, // NodeApi 객체에서 FileNodeType 데이터 추출
+      name: newNodeName, // 새 이름 할당
+    };
 
-    try {
-      const nowFilePath = findNowFilePath(node);
-      const params = { projectId: projectId, filePath: nowFilePath };
-
-      const { data } = await axiosInstance.get('/api/files', {
-        params: params,
-      });
-
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
+    await handleCreateFileRequest(fileNode as FileNodeType, newNodeName);
   };
 
-  const handleCreateFileRequest = async (newNodeName: string) => {
+  const onDeleteFile = async () => {
     try {
-      const nowFilePath = findNowFilePath(node) + newNodeName;
-      let responseData;
-
-      //directory or file 구별
-      if (node.isInternal) {
-        const response = await axiosInstance.post('/api/files', {
-          projectId: projectId,
-          directories: nowFilePath,
-          files: null,
-          content: 'print("Hello, World!")',
-        });
-        responseData = response.data;
+      const success = await handleDeleteFileRequest(node.data);
+      if (success) {
+        tree.delete(node.id);
+        alert('삭제 성공');
       } else {
-        const response = await axiosInstance.post('/api/files', {
-          projectId: projectId,
-          directories: null,
-          files: nowFilePath,
-          content: 'print("Hello, World!")',
-        });
-        responseData = response.data;
+        alert('파일 삭제에 문제가 있습니다.');
       }
-
-      //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
-
-      //열린 파일 목록 업데이트 -> 총미
-      setOpenFilesIdList(node.id);
-
-      return responseData;
     } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDeleteFileRequest = async () => {
-    try {
-      const nowFilePath = findNowFilePath(node);
-      const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
-
-      console.log(projectId);
-      console.log(nowFilePath);
-      const response = await axiosInstance.delete('/api/files', {
-        data: { projectId: projectId, filePath: nowFilePath },
-      });
-
-      return response.data.success;
-    } catch (error) {
-      console.error(error);
+      console.error('Error deleting file:', error);
+      alert('파일 삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -102,10 +57,19 @@ export const Node = ({
       <FileDiv
         className="node-content"
         onClick={() => node.isInternal && node.toggle()}
+        isNodeDirty={node.data.isDirty}
       >
         {node.isLeaf ? (
           <>
-            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 16px' }} />
+            {/* 파일 저장안한 상태 표시하기 */}
+            {node.data.isDirty ? (
+              <IsDirty></IsDirty>
+            ) : (
+              <IsNotDirty></IsNotDirty>
+            )}
+            <LanguageIcon
+              language={findLanguage(String(node.data.name.split('.').at(-1)))}
+            />
           </>
         ) : (
           <>
@@ -131,7 +95,7 @@ export const Node = ({
         {/* node text */}
         <span
           className="node-text"
-          onClick={handleOpenFile}
+          onClick={() => onNodeClick(node)}
           onDoubleClick={(e: React.MouseEvent<HTMLSpanElement>) => {
             e.preventDefault();
             node.edit();
@@ -142,14 +106,29 @@ export const Node = ({
               type="text"
               defaultValue={node.data.name}
               onFocus={e => e.currentTarget.select()}
-              onBlur={() => node.reset()}
+              onBlur={() => {
+                if (isCorrectName(node.data.name) === true) {
+                  handleCreateFileRequest(node.data, node.data.name);
+                  updateNodeName(node.id, node.data.name);
+                  const extendsName = node.data.name.split('.')[-1];
+                  //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
+                  findLanguage(extendsName);
+                  node.submit(node.data.name);
+                } else {
+                  node.reset();
+                  tree.delete(node.id);
+                }
+              }}
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Escape') node.reset();
                 if (e.key === 'Enter') {
-                  //이때 서버로도 메시지 보내야 함. 성공시 아래 코드 실행
-                  handleCreateFileRequest(e.currentTarget.value);
-                  updateNodeName(node.id, e.currentTarget.value);
-                  node.submit(e.currentTarget.value);
+                  if (isCorrectName(e.currentTarget.value) === true) {
+                    onCreateFile(e.currentTarget.value);
+                    updateNodeName(node.id, e.currentTarget.value);
+                    node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
+                  } else {
+                    tree.delete(node.id);
+                  }
                 }
               }}
               autoFocus
@@ -165,23 +144,7 @@ export const Node = ({
           <button onClick={() => node.edit()} title="Rename...">
             <MdEdit />
           </button>
-          <button
-            onClick={async () => {
-              try {
-                const isSuccess = await handleDeleteFileRequest();
-                if (isSuccess) {
-                  tree.delete(node.id);
-                  alert('삭제 성공');
-                } else {
-                  alert('파일 삭제에 문제가 있습니다.');
-                }
-              } catch (error) {
-                console.error('Error deleting file:', error);
-                alert('파일 삭제 중 오류가 발생했습니다.');
-              }
-            }}
-            title="Delete"
-          >
+          <button onClick={onDeleteFile} title="Delete">
             <RxCross2 />
           </button>
         </div>

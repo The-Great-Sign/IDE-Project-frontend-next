@@ -8,4 +8,5 @@ export interface FileNodeType {
   language?: string;
   filePath?: string;
   content?: string | null;
+  isFile?: boolean;
 }

@@ -14,6 +14,26 @@ export const findNowFilePath = (node: NodeApi<FileNodeType> | null) => {
   return filePath;
 };
 
+export const findPath = (
+  nodes: FileNodeType[],
+  targetId: string,
+  path = ''
+): string | null => {
+  for (const node of nodes) {
+    const currentPath = path + '/' + node.name;
+
+    if (node.id === targetId) {
+      return currentPath;
+    }
+
+    if (node.children) {
+      const foundPath = findPath(node.children, targetId, currentPath);
+      if (foundPath) return foundPath;
+    }
+  }
+  return null;
+};
+
 export const removeNodeById = (
   nodes: FileNodeType[],
   nodeId: string | null
@@ -28,4 +48,62 @@ export const removeNodeById = (
     }
     return acc;
   }, []);
+};
+
+export const isCorrectName = (inputName: string) => {
+  if (inputName === '') {
+    alert('한 글자 이상 입력하세요.');
+    return false;
+  } else if (inputName === '.' || inputName === '..') {
+    alert(
+      `${inputName}이라는 이름은 파일 또는 폴더 이름으로 올바르지 않습니다. 다른 이름을 입력하세요.`
+    );
+    return false;
+  }
+  return true;
+};
+
+interface LangSwtichType {
+  [key: string]: string;
+}
+
+export const findLanguage = (extendsName: string) => {
+  const supportLang: LangSwtichType = {
+    py: 'python',
+    java: 'java',
+    html: 'html',
+    css: 'css',
+    cpp: 'c++',
+    js: 'javascript',
+    json: 'JSON',
+    md: 'markdown',
+  };
+
+  const language = supportLang[extendsName];
+
+  return language;
+};
+
+interface NodeWithParent {
+  node: FileNodeType | null;
+  befParentId: string | null;
+}
+
+export const findNodeById = (
+  nodes: FileNodeType[],
+  nodeId: string | null,
+  currentParentId: string | null
+): NodeWithParent => {
+  for (const node of nodes) {
+    if (node.id === nodeId) {
+      return { node, befParentId: currentParentId };
+    }
+    if (node.children) {
+      const foundNode = findNodeById(node.children, nodeId, node.id);
+      if (foundNode.node) {
+        return foundNode;
+      }
+    }
+  }
+  return { node: null, befParentId: null };
 };
