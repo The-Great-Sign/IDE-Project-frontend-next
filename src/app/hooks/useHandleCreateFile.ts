@@ -1,17 +1,20 @@
-import { NodeApi } from 'react-arborist';
 import axiosInstance from '../api/axiosInstance';
-import { findNowFilePath } from '@/utils/fileTreeUtils';
+import { findPath } from '@/utils/fileTreeUtils';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
+import { useFileTreeStore } from '@/store/useFileTreeStore';
 
-const useHandleCreateFile = (node: NodeApi<FileNodeType>) => {
+const useHandleCreateFile = () => {
   const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
-  const handleCreateFileRequest = async (newNodeName: string) => {
+  const handleCreateFileRequest = async (
+    node: FileNodeType,
+    newNodeName: string
+  ) => {
     try {
-      const nowFilePath = findNowFilePath(node) + newNodeName;
+      const fileTree = useFileTreeStore.getState().fileTree;
+      const nowFilePath = findPath(fileTree, node.id) + newNodeName;
       let responseData;
 
-      //directory or file 구별
-      if (node.isInternal) {
+      if (node.isFile) {
         const response = await axiosInstance.post('/api/files', {
           projectId: projectId,
           directories: nowFilePath,
@@ -28,8 +31,6 @@ const useHandleCreateFile = (node: NodeApi<FileNodeType>) => {
         });
         responseData = response.data;
       }
-
-      //응답받은 filename, content .. 등 필요 정보 담아두기 -> 총미
 
       return responseData;
     } catch (error) {

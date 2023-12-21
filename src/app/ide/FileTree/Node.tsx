@@ -21,19 +21,25 @@ export const Node = ({
 }: NodeRendererProps<FileNodeType>) => {
   const { updateNodeName } = useFileTreeStore();
 
-  const handleCreateFileRequest = useHandleCreateFile(node);
+  const handleCreateFileRequest = useHandleCreateFile();
   const handleOpenFile = useHandleOpenFile();
-  const handleDeleteFileRequest = useHandleDeleteFileRequest(node);
+  const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
   const onNodeClick = (node: NodeApi<FileNodeType>) => {
     handleOpenFile(node);
   };
   const onCreateFile = async (newNodeName: string) => {
-    await handleCreateFileRequest(newNodeName);
+    const fileNode = {
+      ...node.data, // NodeApi 객체에서 FileNodeType 데이터 추출
+      name: newNodeName, // 새 이름 할당
+    };
+
+    await handleCreateFileRequest(fileNode as FileNodeType, newNodeName);
   };
+
   const onDeleteFile = async () => {
     try {
-      const success = await handleDeleteFileRequest();
+      const success = await handleDeleteFileRequest(node.data);
       if (success) {
         tree.delete(node.id);
         alert('삭제 성공');
@@ -102,7 +108,7 @@ export const Node = ({
               onFocus={e => e.currentTarget.select()}
               onBlur={() => {
                 if (isCorrectName(node.data.name) === true) {
-                  handleCreateFileRequest(node.data.name);
+                  handleCreateFileRequest(node.data, node.data.name);
                   updateNodeName(node.id, node.data.name);
                   const extendsName = node.data.name.split('.')[-1];
                   //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요

@@ -6,6 +6,7 @@ import {
 import {
   CreateHandler,
   DeleteHandler,
+  MoveHandler,
   NodeRendererProps,
   Tree,
   TreeApi,
@@ -17,35 +18,63 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { findNodeById } from '@/utils/fileTreeUtils';
+import useHandleDeleteFileRequest from '@/app/hooks/useHandleDeleteFile';
+import useHandleCreateFile from '@/app/hooks/useHandleCreateFile';
 
 const FileTree = () => {
   const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
+  const handleDeleteFileRequest = useHandleDeleteFileRequest();
+  const handleCreateFileRequest = useHandleCreateFile();
+  const nowFileTree = useFileTreeStore.getState().fileTree;
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
-  const onCreate: CreateHandler<FileNodeType> = ({ parentId, type, index }) => {
+  const onCreate: CreateHandler<FileNodeType> = ({ type, index }) => {
     const newUUID = uuidv4();
-    //새 노드 정의
+
     const newNode: FileNodeType = {
       id: `${index}-${newUUID}`,
       name: '',
+      isFile: type !== 'internal',
       ...(type === 'internal' && { children: [] }),
       isDirty: false,
       isOpened: true,
     };
-    //노드 추가 시
-    addNode(newNode, parentId);
+
+    const newParent = treeRef.current?.focusedNode?.id;
+    addNode(newNode, newParent);
+
     const newFileTree = [...fileTree, newNode];
     setFileTree(newFileTree);
-    console.log(treeRef);
-
-    //초기화
 
     return newNode;
   };
 
   const onDelete: DeleteHandler<FileNodeType> = ({ ids }) => {
     deleteNode(ids[0]);
+  };
+
+  const onMove: MoveHandler<FileNodeType> = ({ dragIds, parentId }) => {
+    const { node, befParentId } = findNodeById(nowFileTree, dragIds[0], null);
+
+    const moveFile = async () => {
+      try {
+        if (node?.isFile && befParentId !== parentId) {
+          dragIds.forEach((id: string) =>
+            useFileTreeStore.getState().deleteNode(id)
+          );
+          const newNode = { ...node };
+          useFileTreeStore.getState().addNode(newNode, parentId);
+          console.log(handleDeleteFileRequest(node));
+          handleCreateFileRequest(node, node.name);
+        }
+      } catch (error) {
+        console.error('Error deleting file:', error);
+        alert('파일 삭제 중 오류가 발생했습니다.');
+      }
+    };
+    moveFile();
   };
 
   return (
@@ -86,6 +115,7 @@ const FileTree = () => {
           className="react-aborist"
           onCreate={onCreate}
           onDelete={onDelete}
+          onMove={onMove}
           ref={treeRef}
           data={fileTree}
         >
