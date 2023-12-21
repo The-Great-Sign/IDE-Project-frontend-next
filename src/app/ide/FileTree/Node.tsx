@@ -25,6 +25,7 @@ export const Node = ({
   const handleOpenFile = useHandleOpenFile();
   const handleDeleteFileRequest = useHandleDeleteFileRequest(node);
 
+
   const onNodeClick = (node: NodeApi<FileNodeType>) => {
     handleOpenFile(node);
   };
@@ -61,10 +62,10 @@ export const Node = ({
             ) : (
               <IsNotDirty></IsNotDirty>
             )}
-
             <LanguageIcon
               language={findLanguage(String(node.data.name.split('.').at(-1)))}
             />
+
           </>
         ) : (
           <>
