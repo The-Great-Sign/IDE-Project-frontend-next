@@ -15,6 +15,7 @@ import {
   CreateProjectPassword,
   CreateProjectTitle,
 } from './CreateProject.styles';
+import EnterProject from '../EnterProject/EnterProject';
 
 interface CreateProjectProps {
   name: string;
@@ -24,6 +25,7 @@ interface CreateProjectProps {
 }
 
 const CreateProject = () => {
+  const [isCreated, setIsCreated] = useState(false);
   const [createData, setCreateData] = useState<CreateProjectProps>({
     name: '',
     description: '',
@@ -39,8 +41,12 @@ const CreateProject = () => {
       if (data.success) {
         console.log(data.results);
         useProjectStore.getState().addProject(data.results);
+        useProjectStore.getState().setProject(data.results);
+        setIsCreated(true);
         // const currentState = useProjectStore.getState();
         // console.log("현재 프로젝트 상태:", currentState.projects);
+      } else {
+        alert(data.message);
       }
     } catch (error) {
       console.error(error);
@@ -63,7 +69,9 @@ const CreateProject = () => {
     postCreateProject(createData);
   };
 
-  return (
+  return isCreated ? (
+    <EnterProject />
+  ) : (
     <CreateProjectContainer>
       {/* <CreateProjectHeader>
         <CreateProjectHead />
