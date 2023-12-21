@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/colors';
 import styled from 'styled-components';
 
 export const IDEContainer = styled.div`
@@ -36,4 +37,5 @@ export const Section = styled.div`
   max-height: calc(100vh - 50px);
   width: 100%;
   overflow: hidden;
+  border-left: 1px solid ${COLORS.primary};
 `;

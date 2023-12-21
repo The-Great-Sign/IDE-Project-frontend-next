@@ -18,7 +18,7 @@ interface FileTreeState {
   fileTree: FileNodeType[];
   setFileTree: (fileTree: FileNodeType[]) => void;
   updateNodeName: (nodeId: string, newName: string) => void;
-  addNode: (newNode: FileNodeType, parentId: string | null) => void;
+  addNode: (newNode: FileNodeType, parentId?: string | null) => void;
   deleteNode: (nodeids: string | null) => void;
 }
 
@@ -32,10 +32,30 @@ export const useFileTreeStore = create<FileTreeState>(set => ({
         return node.id === nodeId ? { ...node, name: newName } : node;
       }),
     })),
-  addNode: newNode =>
-    set(state => ({
-      fileTree: [...state.fileTree, newNode],
-    })),
+  addNode: (newNode: FileNodeType, parentId?: string | null) =>
+    set(state => {
+      const addNodeToTree = (nodes: FileNodeType[]): FileNodeType[] =>
+        nodes.map(node => {
+          if (node.id === parentId) {
+            return {
+              ...node,
+              children: [...(node.children || []), newNode],
+            };
+          } else {
+            return {
+              ...node,
+              children: node.children
+                ? addNodeToTree(node.children)
+                : node.children,
+            };
+          }
+        });
+      return {
+        fileTree: parentId
+          ? addNodeToTree(state.fileTree)
+          : [...state.fileTree, newNode],
+      };
+    }),
   deleteNode: nodeId =>
     set(state => ({
       fileTree: removeNodeById(state.fileTree, nodeId),
