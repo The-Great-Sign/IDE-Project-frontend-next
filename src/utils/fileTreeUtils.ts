@@ -63,3 +63,27 @@ export const findLanguage = (extendsName: string) => {
 
   return language;
 };
+
+interface NodeWithParent {
+  node: FileNodeType | null;
+  befParentId: string | null;
+}
+
+export const findNodeById = (
+  nodes: FileNodeType[],
+  nodeId: string | null,
+  currentParentId: string | null = null
+): NodeWithParent => {
+  for (const node of nodes) {
+    if (node.id === nodeId) {
+      return { node, befParentId: currentParentId };
+    }
+    if (node.children) {
+      const foundNode = findNodeById(node.children, nodeId, node.id);
+      if (foundNode.node) {
+        return foundNode;
+      }
+    }
+  }
+  return { node: null, befParentId: null };
+};
