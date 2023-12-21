@@ -6,14 +6,18 @@ import { RxCross2 } from 'react-icons/rx';
 import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import React from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
+import { useFileTreeStore } from '@/store/useFileTreeStore';
+import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
+import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
 import {
   findLanguage,
   findNowFilePath,
   isCorrectName,
 } from '@/utils/fileTreeUtils';
-import { useFileTreeStore } from '@/store/useFileTreeStore';
-import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import useCurrentOpenFileList from '@/store/useCurrentOpenFile';
+import { FaJava, FaHtml5, FaCss3Alt, FaMarkdown } from 'react-icons/fa';
+import { IoLogoJavascript } from 'react-icons/io5';
+import { SiCplusplus } from 'react-icons/si';
+import { TbBrandPython } from 'react-icons/tb';
 import { useFileStore } from '@/store/useFileStore';
 
 export const Node = ({
@@ -27,6 +31,28 @@ export const Node = ({
   const { setOpenFilesIdList } = useCurrentOpenFileList();
   const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
 
+  const renderIcon = (language: string) => {
+    switch (language) {
+      case 'python':
+        return <TbBrandPython size="18px" style={{ margin: '0 2px 0 4px' }} />;
+      case 'java':
+        return <FaJava size="18px" style={{ margin: '0 2px 0 4px' }} />;
+      case 'c++':
+        return <SiCplusplus size="18px" style={{ margin: '0 2px 0 4px' }} />;
+      case 'html':
+        return <FaHtml5 size="18px" style={{ margin: '0 2px 0 4px' }} />;
+      case 'javascript':
+        return (
+          <IoLogoJavascript size="18px" style={{ margin: '0 2px 0 4px' }} />
+        );
+      case 'css':
+        return <FaCss3Alt size="18px" style={{ margin: '0 2px 0 4px' }} />;
+      case 'markdown':
+        return <FaMarkdown size="18px" style={{ margin: '0 2px 0 4px' }} />;
+      default:
+        return <AiOutlineFile size="18px" style={{ margin: '0 2px 0 4px' }} />;
+    }
+  };
   const handleOpenFile = async () => {
     const fileId = node.id;
     const fileName = node.data.name;
@@ -42,6 +68,7 @@ export const Node = ({
       const { data } = await axiosInstance.get('/api/files', {
         params: params,
       });
+      console.log(data);
 
       return data;
     } catch (error) {
@@ -87,7 +114,6 @@ export const Node = ({
   const handleDeleteFileRequest = async () => {
     try {
       const nowFilePath = findNowFilePath(node);
-      const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
 
       console.log(projectId);
       console.log(nowFilePath);
@@ -116,7 +142,7 @@ export const Node = ({
             ) : (
               <IsNotDirty></IsNotDirty>
             )}
-            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 4px' }} />
+            {renderIcon(findLanguage(String(node.data.name.split('.').at(-1))))}
           </>
         ) : (
           <>
@@ -160,9 +186,6 @@ export const Node = ({
                   if (isCorrectName(e.currentTarget.value) === true) {
                     handleCreateFileRequest(e.currentTarget.value);
                     updateNodeName(node.id, e.currentTarget.value);
-                    const extendsName = e.currentTarget.value.split('.')[-1];
-                    //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
-                    findLanguage(extendsName);
                     node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
                   } else {
                     tree.delete(node.id);
