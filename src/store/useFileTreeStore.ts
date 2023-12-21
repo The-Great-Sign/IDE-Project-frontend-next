@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { removeNodeById } from '@/utils/fileTreeUtils';
+import { findFilePath, removeNodeById } from '@/utils/fileTreeUtils';
 
 const data: FileNodeType[] = [
   {
@@ -20,6 +20,7 @@ interface FileTreeState {
   updateNodeName: (nodeId: string, newName: string) => void;
   addNode: (newNode: FileNodeType, parentId?: string | null) => void;
   deleteNode: (nodeids: string | null) => void;
+  findNodePath: (nodeid: string) => string | null;
 }
 
 export const useFileTreeStore = create<FileTreeState>(set => ({
@@ -60,4 +61,8 @@ export const useFileTreeStore = create<FileTreeState>(set => ({
     set(state => ({
       fileTree: removeNodeById(state.fileTree, nodeId),
     })),
+  findNodePath: (nodeId: string) => {
+    const state: FileTreeState = useFileTreeStore.getState();
+    return findFilePath(state.fileTree, nodeId);
+  },
 }));
