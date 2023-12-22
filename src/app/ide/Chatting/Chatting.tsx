@@ -8,15 +8,11 @@ import {
 } from './Chatting.styles';
 import GeneralChatting from './GeneralChatting';
 import AIChatting from './AIChatting';
-import { Client } from '@stomp/stompjs';
+import useGeneralChatStore from '@/store/useChattingStore';
 
-interface ChattingProps {
-  client: Client | null;
-  users: number;
-}
-
-const Chatting: React.FC<ChattingProps> = ({ client, users }) => {
+const Chatting = () => {
   const [activeTab, setActiveTab] = useState<string>('채팅');
+  const users = useGeneralChatStore(state => state.users);
 
   const handleClick = (tab: string) => {
     setActiveTab(tab);
@@ -56,11 +52,7 @@ const Chatting: React.FC<ChattingProps> = ({ client, users }) => {
             AI✨
           </ChattingTab>
         </ChattingHeader>
-        {activeTab === `채팅 (${users})` ? (
-          <GeneralChatting client={client} />
-        ) : (
-          <AIChatting />
-        )}
+        {activeTab === `채팅 (${users})` ? <GeneralChatting /> : <AIChatting />}
       </ChattingContainer>
     </Resizable>
   );

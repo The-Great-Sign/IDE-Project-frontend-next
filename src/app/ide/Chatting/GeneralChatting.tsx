@@ -11,14 +11,11 @@ import {
   ChattingSendButton,
 } from './Chatting.styles';
 import useGeneralChatStore from '@/store/useChattingStore';
-import { Client } from '@stomp/stompjs';
 import { testWebsocket } from '@/app/api/websocket';
+import useProjectStore from '@/store/useProjectStore';
 
-interface ChattingProps {
-  client: Client | null;
-}
-
-const GeneralChatting: React.FC<ChattingProps> = ({ client }) => {
+const GeneralChatting = () => {
+  const client = useProjectStore.getState().cRef;
   const [sendContent, setSendContent] = useState('');
   const messages = useGeneralChatStore(state => state.messages);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);

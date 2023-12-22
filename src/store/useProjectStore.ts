@@ -1,9 +1,10 @@
+import { Client } from '@stomp/stompjs';
 import { create } from 'zustand';
 
 export interface ExecuteState {
   success: boolean;
   message: string;
-  results: string;
+  results: 'PENDING' | 'RUNNING';
 }
 
 export interface ProjectProps {
@@ -18,19 +19,28 @@ export interface ProjectProps {
 interface ProjectState {
   executeProject: ExecuteState;
   setExecuteState: (execute: ExecuteState) => void;
+  status: 'PENDING' | 'RUNNING';
+  setStatus: (currentstatus: 'PENDING' | 'RUNNING') => void;
   currentProject: ProjectProps;
   projects: ProjectProps[];
   setProject: (project: ProjectProps) => void;
   addProject: (project: ProjectProps) => void;
+  cRef: Client | null;
+  setClient: (cref: Client | null) => void;
 }
 
 const useProjectStore = create<ProjectState>(set => ({
   executeProject: {
+    // 실행 요청 결과
     success: false,
     message: '',
-    results: '',
+    results: 'PENDING',
   },
   setExecuteState: (execute: ExecuteState) => set({ executeProject: execute }),
+
+  status: 'PENDING',
+  setStatus: (currentstatus: 'PENDING' | 'RUNNING') =>
+    set({ status: currentstatus }),
 
   currentProject: {
     // 생성된 프로젝트 정보
@@ -47,6 +57,9 @@ const useProjectStore = create<ProjectState>(set => ({
     set(state => ({
       projects: [...state.projects, project as ProjectProps],
     })),
+
+  cRef: null,
+  setClient: (cref: Client | null) => set({ cRef: cref }),
 }));
 
 export default useProjectStore;
