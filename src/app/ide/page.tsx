@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chatting from './Chatting/Chatting';
 import { Client } from '@stomp/stompjs';
-import initializeWebSocket from '@/app/api/websocket';
+// import initializeWebSocket from '@/app/api/websocket';
 import useGeneralChatStore, {
   GeneralMessageType,
 } from '@/store/useChattingStore';
@@ -18,8 +18,8 @@ import FileTree from './FileTree/FileTree';
 import TerminalTest from './Terminal/TerminalTest';
 import Toolbar from './Toolbar/Toolbar';
 import { testWebsocket } from '@/app/api/websocket';
+import EditorTab from './Editor/EditorTab/EditorTab';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
-import EditorTab from './Editor/EditorTab';
 import ShowEditor from './Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
 
@@ -40,7 +40,7 @@ const Ide = () => {
 
   useEffect(() => {
     if (clientRef.current == null) {
-      clientRef.current = initializeWebSocket();
+      // clientRef.current = initializeWebSocket();
     }
 
     const client = clientRef.current;

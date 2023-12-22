@@ -1,4 +1,4 @@
-import { UserAvatars } from '../Editor/Avatars';
+import { UserAvatars } from '../Editor/Avatars/Avatars';
 import { CurrentUserBox } from './IDEHeader.styles';
 
 const CurrentUser = () => {

@@ -21,6 +21,7 @@ interface UserState {
   toggleLogin: () => void;
 }
 
+// id 유니크 값으로 바꾸기!
 const useUserStore = create<UserState>(set => ({
   id: randId,
   name: name,

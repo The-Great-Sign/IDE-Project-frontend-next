@@ -1,5 +1,5 @@
 import { LoginSignUpDiv } from './LoginSignUpLink.style';
-import StyledLink from '../../../styles/StyledLink';
+import StyledLink from '@/components/StyledLink/StyledLink';
 import React from 'react';
 
 const LoginSignUpLink = () => {
