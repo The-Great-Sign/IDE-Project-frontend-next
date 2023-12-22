@@ -1,43 +1,26 @@
 'use client';
 
-import './globals.css';
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import * as React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import GlobalStyles from '@/styles/globalStyles';
+import useThemeStore from '@/store/useThemeStore';
+import ThemeToggleBtn from '@/components/ThemeToggleBtn/ThemeToggleBtn';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          primary: {
-            light: '#757ce8',
-            main: '#3f50b5',
-            dark: '#002884',
-            contrastText: '#fff',
-          },
-          mode: prefersDarkMode ? 'dark' : 'light',
-        },
-      }),
-    [prefersDarkMode]
-  );
-
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
+  const theme = useThemeStore(state => state.theme);
   return (
     <html lang="en">
-      <head />
       <body>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
+        {theme && (
+          <ThemeProvider theme={theme}>
+            <GlobalStyles />
+            {children}
+            <ThemeToggleBtn />
+          </ThemeProvider>
+        )}
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

@@ -1,38 +1,4 @@
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { NodeApi } from 'react-arborist';
-
-export const findNowFilePath = (node: NodeApi<FileNodeType> | null) => {
-  let filePath = '';
-  while (node!.data.id !== '__REACT_ARBORIST_INTERNAL_ROOT__') {
-    const newFile = '/' + node!.data.name;
-    filePath = newFile + filePath;
-    if (node) {
-      node = node.parent;
-    }
-  }
-
-  return filePath;
-};
-
-export const findPath = (
-  nodes: FileNodeType[],
-  targetId: string,
-  path = ''
-): string | null => {
-  for (const node of nodes) {
-    const currentPath = path + '/' + node.name;
-
-    if (node.id === targetId) {
-      return currentPath;
-    }
-
-    if (node.children) {
-      const foundPath = findPath(node.children, targetId, currentPath);
-      if (foundPath) return foundPath;
-    }
-  }
-  return null;
-};
 
 export const removeNodeById = (
   nodes: FileNodeType[],
@@ -106,4 +72,61 @@ export const findNodeById = (
     }
   }
   return { node: null, befParentId: null };
+};
+
+export const findFilePath = (
+  nodes: FileNodeType[],
+  targetId: string,
+  path = ''
+): string | null => {
+  for (const node of nodes) {
+    const currentPath = path === '' ? '/' + node.name : path + '/' + node.name;
+
+    if (node.id === targetId) {
+      return currentPath;
+    }
+
+    if (node.children) {
+      const foundPath: string | null = findFilePath(
+        node.children,
+        targetId,
+        currentPath
+      );
+      if (foundPath) return foundPath;
+    }
+  }
+  return null;
+};
+
+export interface ServerNode {
+  id: string;
+  name: string;
+  type: 'FILE' | 'DIRECTORY';
+  children?: ServerNode[];
+  path: string;
+}
+
+export interface ServerResponse {
+  results: ServerNode[];
+}
+
+export const transformToFileNodeType = (
+  nodes: ServerNode[]
+): FileNodeType[] => {
+  return nodes.map(node => {
+    const fileNode: FileNodeType = {
+      id: node.id,
+      name: node.name,
+      isFile: node.type === 'FILE',
+      isDirty: false,
+      isOpened: false,
+      filePath: node.path,
+    };
+
+    if (node.type === 'DIRECTORY' && node.children) {
+      fileNode.children = transformToFileNodeType(node.children);
+    }
+
+    return fileNode;
+  });
 };

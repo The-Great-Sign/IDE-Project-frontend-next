@@ -18,15 +18,18 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { findNodeById } from '@/utils/fileTreeUtils';
-import useHandleDeleteFileRequest from '@/app/hooks/useHandleDeleteFile';
-import useHandleCreateFile from '@/app/hooks/useHandleCreateFile';
+import {
+  ServerResponse,
+  findNodeById,
+  transformToFileNodeType,
+} from '@/utils/fileTreeUtils';
+
+import axiosInstance from '@/app/api/axiosInstance';
+import { Button } from '@mui/material';
 
 const FileTree = () => {
   const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
-  const handleDeleteFileRequest = useHandleDeleteFileRequest();
-  const handleCreateFileRequest = useHandleCreateFile();
-  const nowFileTree = useFileTreeStore.getState().fileTree;
+  const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24';
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
@@ -55,19 +58,65 @@ const FileTree = () => {
     deleteNode(ids[0]);
   };
 
+  const checkFileTree = async () => {
+    try {
+      const response = await axiosInstance.get<ServerResponse>(
+        `/api/projects/${projectId}/directory`
+      );
+      console.log(response.data.results);
+
+      // 서버에서 받은 데이터를 FileNodeType 형식으로 변환
+      const transformedData = transformToFileNodeType(response.data.results);
+      setFileTree(transformedData);
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onMove: MoveHandler<FileNodeType> = ({ dragIds, parentId }) => {
-    const { node, befParentId } = findNodeById(nowFileTree, dragIds[0], null);
+    const nowFileTree = useFileTreeStore.getState().fileTree;
+    const state = useFileTreeStore.getState();
+    const { node, befParentId } = findNodeById(nowFileTree, dragIds[0], '/');
 
     const moveFile = async () => {
       try {
+        let findParentPath;
+
         if (node?.isFile && befParentId !== parentId) {
+          const nowFilePath = state.findNodePath(node.id);
+
+          const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24';
+
+          const response = await axiosInstance.delete('/api/files', {
+            data: { projectId: projectId, path: nowFilePath },
+          });
+
           dragIds.forEach((id: string) =>
             useFileTreeStore.getState().deleteNode(id)
           );
-          const newNode = { ...node };
-          useFileTreeStore.getState().addNode(newNode, parentId);
-          console.log(handleDeleteFileRequest(node));
-          handleCreateFileRequest(node, node.name);
+
+          const newNode = node;
+          newNode.id = uuidv4();
+
+          useFileTreeStore.getState().addNode(node, parentId);
+          if (parentId) {
+            findParentPath = state.findNodePath(parentId) + '/' + node.name;
+          } else {
+            findParentPath = '/' + node.name;
+          }
+
+          const response2 = await axiosInstance.post('/api/files', {
+            projectId: projectId,
+            directories: null,
+            files: findParentPath,
+            content: 'print("Hello, World!")',
+          });
+
+          console.log(response2);
+
+          return response;
         }
       } catch (error) {
         console.error('Error deleting file:', error);
@@ -123,6 +172,8 @@ const FileTree = () => {
             <Node {...(nodeProps as NodeRendererProps<FileNodeType>)} />
           )}
         </Tree>
+
+        <Button onClick={checkFileTree}>확인</Button>
       </FileTreeConatiner>
     </Resizable>
   );

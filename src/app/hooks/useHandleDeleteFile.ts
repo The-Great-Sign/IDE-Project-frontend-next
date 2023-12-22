@@ -1,24 +1,29 @@
 import axiosInstance from '../api/axiosInstance';
-import { findPath } from '@/utils/fileTreeUtils';
+
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 
 const useHandleDeleteFileRequest = () => {
-  const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
+  const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24'; //임시
 
   const handleDeleteFileRequest = async (node: FileNodeType) => {
-    const fileTree = useFileTreeStore.getState().fileTree;
-    const nowFilePath = findPath(fileTree, node.id);
     try {
+      const nowFilePath = useFileTreeStore.getState().findNodePath(node.id);
+
+      let sendPath;
+      if (nowFilePath == null) {
+        sendPath = '/' + node.name;
+      } else {
+        sendPath = nowFilePath;
+      }
+
       const response = await axiosInstance.delete('/api/files', {
-        data: { projectId: projectId, filePath: nowFilePath },
+        data: { projectId: projectId, path: sendPath },
       });
-      console.log(nowFilePath);
-      console.log(response);
+
       return response.data.success;
     } catch (error) {
       console.error(error);
-      console.log(nowFilePath);
     }
   };
 
