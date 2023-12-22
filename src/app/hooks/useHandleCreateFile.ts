@@ -1,32 +1,38 @@
 import axiosInstance from '../api/axiosInstance';
-import { findPath } from '@/utils/fileTreeUtils';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 
 const useHandleCreateFile = () => {
-  const projectId = 'ebc63279-89b9-4b1d-bb4d-1270130c3d4d'; //임시
+  const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24'; //임시
   const handleCreateFileRequest = async (
     node: FileNodeType,
     newNodeName: string
   ) => {
     try {
-      const fileTree = useFileTreeStore.getState().fileTree;
-      const nowFilePath = findPath(fileTree, node.id) + newNodeName;
+      let sendFilePath;
+      const nowFilePath = useFileTreeStore.getState().findNodePath(node.id);
+
+      if (nowFilePath == null) {
+        sendFilePath = '/' + newNodeName;
+      } else {
+        sendFilePath = nowFilePath + newNodeName;
+      }
+
       let responseData;
 
       if (node.isFile) {
         const response = await axiosInstance.post('/api/files', {
           projectId: projectId,
-          directories: nowFilePath,
-          files: null,
+          directories: null,
+          files: sendFilePath,
           content: 'print("Hello, World!")',
         });
         responseData = response.data;
       } else {
         const response = await axiosInstance.post('/api/files', {
           projectId: projectId,
-          directories: null,
-          files: nowFilePath,
+          directories: sendFilePath,
+          files: null,
           content: 'print("Hello, World!")',
         });
         responseData = response.data;

@@ -59,14 +59,9 @@ export const Node = ({
         onClick={() => node.isInternal && node.toggle()}
         isNodeDirty={node.data.isDirty}
       >
-        {node.isLeaf ? (
+        {node.data.isFile ? (
           <>
-            {/* 파일 저장안한 상태 표시하기 */}
-            {node.data.isDirty ? (
-              <IsDirty></IsDirty>
-            ) : (
-              <IsNotDirty></IsNotDirty>
-            )}
+            {node.data.isDirty ? <IsDirty /> : <IsNotDirty />}
             <LanguageIcon
               language={findLanguage(String(node.data.name.split('.').at(-1)))}
             />
