@@ -1,28 +1,33 @@
+import { ChattingType } from '@/app/api/websocket';
 import { create } from 'zustand';
 
-export enum GeneralMessageType {
-  ENTER = 'ENTER',
-  EXIT = 'EXIT',
-  TALK = 'TALK',
-}
+// export enum GeneralMessageType {
+//   ENTER = 'ENTER',
+//   EXIT = 'EXIT',
+//   TALK = 'TALK',
+// }
 
-export interface GeneralMessage {
-  messageType: GeneralMessageType;
-  userNickname: string;
-  content: string;
-  currentUsers: number;
-}
+// export interface GeneralMessage {
+//   messageType: GeneralMessageType;
+//   userNickname: string;
+//   content: string;
+//   currentUsers: number;
+// }
 
 interface GeneralChatState {
-  messages: GeneralMessage[];
-  addMessage: (message: GeneralMessage) => void;
+  users: number;
+  setUsers: (users: number) => void;
+  messages: ChattingType[];
+  addMessage: (message: ChattingType) => void;
 }
 
 const useGeneralChatStore = create<GeneralChatState>(set => ({
+  users: 0,
+  setUsers: (users: number) => set({ users }),
   messages: [],
-  addMessage: (message: GeneralMessage) =>
+  addMessage: (message: ChattingType) =>
     set(state => ({
-      messages: [...state.messages, message as GeneralMessage],
+      messages: [...state.messages, message as ChattingType],
     })),
 }));
 
