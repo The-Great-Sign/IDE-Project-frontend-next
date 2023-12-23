@@ -1,5 +1,6 @@
 import useGeneralChatStore from '@/store/useChattingStore';
 import useProjectStore from '@/store/useProjectStore';
+import useTokenStore from '@/store/useTokenStore';
 import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -15,7 +16,7 @@ interface StatusProps {
 
 export const testWebsocket: WebsocketProps = {
   projectId: useProjectStore.getState().currentProject.id,
-  token: '',
+  token: useTokenStore.getState().accessToken,
 };
 
 type SubscribeProps = StompSubscription | null;
@@ -88,7 +89,7 @@ const subscribeTerminal = (client: Client | null): SubscribeProps => {
 const subscribeFile = (client: Client | null): SubscribeProps => {
   if (client) {
     return client.subscribe(
-      ` /topic/project/${testWebsocket.projectId}/file`,
+      `/topic/project/${testWebsocket.projectId}/file`,
       ReceivedFile => {
         console.log('file connected');
         console.log(`Received: ${ReceivedFile.body}`);

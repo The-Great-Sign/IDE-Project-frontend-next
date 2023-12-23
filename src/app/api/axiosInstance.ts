@@ -1,3 +1,4 @@
+import useTokenStore from '@/store/useTokenStore';
 import axios from 'axios';
 
 const headers = {
@@ -12,6 +13,5 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.defaults.headers.common['Authorization'] =
-  `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnb29nbGUuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTcwNDAyNTAyMX0.BCX-iztywjozVUx3Mkz2Oip0NUIo8SScModeV1Bq6Uo`;
-
+  useTokenStore.getState().accessToken;
 export default axiosInstance;
