@@ -3,11 +3,12 @@ import axiosInstance from '../api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { NodeApi } from 'react-arborist';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
+import useProjectStore from '@/store/useProjectStore';
 
 const useHandleOpenFile = () => {
   const fileStore = useFileStore();
 
-  const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24';
+  const projectId = useProjectStore.getState().currentProject.id;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleOpenFile = async (node: NodeApi<FileNodeType>) => {

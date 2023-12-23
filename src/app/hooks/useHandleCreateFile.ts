@@ -1,9 +1,11 @@
 import axiosInstance from '../api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
+import useProjectStore from '@/store/useProjectStore';
 
 const useHandleCreateFile = () => {
-  const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24'; //임시
+  const projectId = useProjectStore.getState().currentProject.id;
+
   const handleCreateFileRequest = async (
     node: FileNodeType,
     newNodeName: string
@@ -20,7 +22,7 @@ const useHandleCreateFile = () => {
 
       let responseData;
 
-      if (node.isFile) {
+      if (node.type === 'FILE') {
         const response = await axiosInstance.post('/api/files', {
           projectId: projectId,
           directories: null,
