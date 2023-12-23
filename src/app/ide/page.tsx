@@ -23,12 +23,16 @@ import ShowEditor from './Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
 import useProjectStore from '@/store/useProjectStore';
 import LoadingProject from '../project/EnterProject/LoadingProject/LoadingProject';
+import { checkFileTree } from '@/utils/checkFileTree';
+import { useFileTreeStore } from '@/store/useFileTreeStore';
 
 const Ide = () => {
   const execute = useProjectStore(state => state.status);
+  const projectId = useProjectStore.getState().currentProject.id;
 
   const { selectedFileId } = useFileStore();
   const { isvisibleDiv } = useVisibleDiv();
+  const { setFileTree } = useFileTreeStore();
 
   useEffect(() => {
     console.log('execute', execute);
@@ -39,6 +43,14 @@ const Ide = () => {
       subscribeTerminal(client);
       subscribeFile(client);
 
+      checkFileTree(projectId).then(response => {
+        console.log(projectId);
+        if (response) {
+          setFileTree(response.data.results);
+          console.log(response.data.results);
+        }
+      });
+
       return () => {
         console.log('execute', execute);
         // if (client) {
@@ -46,7 +58,7 @@ const Ide = () => {
         // }
       };
     }
-  }, [execute]);
+  }, [execute, setFileTree]);
 
   return execute == 'RUNNING' ? (
     <main>

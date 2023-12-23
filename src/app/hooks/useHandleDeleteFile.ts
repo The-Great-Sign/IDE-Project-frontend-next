@@ -2,9 +2,10 @@ import axiosInstance from '../api/axiosInstance';
 
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
+import useProjectStore from '@/store/useProjectStore';
 
 const useHandleDeleteFileRequest = () => {
-  const projectId = '900feca1-b386-4c24-bdbf-8b4aa64c8b24'; //임시
+  const projectId = useProjectStore.getState().currentProject.id;
 
   const handleDeleteFileRequest = async (node: FileNodeType) => {
     try {

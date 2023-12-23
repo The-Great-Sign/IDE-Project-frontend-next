@@ -117,7 +117,7 @@ export const transformToFileNodeType = (
     const fileNode: FileNodeType = {
       id: node.id,
       name: node.name,
-      isFile: node.type === 'FILE',
+      type: node.type,
       isDirty: false,
       isOpened: false,
       filePath: node.path,
@@ -126,7 +126,6 @@ export const transformToFileNodeType = (
     if (node.type === 'DIRECTORY' && node.children) {
       fileNode.children = transformToFileNodeType(node.children);
     }
-
     return fileNode;
   });
 };

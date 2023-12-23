@@ -59,7 +59,7 @@ export const Node = ({
         onClick={() => node.isInternal && node.toggle()}
         isNodeDirty={node.data.isDirty}
       >
-        {node.data.isFile ? (
+        {node.data.type === 'FILE' ? (
           <>
             {node.data.isDirty ? <IsDirty /> : <IsNotDirty />}
             <LanguageIcon
