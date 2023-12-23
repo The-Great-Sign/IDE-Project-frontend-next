@@ -14,15 +14,21 @@ interface File {
 interface FileState {
   files: File[];
   selectedFileId: string | null;
-  openFile: (fileId: string, name: string, language: string) => void;
+  openFile: (
+    fileId: string,
+    name: string,
+    language: string
+    // content: string
+  ) => void;
   closeFile: (fileId: string) => void;
   selectFile: (fileId: string) => void;
+  updateFileName: (fileId: string, newName: string) => void;
 }
 
 export const useFileStore = create<FileState>(set => ({
   files: [],
   selectedFileId: null,
-  openFile: (fileId, name, language) => {
+  openFile: (fileId, name, language, content = '') => {
     set(state => {
       const existingFile = state.files.find(f => f.id === fileId);
       if (existingFile) {
@@ -32,7 +38,7 @@ export const useFileStore = create<FileState>(set => ({
       const newFile = {
         id: fileId,
         name,
-        content: '',
+        content,
         language,
         yDoc,
         isOpened: true,
@@ -52,5 +58,12 @@ export const useFileStore = create<FileState>(set => ({
   },
   selectFile: fileId => {
     set({ selectedFileId: fileId });
+  },
+  updateFileName: (fileId, newName) => {
+    set(state => ({
+      files: state.files.map(file =>
+        file.id === fileId ? { ...file, name: newName } : file
+      ),
+    }));
   },
 }));

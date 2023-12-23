@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../app/api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import useProjectStore from '@/store/useProjectStore';
