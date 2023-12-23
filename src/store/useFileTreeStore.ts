@@ -2,17 +2,6 @@ import { create } from 'zustand';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { findFilePath, removeNodeById } from '@/utils/fileTreeUtils';
 
-const data: FileNodeType[] = [
-  {
-    id: '1',
-    name: 'hello.py',
-    content: 'print("hello python")',
-    isDirty: false,
-    isOpened: true,
-    language: 'python',
-  },
-];
-
 interface FileTreeState {
   file: FileNodeType | null;
   fileTree: FileNodeType[];
@@ -25,7 +14,7 @@ interface FileTreeState {
 
 export const useFileTreeStore = create<FileTreeState>(set => ({
   file: null,
-  fileTree: data,
+  fileTree: [],
   setFileTree: fileTree => set({ fileTree }),
   updateNodeName: (nodeId, newName) =>
     set(state => ({
