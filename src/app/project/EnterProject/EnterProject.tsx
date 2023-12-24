@@ -1,7 +1,5 @@
 'use client';
 import React from 'react';
-import useProjectStore from '@/store/useProjectStore';
-import axiosInstance from '@/app/api/axiosInstance';
 import { useRouter } from 'next/navigation';
 import {
   EnterProjectAccess,
@@ -10,31 +8,14 @@ import {
   EnterProjectHeader,
   EnterProjectShare,
 } from './EnterProject.styles';
+import useProjectStore from '@/store/useProjectStore';
 
 const EnterProject = () => {
   const router = useRouter();
-  const currentProject = useProjectStore.getState().currentProject;
-  const projectId = currentProject.id;
-
-  const postEnterProject = async () => {
-    try {
-      const response = await axiosInstance.post(
-        `/api/projects/${projectId}/run`
-      );
-      const data = response.data;
-      useProjectStore.getState().setStatus(data.results);
-      if (data.success) {
-        router.push('/ide');
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const projectId = useProjectStore.getState().currentProject.id;
 
   const handleEnter = () => {
-    postEnterProject();
+    router.push(`/ide/${projectId}`);
   };
 
   return (
