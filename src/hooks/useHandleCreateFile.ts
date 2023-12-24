@@ -27,7 +27,7 @@ const useHandleCreateFile = () => {
           projectId: projectId,
           directories: null,
           files: sendFilePath,
-          content: 'print("Hello, World!")',
+          content: '',
         });
         responseData = response.data;
       } else {
@@ -35,7 +35,7 @@ const useHandleCreateFile = () => {
           projectId: projectId,
           directories: sendFilePath,
           files: null,
-          content: 'print("Hello, World!")',
+          content: '',
         });
         responseData = response.data;
       }

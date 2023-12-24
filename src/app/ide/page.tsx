@@ -6,7 +6,6 @@ import {
   subscribeFile,
   subscribeTerminal,
 } from '@/app/api/websocket';
-import { Room } from '@/app/ide/Room';
 import {
   ContentContainer,
   IDEContainer,
@@ -58,28 +57,26 @@ const Ide = () => {
         // }
       };
     }
-  }, [execute, setFileTree]);
+  }, [execute, projectId, setFileTree]);
 
   return execute == 'RUNNING' ? (
     <main>
-      <Room>
-        <IDEContainer>
-          <IDEHeader />
-          <IDEContentCode>
-            <ContentContainer>
-              <Toolbar />
-            </ContentContainer>
-            {isvisibleDiv ? <FileTree /> : <></>}
+      <IDEContainer>
+        <IDEHeader />
+        <IDEContentCode>
+          <ContentContainer>
+            <Toolbar />
+          </ContentContainer>
+          {isvisibleDiv ? <FileTree /> : <></>}
 
-            <Section>
-              <EditorTab />
-              {selectedFileId && <ShowEditor fileId={selectedFileId} />}
-              <TerminalTest />
-            </Section>
-            <Chatting />
-          </IDEContentCode>
-        </IDEContainer>
-      </Room>
+          <Section>
+            <EditorTab />
+            {selectedFileId && <ShowEditor fileId={selectedFileId} />}
+            <TerminalTest />
+          </Section>
+          <Chatting />
+        </IDEContentCode>
+      </IDEContainer>
     </main>
   ) : (
     <LoadingProject />

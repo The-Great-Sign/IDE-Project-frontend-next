@@ -19,10 +19,9 @@ const useHandleOpenFile = () => {
     try {
       const response = await axiosInstance.get('/api/files', { params });
       console.log(response);
-      // const fileContent = response.data.content;
-      // const fileContent = 'hi';
+      const fileContent = response.data.content;
 
-      fileStore.openFile(fileId, fileName, fileLanguage);
+      fileStore.openFile(fileId, fileName, fileLanguage, fileContent);
       fileStore.selectFile(fileId);
     } catch (error) {
       console.error('Error fetching file content:', error);

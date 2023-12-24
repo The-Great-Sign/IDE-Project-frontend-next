@@ -2,8 +2,6 @@ import { Liveblocks } from '@liveblocks/node';
 import { NextRequest } from 'next/server';
 import useUserStore from '@/store/useUserStore';
 
-// [TO DO] 클라이언트가 접속을 하면 모든 사용자의 정보를 알아야하는건지, 본인의 정보만 알면 되는건지 알아오기(후자)
-
 const API_KEY = process.env.LIVEBLOCKS_SECRET_KEY;
 
 const liveblocks = new Liveblocks({

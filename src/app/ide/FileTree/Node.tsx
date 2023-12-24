@@ -38,6 +38,7 @@ export const Node = ({
     try {
       const success = await handleDeleteFileRequest(node.data);
       if (success) {
+        // 룸 삭제 로직 넣기
         tree.delete(node.id);
         alert('삭제 성공');
       } else {
@@ -53,7 +54,6 @@ export const Node = ({
   const handleFileOpenAndUpdate = (fileId: string, newName: string) => {
     const language = findLanguage(newName.split('.').at(-1) || 'python');
     handleOpenFile(fileId, newName, language);
-    // updateNodeName(fileId, newName);
   };
 
   // 파일 이름 입력 완료 처리
@@ -130,7 +130,7 @@ export const Node = ({
                     tree.delete(node.id);
                   }
                 }}
-                onKeyDown={e => {
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === 'Escape') node.reset();
                   if (e.key === 'Enter') {
                     if (isCorrectName(e.currentTarget.value) === true) {

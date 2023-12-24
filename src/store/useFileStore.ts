@@ -1,6 +1,6 @@
-// useFileStore.ts
 import { create } from 'zustand';
 import * as Y from 'yjs';
+import { getYDoc } from '@/app/ide/Editor/CreateEditorState';
 
 interface File {
   id: string;
@@ -17,12 +17,14 @@ interface FileState {
   openFile: (
     fileId: string,
     name: string,
-    language: string
-    // content: string
+    language: string,
+    content: string
   ) => void;
   closeFile: (fileId: string) => void;
   selectFile: (fileId: string) => void;
+  // [TO DO] 파일명 업데이트 고치기
   updateFileName: (fileId: string, newName: string) => void;
+  updateFileContent: (fileId: string, newContent: string) => void;
 }
 
 export const useFileStore = create<FileState>(set => ({
@@ -34,7 +36,7 @@ export const useFileStore = create<FileState>(set => ({
       if (existingFile) {
         return { ...state, selectedFileId: fileId };
       }
-      const yDoc = new Y.Doc();
+      const yDoc = getYDoc(fileId);
       const newFile = {
         id: fileId,
         name,
@@ -58,6 +60,13 @@ export const useFileStore = create<FileState>(set => ({
   },
   selectFile: fileId => {
     set({ selectedFileId: fileId });
+  },
+  updateFileContent: (fileId, newContent) => {
+    set(state => ({
+      files: state.files.map(file =>
+        file.id === fileId ? { ...file, content: newContent } : file
+      ),
+    }));
   },
   updateFileName: (fileId, newName) => {
     set(state => ({
