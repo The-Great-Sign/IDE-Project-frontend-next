@@ -17,10 +17,12 @@ import { TypedLiveblocksProvider } from '@/liveblocks.config';
 const yDocs = new Map<string, Y.Doc>();
 
 export const getYDoc = (fileId: string): Y.Doc => {
-  if (!yDocs.has(fileId)) {
-    yDocs.set(fileId, new Y.Doc());
+  let ydoc = yDocs.get(fileId);
+  if (!ydoc) {
+    ydoc = new Y.Doc();
+    yDocs.set(fileId, ydoc);
   }
-  return yDocs.get(fileId)!;
+  return ydoc;
 };
 
 export const createEditorState = (
@@ -31,7 +33,8 @@ export const createEditorState = (
 ): EditorState => {
   const ydoc = getYDoc(fileId);
   const ytext = ydoc.getText('codemirror');
-  if (content) {
+
+  if (!ytext.toString() && content) {
     ytext.insert(0, content);
   }
   const nowLanguage = new Compartment();
