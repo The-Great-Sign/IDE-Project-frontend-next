@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 import { RoomProvider } from '@/liveblocks.config';
-// import { useSearchParams } from 'next/navigation';
 import { ClientSideSuspense } from '@liveblocks/react';
 import { Loading } from '@/app/Loading';
 

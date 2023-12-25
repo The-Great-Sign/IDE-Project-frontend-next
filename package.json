@@ -56,6 +56,7 @@
     "react-arborist": "^3.4.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
+    "react-loader-spinner": "^6.1.6",
     "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.2",
     "uuidv4": "^6.2.13",

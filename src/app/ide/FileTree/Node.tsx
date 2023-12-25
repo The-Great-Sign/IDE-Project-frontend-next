@@ -12,6 +12,7 @@ import useHandleOpenFile from '@/hooks/useHandleOpenFile';
 import LanguageIcon from './LanguageIcon';
 import useHandleCreateFile from '@/hooks/useHandleCreateFile';
 import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';
+import axiosInstance from '@/app/api/axiosInstance';
 
 export const Node = ({
   node,
@@ -37,8 +38,14 @@ export const Node = ({
   const onDeleteFile = async () => {
     try {
       const success = await handleDeleteFileRequest(node.data);
+
       if (success) {
-        // 룸 삭제 로직 넣기
+        // 서버에서 받아온 파일 id 값으로 바꾸기;
+        const roomId = node.id;
+        const response = await axiosInstance.delete(
+          `/api/live-blocks/rooms/file-${roomId}`
+        );
+        console.log(response);
         tree.delete(node.id);
         alert('삭제 성공');
       } else {
