@@ -23,7 +23,7 @@ import ShowEditor from './Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
 import useProjectStore from '@/store/useProjectStore';
 import LoadingProject from '../project/EnterProject/LoadingProject/LoadingProject';
-import { checkFileTree } from '@/utils/checkFileTree';
+import { checkFileTree } from '@/app/api/filetree/updateFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 
 const Ide = () => {
@@ -47,7 +47,6 @@ const Ide = () => {
         console.log(projectId);
         if (response) {
           setFileTree(response.data.results);
-          console.log(response.data.results);
         }
       });
 
