@@ -12,15 +12,17 @@ const useHandleCreateFile = () => {
   ) => {
     try {
       let sendFilePath;
-      const nowFilePath = useFileTreeStore.getState().findNodePath(node.id);
+      let responseData;
 
-      if (nowFilePath == null) {
+      const parentPath = useFileTreeStore
+        .getState()
+        .findNodePath(node.parentId);
+
+      if (parentPath == null) {
         sendFilePath = '/' + newNodeName;
       } else {
-        sendFilePath = nowFilePath + newNodeName;
+        sendFilePath = parentPath + '/' + newNodeName;
       }
-
-      let responseData;
 
       if (node.type === 'FILE') {
         const response = await axiosInstance.post('/api/files', {

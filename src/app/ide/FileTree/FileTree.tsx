@@ -18,39 +18,36 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { findNodeById } from '@/utils/fileTreeUtils';
+
 import axiosInstance from '@/app/api/axiosInstance';
 import useProjectStore from '@/store/useProjectStore';
+import { findNodeById } from '@/utils/filetree/findNodeUtils';
+import { Button } from '@mui/material';
 
 const FileTree = () => {
-  const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
   const projectId = useProjectStore.getState().currentProject.id;
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
-  const onCreate: CreateHandler<FileNodeType> = ({ type, index }) => {
-    const newUUID = uuidv4();
-
+  const onCreate: CreateHandler<FileNodeType> = ({ type, parentId }) => {
     const newNode: FileNodeType = {
-      id: `${index}-${newUUID}`,
+      id: uuidv4(),
       name: '',
       type: type === 'internal' ? 'DIRECTORY' : 'FILE',
       ...(type === 'internal' && { children: [] }),
       isDirty: false,
       isOpened: true,
+      filePath: useFileTreeStore.getState().findNodePathByName(''),
+      parentId: parentId,
     };
 
-    const newParent = treeRef.current?.focusedNode?.id;
-    addNode(newNode, newParent);
-
-    const newFileTree = [...fileTree, newNode];
-    setFileTree(newFileTree);
+    useFileTreeStore.getState().addNode(newNode, parentId);
 
     return newNode;
   };
 
   const onDelete: DeleteHandler<FileNodeType> = ({ ids }) => {
-    deleteNode(ids[0]);
+    useFileTreeStore.getState().deleteNode(ids[0]);
   };
 
   const onMove: MoveHandler<FileNodeType> = ({ dragIds, parentId }) => {
@@ -106,10 +103,10 @@ const FileTree = () => {
     <Resizable
       defaultSize={{
         width: '330px',
-        height: '100%', // 초기 높이 설정
+        height: '100%',
       }}
       enable={{
-        top: false, // 위쪽으로만 리사이징 가능
+        top: false,
         right: true,
         bottom: false,
         left: false,
@@ -142,12 +139,13 @@ const FileTree = () => {
           onDelete={onDelete}
           onMove={onMove}
           ref={treeRef}
-          data={fileTree}
+          data={useFileTreeStore.getState().fileTree}
         >
           {nodeProps => (
             <Node {...(nodeProps as NodeRendererProps<FileNodeType>)} />
           )}
         </Tree>
+        <Button>버튼</Button>
       </FileTreeConatiner>
     </Resizable>
   );
