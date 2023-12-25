@@ -2,12 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chatting from '../Chatting/Chatting';
 import {
+  LoadingStatusProps,
   SubscribeProps,
   initializeWebSocket,
   subscribeChatting,
   subscribeFile,
-  // subscribeLoading,
-  subscribeTerminal,
 } from '@/app/api/websocket';
 import {
   ContentContainer,
@@ -17,7 +16,7 @@ import {
 } from '../page.styles';
 import IDEHeader from '../Header/IDEHeader';
 import FileTree from '../FileTree/FileTree';
-import TerminalTest from '../Terminal/TerminalTest';
+import Terminal from '../Terminal/Terminal';
 import Toolbar from '../Toolbar/Toolbar';
 import EditorTab from '../Editor/EditorTab/EditorTab';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
@@ -28,10 +27,12 @@ import { checkFileTree } from '@/utils/checkFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import axiosInstance from '@/app/api/axiosInstance';
 import { Client } from '@stomp/stompjs';
+import { Terminal as XTerm } from 'xterm';
 
-interface LoadingStatusProps {
-  containerId: string;
-  status: 'PENDING' | 'RUNNING';
+interface ReceivedTerminalType {
+  success: boolean;
+  path: string;
+  content: string;
 }
 
 export const getCurrentProjectId = () => {
@@ -42,8 +43,11 @@ export const getCurrentProjectId = () => {
 };
 
 const Ide = () => {
-  const [execute, setExecute] = useState<string>('PENDING');
   const clientRef = useRef<Client | null>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const xtermRef = useRef<XTerm | null>(null);
+  const [execute, setExecute] = useState<string>('PENDING');
+  const [currentPath, setCurrentPath] = useState<string>('/');
 
   const { selectedFileId } = useFileStore();
   const { isvisibleDiv } = useVisibleDiv();
@@ -52,17 +56,17 @@ const Ide = () => {
   const postEnterProject = async (projectId: string) => {
     try {
       const response = await axiosInstance.post(
-        // http 보내기
         `/api/projects/${projectId}/run`
       );
       const data = response.data;
-      setExecute(data.results); // 답 받아오기
+      setExecute(data.results);
     } catch (error) {
       console.error(error);
     }
   };
 
   const subscribeLoading = (
+    // 로딩 구독
     client: Client | null,
     projectId: string
   ): SubscribeProps => {
@@ -78,9 +82,45 @@ const Ide = () => {
     return null;
   };
 
+  const subscribeTerminal = (
+    client: Client | null,
+    xtermRef: React.RefObject<XTerm>,
+    projectId: string
+  ): SubscribeProps => {
+    // 터미널 구독
+    if (client && xtermRef.current) {
+      return client.subscribe(
+        `/user/queue/project/${projectId}/terminal`,
+        ReceivedTerminal => {
+          console.log(ReceivedTerminal);
+          const { success, path, content } = JSON.parse(
+            ReceivedTerminal.body
+          ) as ReceivedTerminalType;
+          if (success && content) {
+            if (xtermRef.current) {
+              xtermRef.current.write(content + '\r\n' + '\r\n');
+            }
+          }
+          if (xtermRef.current) {
+            xtermRef.current.write(path + ': ');
+          }
+          setCurrentPath(path);
+          console.log(`path: ${path}, content: ${content}`);
+          console.log(`currentPath: ${path}, content: ${content}`);
+        }
+      );
+    }
+    return null;
+  };
+
   useEffect(() => {
+    xtermRef.current = new XTerm();
+    if (terminalRef.current && xtermRef.current) {
+      xtermRef.current.open(terminalRef.current);
+    }
     const projectId = getCurrentProjectId();
     postEnterProject(projectId);
+
     if (execute == 'PENDING') {
       // 로딩 연결
       console.log('pending');
@@ -94,18 +134,22 @@ const Ide = () => {
             console.log('connected');
             subscribeLoading(clientRef.current, getCurrentProjectId());
             subscribeChatting(clientRef.current, getCurrentProjectId());
-            subscribeTerminal(clientRef.current, getCurrentProjectId());
+            subscribeTerminal(
+              clientRef.current,
+              xtermRef,
+              getCurrentProjectId()
+            );
             subscribeFile(clientRef.current, getCurrentProjectId());
+            checkFileTree(getCurrentProjectId()).then(response => {
+              if (response) {
+                setFileTree(response.data.results);
+              }
+            });
           };
         }
         clientRef.current.activate();
       }
     }
-    checkFileTree(projectId).then(response => {
-      if (response) {
-        setFileTree(response.data.results);
-      }
-    });
 
     return () => {};
   }, [execute]);
@@ -123,7 +167,12 @@ const Ide = () => {
           <Section>
             <EditorTab />
             {selectedFileId && <ShowEditor fileId={selectedFileId} />}
-            <TerminalTest />
+            <Terminal
+              clientRef={clientRef}
+              terminalRef={terminalRef}
+              xtermRef={xtermRef}
+              currentPath={currentPath}
+            />
           </Section>
           <Chatting clientRef={clientRef} />
         </IDEContentCode>

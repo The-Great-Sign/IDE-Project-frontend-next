@@ -1,12 +1,12 @@
 // useHandleOpenFile.ts
 import { useFileStore } from '@/store/useFileStore';
 import axiosInstance from '@/app/api/axiosInstance';
-import useProjectStore from '@/store/useProjectStore';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
+import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
 
 const useHandleOpenFile = () => {
   const fileStore = useFileStore();
-  const projectId = useProjectStore.getState().currentProject.id;
+  const projectId = getCurrentProjectId();
 
   const handleOpenFile = async (
     fileId: string,
