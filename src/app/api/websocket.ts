@@ -1,6 +1,8 @@
 import useGeneralChatStore from '@/store/useChattingStore';
+import { useFileTreeStore } from '@/store/useFileTreeStore';
 import useProjectStore from '@/store/useProjectStore';
 import useTokenStore from '@/store/useTokenStore';
+
 import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -26,6 +28,12 @@ export interface ChattingType {
   userNickname: string;
   content: string;
   currentUsers: number;
+}
+
+export interface FileSocketReceivedType {
+  event: string;
+  path: string;
+  type: 'FILE' | 'DIRECTORY';
 }
 
 const initializeWebSocket = () => {
@@ -93,6 +101,8 @@ const subscribeFile = (client: Client | null): SubscribeProps => {
       ReceivedFile => {
         console.log('file connected');
         console.log(`Received: ${ReceivedFile.body}`);
+        const fileData: FileSocketReceivedType = JSON.parse(ReceivedFile.body);
+        useFileTreeStore.getState().handleWebSocketFileEvent(fileData);
       }
     );
   }
