@@ -4,32 +4,35 @@ import { create } from 'zustand';
 const hex = '#' + Math.round(Math.random() * 0xffffff).toString(16);
 
 // 랜덤 이름 생성
-const names = ['Dehan', 'Musfiq', 'Rahim', 'Sohel', 'MOhit', 'Rachel'];
-const randInt = Math.floor(Math.random() * names.length);
-const name = names[randInt];
+// const names =
+// const randInt = Math.floor(Math.random() * names.length);
+// const name = names[randInt];
 
 // 랜덤 ID 생성 -> 실제 유저 데이터로 바꿀 예정
 const randId = Math.floor(Math.random() * 100);
 
 interface UserState {
-  id: number;
+  id: string;
   name: string;
-  imageUrl: string | null;
+  imageUrl: string;
   cursorColor: string;
-  setUser: (id: number, name: string, imageUrl: string) => void;
+  setUser: (id: string, name: string, imageUrl: string) => void;
   isLoggedIn: boolean;
   toggleLogin: () => void;
+  setLogin: (state: boolean) => void;
 }
 
 // id 유니크 값으로 바꾸기!
 const useUserStore = create<UserState>(set => ({
-  id: randId,
-  name: name,
-  imageUrl: null,
+  id: String(randId),
+  name: '로그인안됨',
+  imageUrl: '',
   cursorColor: hex,
-  setUser: (id, name, imageUrl) => set({ id, name, imageUrl }),
+  setUser: (id, name, imageUrl) =>
+    set({ id: id, name: name, imageUrl: imageUrl }),
   isLoggedIn: false,
   toggleLogin: () => set(state => ({ isLoggedIn: !state.isLoggedIn })),
+  setLogin: (state: boolean) => set({ isLoggedIn: state }),
 }));
 
 export default useUserStore;

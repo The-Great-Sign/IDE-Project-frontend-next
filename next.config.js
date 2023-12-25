@@ -5,7 +5,7 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['liveblocks.io'],
+    domains: ['liveblocks.io', 'lh3.googleusercontent.com'],
   },
   async rewrites() {
     return [
