@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 
 interface TokenState {
-  accessToken: string | null;
+  accessToken: string;
   tokenExpiryTime: string | null;
-  setAccessToken: (accessToken: string | null) => void;
+  setAccessToken: (accessToken: string) => void;
 }
 
 const useTokenStore = create<TokenState>(set => ({

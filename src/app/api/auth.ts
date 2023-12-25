@@ -15,9 +15,8 @@ export async function refreshToken() {
     try {
       const response = await axiosInstance.get('/refresh-token');
       const newAccessToken = response.data.accessToken;
-      const newExpiryTime = response.data.expiryTime;
 
-      useTokenStore.getState().setAccessToken(newAccessToken, newExpiryTime);
+      useTokenStore.getState().setAccessToken(newAccessToken);
     } catch (error) {
       console.error('Token refresh failed', error);
     }
