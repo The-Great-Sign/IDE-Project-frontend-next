@@ -1,17 +1,15 @@
 import { create } from 'zustand';
 
 interface TokenState {
-  accessToken: string;
+  accessToken: string | null;
   tokenExpiryTime: string | null;
-  setAccessToken: (accessToken: string, tokenExpiryTime: string | null) => void;
+  setAccessToken: (accessToken: string | null) => void;
 }
 
 const useTokenStore = create<TokenState>(set => ({
-  accessToken:
-    'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnb29nbGUuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTcwNDAyNTAyMX0.BCX-iztywjozVUx3Mkz2Oip0NUIo8SScModeV1Bq6Uo', //봉승봉승
+  accessToken: '',
   tokenExpiryTime: null,
-  setAccessToken: (token, expiryTime) =>
-    set({ accessToken: token, tokenExpiryTime: expiryTime }),
+  setAccessToken: token => set({ accessToken: token }),
 }));
 
 export default useTokenStore;
