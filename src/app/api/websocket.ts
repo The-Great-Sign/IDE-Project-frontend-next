@@ -1,9 +1,15 @@
 import useGeneralChatStore from '@/store/useChattingStore';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
-import useProjectStore from '@/store/useProjectStore';
 import useTokenStore from '@/store/useTokenStore';
 import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+
+const getCurrentProjectId = () => {
+  const path = window.location.pathname;
+  const pathSegments = path.split('/');
+  const projectId = pathSegments[2];
+  return projectId;
+};
 
 interface WebsocketProps {
   projectId: string;
@@ -11,7 +17,7 @@ interface WebsocketProps {
 }
 
 export const testWebsocket: WebsocketProps = {
-  projectId: useProjectStore.getState().currentProject.id,
+  projectId: getCurrentProjectId(),
   token: useTokenStore.getState().accessToken,
 };
 
@@ -33,21 +39,13 @@ export interface FileSocketReceivedType {
   event: string;
   path: string;
   type: 'FILE' | 'DIRECTORY';
+  fileId: number;
 }
-
-const getCurrentProjectId = () => {
-  const path = window.location.pathname;
-  const pathSegments = path.split('/');
-  const projectId = pathSegments[2];
-  return projectId;
-};
 
 const initializeWebSocket = () => {
   const client = new Client({
     webSocketFactory: () =>
-      new SockJS(
-        `http://ec2-43-203-40-200.ap-northeast-2.compute.amazonaws.com:8080/ws/ide`
-      ),
+      new SockJS(`${process.env.NEXT_PUBLIC_BACKEND_URI}/ws/ide`),
     connectHeaders: {
       Authorization: testWebsocket.token,
       ProjectId: getCurrentProjectId(),
