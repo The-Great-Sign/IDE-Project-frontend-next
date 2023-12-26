@@ -12,6 +12,7 @@ import { json } from '@codemirror/lang-json';
 import { java } from '@codemirror/lang-java';
 import { css } from '@codemirror/lang-css';
 import { TypedLiveblocksProvider } from '@/liveblocks.config';
+import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
 
 // 공통 Y.Doc 인스턴스를 생성하고 관리하는 로직
 const yDocs = new Map<string, Y.Doc>();
@@ -29,7 +30,8 @@ export const createEditorState = (
   fileId: string,
   content: string,
   language: string,
-  provider: TypedLiveblocksProvider
+  provider: TypedLiveblocksProvider,
+  isDarkMode: boolean
 ): EditorState => {
   const ydoc = getYDoc(fileId);
   const ytext = ydoc.getText('codemirror');
@@ -38,6 +40,7 @@ export const createEditorState = (
     ytext.insert(0, content);
   }
   const nowLanguage = new Compartment();
+  const themeExtension = isDarkMode ? githubDark : githubLight;
 
   // 언어에 따른 에디터 확장 선택 함수
   const EXTENSIONS: { [key: string]: LanguageSupport } = {
@@ -59,6 +62,7 @@ export const createEditorState = (
   const state = EditorState.create({
     doc: ytext.toString(),
     extensions: [
+      themeExtension,
       basicSetup,
       nowLanguage.of(selectedLanguage),
       yCollab(ytext, provider.awareness),
