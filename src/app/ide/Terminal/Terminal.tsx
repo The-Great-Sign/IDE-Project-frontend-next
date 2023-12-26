@@ -37,23 +37,38 @@ const Terminal = ({
     if (terminalRef.current && xtermRef.current) {
       let currentCommand = '';
       const TerminalDataHandler = xtermRef.current.onData(data => {
+        console.log('data', data);
         if (data === '\r') {
-          const content: Content = {
-            path: currentPath,
-            command: currentCommand,
-          };
-          console.log('content', content);
-          if (clientRef.current) {
-            clientRef.current.publish({
-              destination: `/app/project/${getCurrentProjectId()}/terminal`,
-              body: JSON.stringify(content),
-            });
-            setCommands(prevCommands => [...prevCommands, currentCommand]);
-            console.log(commands);
-            if (xtermRef.current) {
-              xtermRef.current.write('\r\n');
+          if (currentCommand === '' && xtermRef.current) {
+            xtermRef.current.write('\r\n' + currentPath + ': ');
+          } else {
+            const content: Content = {
+              path: currentPath,
+              command: currentCommand,
+            };
+            console.log('content', content);
+            if (clientRef.current) {
+              clientRef.current.publish({
+                destination: `/app/project/${getCurrentProjectId()}/terminal`,
+                body: JSON.stringify(content),
+              });
+              setCommands(prevCommands => [...prevCommands, currentCommand]);
+              console.log(commands);
+              if (xtermRef.current) {
+                xtermRef.current.write('\r\n');
+              }
+              currentCommand = '';
             }
-            currentCommand = '';
+          }
+        } else if (data === '\x7f' || data === '\b') {
+          // 백스페이스 키 처리
+          if (currentCommand.length > 0) {
+            // 현재 명령어에서 마지막 문자 제거
+            currentCommand = currentCommand.slice(0, -1);
+            // xterm에도 반영 (커서 한 칸 뒤로 이동, 공백으로 덮기, 다시 커서 한 칸 뒤로 이동)
+            if (xtermRef.current) {
+              xtermRef.current.write('\b \b');
+            }
           }
         } else {
           // 키보드 입력 시 서버로 메시지 전송
