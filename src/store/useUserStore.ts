@@ -4,7 +4,6 @@ import { create } from 'zustand';
 const hex = '#' + Math.round(Math.random() * 0xffffff).toString(16);
 
 const randId = Math.floor(Math.random() * 100);
-
 interface UserState {
   id: string;
   name: string | null;
@@ -18,9 +17,9 @@ interface UserState {
 
 const useUserStore = create<UserState>(set => ({
   id: String(randId),
-  name: null,
-  imageUrl: '',
-  cursorColor: hex,
+  name: '로그인안됨',
+  imageUrl: 'https://liveblocks.io/avatars/avatar-4.png',
+  cursorColor: '#00A86B',
   setUser: (id, name, imageUrl) =>
     set({ id: id, name: name, imageUrl: imageUrl }),
   isLoggedIn: false,
