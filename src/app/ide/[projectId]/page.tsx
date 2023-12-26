@@ -204,7 +204,7 @@ const Ide = () => {
   return execute == 'RUNNING' ? (
     <main>
       <IDEContainer>
-        <IDEHeader />
+        <IDEHeader clientRef={clientRef} />
         <IDEContentCode>
           <ContentContainer>
             <Toolbar />
