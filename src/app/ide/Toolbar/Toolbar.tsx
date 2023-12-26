@@ -25,7 +25,9 @@ const Toolbar = () => {
   const shareURL = async () => {
     await navigator.clipboard
       .writeText(
-        `${process.env.NEXT_PUBLIC_BACKEND_URI}/invite/${getCurrentProjectId()}`
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/invite/${getCurrentProjectId()}`
       )
       .then(() => {
         alert('클립보드에 복사되었습니다.');

@@ -10,7 +10,7 @@ import {
   ChattingInput,
   ChattingSendButton,
 } from './Chatting.styles';
-import useGeneralChatStore from '@/store/useChattingStore';
+import { useGeneralChatStore } from '@/store/useChattingStore';
 import { getCurrentProjectId } from '../[projectId]/page';
 import { Client } from '@stomp/stompjs';
 

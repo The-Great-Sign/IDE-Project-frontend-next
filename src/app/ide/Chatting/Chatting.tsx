@@ -8,8 +8,8 @@ import {
 } from './Chatting.styles';
 import GeneralChatting from './GeneralChatting';
 import AIChatting from './AIChatting';
-import useGeneralChatStore from '@/store/useChattingStore';
 import { Client } from '@stomp/stompjs';
+import { useGeneralChatStore } from '@/store/useChattingStore';
 
 interface GeneralChattingProps {
   clientRef: React.RefObject<Client>;
@@ -39,8 +39,6 @@ const Chatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
         bottomLeft: false,
         topLeft: false,
       }}
-      minWidth={'140px'}
-      maxWidth={'400px'}
     >
       <ChattingContainer>
         <ChattingHeader>

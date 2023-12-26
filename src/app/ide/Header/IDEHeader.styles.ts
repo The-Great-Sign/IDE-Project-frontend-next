@@ -11,8 +11,6 @@ export const IDEHeaderContainer = styled(HeaderContainer)`
   padding-top: 0px;
 `;
 
-export const IDEBack = styled.button``;
-
 export const IDELogo = styled(Logo)`
   font-size: ${FONTS.lg};
 `;
@@ -22,6 +20,7 @@ export const StyleAiOutlineComment = styled(AiOutlineComment)`
   width: 50px;
   height: 50px;
   margin-left: 10px;
+  cursor: pointer;
 `;
 
 export const RightBox = styled.div`

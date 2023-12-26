@@ -114,3 +114,5 @@ export const ChattingSendButton = styled.button`
   height: 40px;
   border-radius: 5px;
 `;
+
+export const CodeReviewBtn = styled.button``;

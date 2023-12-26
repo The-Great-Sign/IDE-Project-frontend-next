@@ -31,6 +31,7 @@ import { Terminal as XTerm } from 'xterm';
 import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
 import useUserStore from '@/store/useUserStore';
+import { useVisibleChat } from '@/store/useChattingStore';
 
 interface ReceivedTerminalType {
   success: boolean;
@@ -54,6 +55,7 @@ const Ide = () => {
 
   const { selectedFileId } = useFileStore();
   const { isvisibleDiv } = useVisibleDiv();
+  const { isvisibleChat } = useVisibleChat();
   const { setFileTree } = useFileTreeStore();
 
   useEffect(() => {
@@ -221,7 +223,7 @@ const Ide = () => {
               currentPath={currentPath}
             />
           </Section>
-          <Chatting clientRef={clientRef} />
+          {isvisibleChat ? <Chatting clientRef={clientRef} /> : <></>}
         </IDEContentCode>
       </IDEContainer>
     </main>
