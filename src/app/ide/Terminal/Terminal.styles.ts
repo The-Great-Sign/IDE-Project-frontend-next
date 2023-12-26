@@ -7,7 +7,7 @@ export const TerminalContainer = styled.div`
   width: 100%;
 `;
 
-export const TerminalTestContainer = styled.div`
+export const Terminal = styled.div`
   width: 100%;
   height: 100%;
   margin: 0;

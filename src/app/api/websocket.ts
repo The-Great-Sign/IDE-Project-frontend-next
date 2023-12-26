@@ -16,6 +16,11 @@ export const testWebsocket: WebsocketProps = {
 
 export type SubscribeProps = StompSubscription | null;
 
+export interface LoadingStatusProps {
+  containerId: string;
+  status: 'PENDING' | 'RUNNING';
+}
+
 export interface ChattingType {
   messageType: 'ENTER' | 'EXIT' | 'TALK';
   userNickname: string;
@@ -63,22 +68,6 @@ const subscribeChatting = (
   return null;
 };
 
-const subscribeTerminal = (
-  client: Client | null,
-  projectId: string
-): SubscribeProps => {
-  if (client) {
-    return client.subscribe(
-      `/user/queue/project/${projectId}/terminal`,
-      ReceivedTerminal => {
-        console.log('terminal connected');
-        console.log(`Received: ${ReceivedTerminal.body}`);
-      }
-    );
-  }
-  return null;
-};
-
 const subscribeFile = (
   client: Client | null,
   projectId: string
@@ -95,9 +84,4 @@ const subscribeFile = (
   return null;
 };
 
-export {
-  initializeWebSocket,
-  subscribeChatting,
-  subscribeTerminal,
-  subscribeFile,
-};
+export { initializeWebSocket, subscribeChatting, subscribeFile };
