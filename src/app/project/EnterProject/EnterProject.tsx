@@ -16,7 +16,7 @@ const EnterProject = () => {
 
   const shareURL = async () => {
     await navigator.clipboard
-      .writeText(`${process.env.NEXT_PUBLIC_BACKEND_URI}/invite/${projectId}`)
+      .writeText(`${process.env.NEXT_PUBLIC_API_BASE_URL}/invite/${projectId}`)
       .then(() => {
         alert('클립보드에 복사되었습니다.');
       })

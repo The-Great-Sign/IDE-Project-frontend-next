@@ -17,12 +17,14 @@ import useProjectStore from '@/store/useProjectStore';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
 import { getCurrentProjectId } from '../[projectId]/page';
+import { useVisibleChat } from '@/store/useChattingStore';
 
 interface IDEHeaderProps {
   clientRef: React.RefObject<Client>;
 }
 
 const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
+  const { toggleChat } = useVisibleChat();
   const { files, selectedFileId } = useFileStore();
   const projectId = useProjectStore.getState().currentProject.id;
   const { findNodePath } = useFileTreeStore();
@@ -91,7 +93,7 @@ const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
         </SmallButton>
       </IDEBtnDiv>
       <RightBox>
-        <StyleAiOutlineComment />
+        <StyleAiOutlineComment onClick={toggleChat} />
       </RightBox>
     </IDEHeaderContainer>
   );
