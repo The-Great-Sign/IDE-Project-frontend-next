@@ -18,7 +18,7 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { findNodeById } from '@/utils/fileTreeUtils';
+import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
 import useProjectStore from '@/store/useProjectStore';
 
