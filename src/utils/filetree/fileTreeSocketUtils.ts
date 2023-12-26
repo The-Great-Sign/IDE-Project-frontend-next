@@ -8,7 +8,7 @@ export const processWebSocketFileEvent = (
   fileTree: FileNodeType[],
   fileData: FileSocketReceivedType
 ): FileNodeType[] => {
-  const { event, path, type } = fileData;
+  const { fileId, event, path, type } = fileData;
 
   if (event === 'CREATE') {
     // CREATE 이벤트 처리 로직
@@ -18,15 +18,21 @@ export const processWebSocketFileEvent = (
 
     // 새 파일 노드 생성
     const newNode: FileNodeType = {
-      id: path,
+      //여기서 id를 서버 응답으로 설정
+      id: String(fileId),
       name: path.split('/').pop() || '',
       type: type === 'DIRECTORY' ? 'DIRECTORY' : 'FILE',
       children: type === 'DIRECTORY' ? [] : undefined,
       parentId: parentNodeId,
+      isDirty: false,
+      filePath: parentPath + '/' + name,
     };
+    console.log(newNode);
 
     // 파일 트리에 노드 추가
     return addNodeToTreeWebSocket(fileTree, newNode, parentNodeId);
+
+    //파일 생성 시 파일 열기 로직 여기에 추가
   } else if (event === 'DELETE') {
     // DELETE 이벤트 처리 로직
     const nodeId = findNodeIdByPath(fileTree, path);
