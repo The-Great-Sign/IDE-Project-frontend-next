@@ -11,6 +11,8 @@ export const IDEHeaderContainer = styled(HeaderContainer)`
   padding-top: 0px;
 `;
 
+export const IDEBack = styled.button``;
+
 export const IDELogo = styled(Logo)`
   font-size: ${FONTS.lg};
 `;

@@ -1,3 +1,5 @@
+'use client';
+
 import { SmallButton } from '@/components/Button/Button';
 import StyledLink from '@/components/StyledLink/StyledLink';
 import {
@@ -13,8 +15,14 @@ import axiosInstance from '@/app/api/axiosInstance';
 import { useFileStore } from '@/store/useFileStore';
 import useProjectStore from '@/store/useProjectStore';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
+import { Client } from '@stomp/stompjs';
+import { getCurrentProjectId } from '../[projectId]/page';
 
-const IDEHeader = () => {
+interface IDEHeaderProps {
+  clientRef: React.RefObject<Client>;
+}
+
+const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
   const { files, selectedFileId } = useFileStore();
   const projectId = useProjectStore.getState().currentProject.id;
   const { findNodePath } = useFileTreeStore();
@@ -44,16 +52,24 @@ const IDEHeader = () => {
   };
 
   const handleClose = async () => {
-    try {
-      await axiosInstance.post(`/api/projects/${projectId}/stop`);
-    } catch (e) {
-      console.error(e);
+    const confirmClose = confirm('프로젝트를 종료하시겠습니까?');
+    if (confirmClose) {
+      try {
+        await axiosInstance.post(`/api/projects/${getCurrentProjectId()}/stop`);
+        console.log('프로젝트 종료');
+        if (clientRef.current) {
+          clientRef.current.deactivate();
+          window.location.href = '/project';
+        }
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
   return (
     <IDEHeaderContainer>
-      <StyledLink onClick={handleClose} href="/project">
+      <StyledLink onClick={handleClose} href="#">
         뒤로가기
       </StyledLink>
       <IDELogo>

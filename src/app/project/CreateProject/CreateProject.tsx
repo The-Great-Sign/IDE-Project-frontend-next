@@ -92,7 +92,7 @@ const CreateProject = () => {
 
         <CreateProjectInputTitle>프로젝트 비밀번호</CreateProjectInputTitle>
         <CreateProjectPassword
-          type="text"
+          type="password"
           name="password"
           placeholder="설정할 비밀번호를 입력하세요"
           onChange={handleInput}
