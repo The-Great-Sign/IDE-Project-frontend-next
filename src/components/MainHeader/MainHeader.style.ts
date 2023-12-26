@@ -14,4 +14,5 @@ export const HeaderContainer = styled.div`
 export const Logo = styled.div`
   font-size: ${FONTS.lg};
   font-weight: 700;
+  padding-left: 60px;
 `;

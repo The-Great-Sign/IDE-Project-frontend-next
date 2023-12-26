@@ -38,32 +38,11 @@ export const SmallButton = styled(Button)`
   background: ${COLORS.primary};
   color: white;
   font-weight: 500;
-  &:hover {
-    background: ${COLORS.primary};
-    opacity: 0.5;
-  }
   &:last-child {
     background: rgb(212, 218, 250);
     color: black;
     &:hover {
-      opacity: 0.5;
+      background: rgb(212, 218, 250, 0.5);
     }
-  }
-`;
-
-export const ExitBtn = styled(Button)`
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  color: ${COLORS.primary};
-  font-weight: 500;
-  min-width: 20px;
-  width: 20px;
-  margin: 0 10px;
-  padding: 0 15px;
-  white-space: nowrap;
-  &:hover {
-    color: red;
   }
 `;

@@ -6,7 +6,6 @@ export const EditorContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 500px;
   overflow: hidden;
 `;
 
@@ -18,7 +17,6 @@ export const EditorHeader = styled.div`
 `;
 
 export const Editor = styled.div`
-  height: 100%;
   position: relative;
   flex-grow: 1;
   overflow: auto;

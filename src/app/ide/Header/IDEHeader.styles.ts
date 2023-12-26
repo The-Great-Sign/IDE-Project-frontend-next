@@ -11,16 +11,14 @@ export const IDEHeaderContainer = styled(HeaderContainer)`
   padding-top: 0px;
 `;
 
-export const LeftBox = styled.div`
-  display: flex;
-`;
-
 export const IDELogo = styled(Logo)`
   font-size: ${FONTS.lg};
 `;
 
 export const StyleAiOutlineComment = styled(AiOutlineComment)`
   padding-right: 20px;
+  width: 50px;
+  height: 50px;
   margin-left: 10px;
   cursor: pointer;
 `;
@@ -37,7 +35,7 @@ export const CurrentUserBox = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 10px;
+  margin: 0 10px;
 `;
 
 export const UserProfile = styled.div`

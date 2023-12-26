@@ -82,7 +82,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
       {/* <EditorHeader>
         <div>{yUndoManager ? <Undo yUndoManager={yUndoManager} /> : null}</div>
       </EditorHeader> */}
-      <Editor ref={editorRef}></Editor>
+      <Editor ref={editorRef} className="editor-view"></Editor>
     </EditorContainer>
   );
 };
