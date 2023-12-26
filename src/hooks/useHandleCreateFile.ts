@@ -1,10 +1,11 @@
 import axiosInstance from '../app/api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
-import useProjectStore from '@/store/useProjectStore';
+import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
 
 const useHandleCreateFile = () => {
-  const projectId = useProjectStore.getState().currentProject.id;
+  const projectId = getCurrentProjectId();
+  console.log(projectId);
 
   const handleCreateFileRequest = async (
     node: FileNodeType,
@@ -14,10 +15,12 @@ const useHandleCreateFile = () => {
       let sendFilePath;
       let responseData;
 
+      //요청 보낼 파일 부모의 경로 구하기
       const parentPath = useFileTreeStore
         .getState()
         .findNodePath(node.parentId);
 
+      //요청 보낼 파일의 전체 경로
       if (parentPath == null) {
         sendFilePath = '/' + newNodeName;
       } else {
@@ -25,19 +28,17 @@ const useHandleCreateFile = () => {
       }
 
       if (node.type === 'FILE') {
-        const response = await axiosInstance.post('/api/files', {
+        //서버 생성 요청 -> 파일
+        const response = await axiosInstance.post('/api/v2/files', {
           projectId: projectId,
-          directories: null,
-          files: sendFilePath,
-          content: '',
+          path: sendFilePath,
         });
         responseData = response.data;
       } else {
-        const response = await axiosInstance.post('/api/files', {
+        //서버 생성 요청 -> 폴더
+        const response = await axiosInstance.post('/api/v2/directories', {
           projectId: projectId,
-          directories: sendFilePath,
-          files: null,
-          content: '',
+          path: sendFilePath,
         });
         responseData = response.data;
       }
