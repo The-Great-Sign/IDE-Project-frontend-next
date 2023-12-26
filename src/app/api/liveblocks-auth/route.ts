@@ -9,18 +9,17 @@ const liveblocks = new Liveblocks({
   secret: API_KEY!,
 });
 
-// localStorage에 저장된 Authorization 값을 요청시 가져오기
-// 프론트단에서 가지고 있는 고유한 토큰값을 서버단에서 사용 가능
-// request -> body, headers 등에 Authorization 담아 보내기
-// = 서버에 토큰을 보내준다!
-
 export async function POST(request: NextRequest) {
+  // 랜덤 라이브커서 색 생성
+  const hex = '#' + Math.round(Math.random() * 0xffffff).toString(16);
+
+  const accessToken = request.headers.get('Authorization');
+
   const result = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URI}/user/info`,
     {
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYWNoZWwudWl1eEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzAzNTgyMDU1fQ.1uJOxOU0JdLTyR9koNtoYvLZTZ6h-yhhDJa3fG32Iz8',
+        Authorization: accessToken,
       },
     }
   );
@@ -30,7 +29,7 @@ export async function POST(request: NextRequest) {
     id: String(id),
     info: {
       name: nickname,
-      color: '#fff',
+      color: hex,
       picture: imageUrl,
     },
   };
