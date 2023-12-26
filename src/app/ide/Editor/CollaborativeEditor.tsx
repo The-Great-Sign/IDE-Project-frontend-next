@@ -7,7 +7,6 @@ import { useRoom, useSelf } from '@/liveblocks.config';
 import { Editor, EditorContainer } from './CollaborativeEditor.styles';
 import { createEditorState } from './CreateEditorState';
 import { useFileStore } from '@/store/useFileStore';
-import { debounce } from 'lodash';
 import useThemeStore from '@/store/useThemeStore';
 interface CollaborativeEditorProps {
   fileId: string;
@@ -31,10 +30,10 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
 
     const ytext = file.yDoc.getText('codemirror');
     // Yjs 변경 이벤트 리스너
-    const yTextListener = debounce(() => {
+    const yTextListener = () => {
       const newContent = ytext.toString();
       updateFileContent(fileId, newContent);
-    }, 100);
+    };
 
     ytext.observe(yTextListener);
     // const undoManager = new Y.UndoManager(ytext);
@@ -74,7 +73,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
       }
       if (ytext) ytext.unobserve(yTextListener);
     };
-  }, [fileId, isDarkMode]);
+  }, [fileId, isDarkMode, file?.yDoc, updateFileContent, room]);
 
   if (!file) return null;
 
