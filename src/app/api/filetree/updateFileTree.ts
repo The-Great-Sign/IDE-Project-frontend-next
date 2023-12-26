@@ -7,7 +7,7 @@ export const checkFileTree = async (projectId: string) => {
     const { setFileTree } = useFileTreeStore.getState();
 
     const response = await axiosInstance.get(
-      `/api/projects/${projectId}/directory`
+      `/api/v2/projects/${projectId}/directory`
     );
     const transformedData = transformToFileNodeType(response.data.results);
 
