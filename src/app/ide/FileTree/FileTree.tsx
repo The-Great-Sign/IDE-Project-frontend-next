@@ -20,12 +20,12 @@ import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
-import useProjectStore from '@/store/useProjectStore';
+import { getCurrentProjectId } from '../[projectId]/page';
 
 const FileTree = () => {
   const { fileTree, deleteNode, addNode, findNodePathByName } =
     useFileTreeStore();
-  const projectId = useProjectStore.getState().currentProject.id;
+  const projectId = getCurrentProjectId();
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
@@ -58,22 +58,22 @@ const FileTree = () => {
     const moveFile = async () => {
       try {
         let findParentPath;
-
-        if (node?.type === 'FILE' && befParentId !== parentId) {
+        //타입이 파일이고 같은 계층에 있지 않았을 때 움직일 수 있도록 한다.
+        if (node && node.type === 'FILE' && befParentId !== parentId) {
           const nowFilePath = state.findNodePath(node.id);
-
           const response = await axiosInstance.delete('/api/files', {
             data: { projectId: projectId, path: nowFilePath },
           });
 
+          //클라이언트 파일 트리에서 해당 노드 지우기
           dragIds.forEach((id: string) =>
             useFileTreeStore.getState().deleteNode(id)
           );
 
-          const newNode = node;
-          newNode.id = uuidv4();
-
+          //클라이언트 파일 트리에서 해당 노드 추가
           useFileTreeStore.getState().addNode(node, parentId);
+
+          //해당 노드가 새로 생성될 경로 찾기
           if (parentId) {
             findParentPath = state.findNodePath(parentId) + '/' + node.name;
           } else {

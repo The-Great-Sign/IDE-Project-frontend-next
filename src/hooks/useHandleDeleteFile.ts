@@ -1,30 +1,28 @@
 import axiosInstance from '../app/api/axiosInstance';
-
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { useFileTreeStore } from '@/store/useFileTreeStore';
-import useProjectStore from '@/store/useProjectStore';
+
+interface DeleteNodeResponseProps {
+  success: boolean;
+  message: string;
+  results: string;
+}
 
 const useHandleDeleteFileRequest = () => {
-  const projectId = useProjectStore.getState().currentProject.id;
-
-  const handleDeleteFileRequest = async (node: FileNodeType) => {
+  const handleDeleteFileRequest = async (
+    node: FileNodeType
+  ): Promise<DeleteNodeResponseProps> => {
     try {
-      const nowFilePath = useFileTreeStore.getState().findNodePath(node.id);
-
-      let sendPath;
-      if (nowFilePath == null) {
-        sendPath = '/' + node.name;
+      let response;
+      if (node.type === 'FILE') {
+        response = await axiosInstance.delete(`/api/v2/files/${node.id}`);
       } else {
-        sendPath = nowFilePath;
+        response = await axiosInstance.delete(`/api/v2/directories/${node.id}`);
       }
-
-      const response = await axiosInstance.delete('/api/files', {
-        data: { projectId: projectId, path: sendPath },
-      });
-
-      return response.data.success;
+      return response.data; // 가정: 서버 응답이 DeleteNodeResponseProps 형식을 따름
     } catch (error) {
       console.error(error);
+      // 에러 발생 시 DeleteNodeResponseProps 타입에 맞는 객체 반환
+      return { success: false, message: 'Error occurred', results: '' };
     }
   };
 
