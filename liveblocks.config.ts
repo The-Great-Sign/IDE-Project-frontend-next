@@ -1,8 +1,32 @@
+import axiosInstance from '@/app/api/axiosInstance';
+import LocalStorage from '@/utils/localstorage';
 import { createClient } from '@liveblocks/client';
 import { createRoomContext } from '@liveblocks/react';
 
 const client = createClient({
-  publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!,
+  // publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!,
+  authEndpoint: async (room) => {
+    const response = await fetch("/api/liveblocks-auth", {
+      method: "POST",
+      headers: {
+        Authentication: LocalStorage.getItem("accessToken"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ room }), // Don't forget to pass `room` down
+    });
+    return await response.json();
+  },
+
+    // const response = await fetch("/api/liveblocks-auth", {
+    //   method: "POST",
+    //   headers: {
+    //     Authentication: LocalStorage.getItem("accessToken"),
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ room }), // Don't forget to pass `room` down
+    // });
+    // return await response.json();
+  },
 });
 
 // Presence represents the properties that will exist on every User in the Room
