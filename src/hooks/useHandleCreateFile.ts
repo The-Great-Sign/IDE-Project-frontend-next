@@ -42,6 +42,7 @@ const useHandleCreateFile = () => {
         });
         responseData = response.data;
       }
+      console.log(responseData);
 
       return responseData;
     } catch (error) {
