@@ -12,7 +12,7 @@ import { BigButton } from '../../components/Button/Button';
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {
-    const googleLoginURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_BACKEND_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
+    const googleLoginURL = `${process.env.NEXT_PUBLIC_BACKEND_URI}/oauth2/authorization/google?redirect_uri=http://localhost:3000&mode=login`;
     window.location.href = googleLoginURL;
   };
 
