@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { findFilePath, removeNodeById } from '@/utils/fileTreeUtils';
+import { addNodeToTree, removeNodeById } from '@/utils/filetree/fileTreeUtils';
+import { FileSocketReceivedType } from '@/app/api/websocket';
+
+import { processWebSocketFileEvent } from '@/utils/filetree/fileTreeSocketUtils';
+import {
+  findFilePath,
+  findFilePathByName,
+} from '@/utils/filetree/findNodeUtils';
 
 interface FileTreeState {
   file: FileNodeType | null;
@@ -9,7 +16,11 @@ interface FileTreeState {
   updateNodeName: (nodeId: string, newName: string) => void;
   addNode: (newNode: FileNodeType, parentId?: string | null) => void;
   deleteNode: (nodeids: string | null) => void;
-  findNodePath: (nodeid: string) => string | null;
+  findNodePath: (nodeid: string | number | null) => string | null | number;
+  findNodePathByName: (nodename: string) => string | null;
+  handleWebSocketFileEvent: (fileData: FileSocketReceivedType) => void;
+  isNewNode: boolean;
+  setIsNewNode: (boolean: boolean) => void;
 }
 
 export const useFileTreeStore = create<FileTreeState>(set => ({
@@ -24,34 +35,32 @@ export const useFileTreeStore = create<FileTreeState>(set => ({
     })),
   addNode: (newNode: FileNodeType, parentId?: string | null) =>
     set(state => {
-      const addNodeToTree = (nodes: FileNodeType[]): FileNodeType[] =>
-        nodes.map(node => {
-          if (node.id === parentId) {
-            return {
-              ...node,
-              children: [...(node.children || []), newNode],
-            };
-          } else {
-            return {
-              ...node,
-              children: node.children
-                ? addNodeToTree(node.children)
-                : node.children,
-            };
-          }
-        });
       return {
         fileTree: parentId
-          ? addNodeToTree(state.fileTree)
+          ? addNodeToTree(state.fileTree, newNode, parentId)
           : [...state.fileTree, newNode],
       };
     }),
+
   deleteNode: nodeId =>
     set(state => ({
       fileTree: removeNodeById(state.fileTree, nodeId),
     })),
-  findNodePath: (nodeId: string) => {
+
+  findNodePath: (nodeid: string | number | null) => {
     const state: FileTreeState = useFileTreeStore.getState();
-    return findFilePath(state.fileTree, nodeId);
+    return findFilePath(state.fileTree, nodeid);
   },
+  findNodePathByName: (nodename: string) => {
+    const state: FileTreeState = useFileTreeStore.getState();
+    return findFilePathByName(state.fileTree, nodename);
+  },
+
+  handleWebSocketFileEvent: (fileData: FileSocketReceivedType) => {
+    set(state => ({
+      fileTree: processWebSocketFileEvent(state.fileTree, fileData),
+    }));
+  },
+  isNewNode: false,
+  setIsNewNode: isNewNode => set({ isNewNode }),
 }));
