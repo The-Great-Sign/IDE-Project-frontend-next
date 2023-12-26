@@ -14,4 +14,5 @@ const axiosInstance = axios.create({
 
 axiosInstance.defaults.headers.common['Authorization'] =
   useTokenStore.getState().accessToken;
+
 export default axiosInstance;

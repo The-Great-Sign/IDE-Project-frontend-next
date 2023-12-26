@@ -25,9 +25,9 @@ interface ProjectState {
 
   currentProject: ProjectProps;
   projects: ProjectProps[];
-  pp: string;
+  invitedProjectId: string;
   setProject: (project: ProjectProps) => void;
-  setProjectId: (id: string) => void;
+  setInvitedProjectId: (id: string) => void;
   addProject: (project: ProjectProps) => void;
   cRef: Client | null;
   setClient: (cref: Client | null) => void;
@@ -55,10 +55,10 @@ const useProjectStore = create<ProjectState>(set => ({
     createdAt: '',
     updatedAt: '',
   },
-  pp: '',
+  invitedProjectId: '',
   projects: [], // 프로젝트 목록
   setProject: (project: ProjectProps) => set({ currentProject: project }),
-  setProjectId: (id: string) => set({ pp: id }),
+  setInvitedProjectId: (id: string) => set({ invitedProjectId: id }),
   addProject: (project: ProjectProps) =>
     set(state => ({
       projects: [...state.projects, project as ProjectProps],
