@@ -5,7 +5,6 @@ import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
 
 const useHandleCreateFile = () => {
   const projectId = getCurrentProjectId();
-  console.log(projectId);
 
   const handleCreateFileRequest = async (
     node: FileNodeType,
@@ -43,7 +42,6 @@ const useHandleCreateFile = () => {
         responseData = response.data;
       }
       console.log(responseData);
-
       return responseData;
     } catch (error) {
       console.error(error);
