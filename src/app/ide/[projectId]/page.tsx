@@ -139,7 +139,7 @@ const Ide = () => {
       try {
         console.log(localStorage.getItem('accessToken'));
         const response = await axios.post(
-          `http://ec2-43-203-40-200.ap-northeast-2.compute.amazonaws.com:8080/api/projects/${projectId}/run`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/projects/${projectId}/run`,
           {},
 
           {

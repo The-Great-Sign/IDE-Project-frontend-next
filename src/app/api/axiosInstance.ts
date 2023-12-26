@@ -7,11 +7,12 @@ const headers = {
 };
 
 const axiosInstance = axios.create({
-  baseURL: 'http://ec2-43-203-40-200.ap-northeast-2.compute.amazonaws.com:8080',
+  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URI}`,
   headers: headers,
   withCredentials: true,
 });
 
 axiosInstance.defaults.headers.common['Authorization'] =
   useTokenStore.getState().accessToken;
+
 export default axiosInstance;

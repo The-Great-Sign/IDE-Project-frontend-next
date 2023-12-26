@@ -45,9 +45,7 @@ const getCurrentProjectId = () => {
 const initializeWebSocket = () => {
   const client = new Client({
     webSocketFactory: () =>
-      new SockJS(
-        `http://ec2-43-203-40-200.ap-northeast-2.compute.amazonaws.com:8080/ws/ide`
-      ),
+      new SockJS(`${process.env.NEXT_PUBLIC_BACKEND_URI}/ws/ide`),
     connectHeaders: {
       Authorization: testWebsocket.token,
       ProjectId: getCurrentProjectId(),
