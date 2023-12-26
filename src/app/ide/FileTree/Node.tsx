@@ -7,7 +7,8 @@ import { NodeRendererProps } from 'react-arborist';
 import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { findLanguage, isCorrectName } from '@/utils/fileTreeUtils';
+import { findLanguage } from '@/utils/filetree/findFileLangUtils';
+import { isCorrectName } from '@/utils/filetree/fileTreeUtils';
 import useHandleOpenFile from '@/hooks/useHandleOpenFile';
 import LanguageIcon from './LanguageIcon';
 import useHandleCreateFile from '@/hooks/useHandleCreateFile';
@@ -26,15 +27,21 @@ export const Node = ({
   const handleCreateFileRequest = useHandleCreateFile();
   const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
+  //파일 생성 버튼 클릭 시 바로 실행되는 로직
   const onCreateFile = async (newNodeName: string) => {
     const fileNode = {
-      ...node.data, // NodeApi 객체에서 FileNodeType 데이터 추출
-      name: newNodeName, // 새 이름 할당
+      ...node.data,
+      name: newNodeName,
     };
+
+    if (node.data.name === '') {
+      useFileTreeStore.getState().deleteNode(node.id);
+    }
 
     await handleCreateFileRequest(fileNode as FileNodeType, newNodeName);
   };
 
+  //파일 삭제 버튼 클릭 시 바로 실행되는 로직
   const onDeleteFile = async () => {
     try {
       const success = await handleDeleteFileRequest(node.data);
@@ -127,9 +134,6 @@ export const Node = ({
                   if (isCorrectName(node.data.name) === true) {
                     handleCreateFileRequest(node.data, node.data.name);
                     updateNodeName(node.id, node.data.name);
-                    const extendsName = node.data.name.split('.')[-1];
-                    //현재 노드의 언어를 해당 리턴 값으로 바꾸도록 추가 설정 필요
-                    findLanguage(extendsName);
                     node.submit(node.data.name);
                     onInputComplete(node.data.name);
                   } else {
@@ -146,6 +150,7 @@ export const Node = ({
                       node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
                       onInputComplete(e.currentTarget.value);
                     } else {
+                      node.reset();
                       tree.delete(node.id);
                     }
                   }

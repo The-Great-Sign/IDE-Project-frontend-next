@@ -23,7 +23,7 @@ import { useVisibleDiv } from '@/store/useVisibleDiv';
 import ShowEditor from '../Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
 import LoadingProject from '@/app/project/EnterProject/LoadingProject/LoadingProject';
-import { checkFileTree } from '@/utils/checkFileTree';
+import { checkFileTree } from '@/app/api/filetree/updateFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import axiosInstance from '@/app/api/axiosInstance';
 import { Client } from '@stomp/stompjs';
@@ -152,7 +152,7 @@ const Ide = () => {
     }
 
     return () => {};
-  }, [execute]);
+  }, [execute, setFileTree]);
 
   return execute == 'RUNNING' ? (
     <main>

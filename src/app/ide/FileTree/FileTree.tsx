@@ -18,33 +18,30 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { findNodeById } from '@/utils/fileTreeUtils';
+import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
 import useProjectStore from '@/store/useProjectStore';
 
 const FileTree = () => {
-  const { fileTree, setFileTree, deleteNode, addNode } = useFileTreeStore();
+  const { fileTree, deleteNode, addNode, findNodePathByName } =
+    useFileTreeStore();
   const projectId = useProjectStore.getState().currentProject.id;
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
-  const onCreate: CreateHandler<FileNodeType> = ({ type, index }) => {
-    const newUUID = uuidv4();
-
+  const onCreate: CreateHandler<FileNodeType> = ({ type, parentId }) => {
     const newNode: FileNodeType = {
-      id: `${index}-${newUUID}`,
+      id: uuidv4(),
       name: '',
       type: type === 'internal' ? 'DIRECTORY' : 'FILE',
       ...(type === 'internal' && { children: [] }),
       isDirty: false,
       isOpened: true,
+      filePath: findNodePathByName(''),
+      parentId: parentId,
     };
 
-    const newParent = treeRef.current?.focusedNode?.id;
-    addNode(newNode, newParent);
-
-    const newFileTree = [...fileTree, newNode];
-    setFileTree(newFileTree);
+    addNode(newNode, parentId);
 
     return newNode;
   };
