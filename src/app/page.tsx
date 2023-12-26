@@ -23,6 +23,7 @@ const App = () => {
     <>
       <MainHeader />
       <MainContainer>
+        <h2>대박징조 DJIDE PROJECT</h2>
         <h2>
           대징 IDE와
           <br />
