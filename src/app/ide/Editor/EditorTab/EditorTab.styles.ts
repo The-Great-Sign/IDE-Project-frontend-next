@@ -1,5 +1,5 @@
 import { COLORS } from '@/constants/colors';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 
 export const EditorTabContainer = styled.div`
@@ -11,6 +11,7 @@ export const EditorTabContainer = styled.div`
   border-bottom: 1px solid ${COLORS.primary};
   flex-direction: row;
   justify-content: space-evenly;
+  color: ${props => props.theme.colors.text};
 `;
 
 export const FileTab = styled.div`
@@ -29,7 +30,6 @@ export const FileTab = styled.div`
 
 export const FileInfo = styled.div`
   padding-left: 10px;
-  color: #fff;
   font-size: 12px;
 `;
 

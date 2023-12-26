@@ -42,6 +42,7 @@
     "@mui/material": "^5.15.0",
     "@mui/material-nextjs": "^5.15.0",
     "@stomp/stompjs": "^7.0.0",
+    "@uiw/codemirror-theme-github": "^4.21.21",
     "axios": "^1.6.2",
     "cm6-theme-material-dark": "^0.2.0",
     "cm6-theme-solarized-dark": "^0.2.0",

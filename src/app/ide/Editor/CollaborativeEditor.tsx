@@ -8,7 +8,7 @@ import { Editor, EditorContainer } from './CollaborativeEditor.styles';
 import { createEditorState } from './CreateEditorState';
 import { useFileStore } from '@/store/useFileStore';
 import { debounce } from 'lodash';
-
+import useThemeStore from '@/store/useThemeStore';
 interface CollaborativeEditorProps {
   fileId: string;
 }
@@ -23,7 +23,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
   const userInfo = useSelf(me => me.info);
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
-
+  const isDarkMode = useThemeStore(state => state.isDarkMode);
   // const [yUndoManager, setYUndoManager] = useState<Y.UndoManager>();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
     const yTextListener = debounce(() => {
       const newContent = ytext.toString();
       updateFileContent(fileId, newContent);
-    }, 500);
+    }, 100);
 
     ytext.observe(yTextListener);
     // const undoManager = new Y.UndoManager(ytext);
@@ -55,7 +55,8 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
       file.id,
       file.content,
       file.language,
-      provider
+      provider,
+      isDarkMode
     );
 
     viewRef.current = new EditorView({
@@ -73,7 +74,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
       }
       if (ytext) ytext.unobserve(yTextListener);
     };
-  }, [fileId]);
+  }, [fileId, isDarkMode]);
 
   if (!file) return null;
 
