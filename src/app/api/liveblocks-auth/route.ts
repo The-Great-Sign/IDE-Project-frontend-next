@@ -1,6 +1,7 @@
 import { Liveblocks } from '@liveblocks/node';
 import { NextRequest } from 'next/server';
-import useUserStore from '@/store/useUserStore';
+
+import axios from 'axios';
 
 const API_KEY = process.env.LIVEBLOCKS_SECRET_KEY;
 
@@ -8,20 +9,32 @@ const liveblocks = new Liveblocks({
   secret: API_KEY!,
 });
 
-export async function POST(request: NextRequest) {
-  // Get the current user's info from your database
-  const { id, name, cursorColor } = useUserStore.getState();
+// localStorage에 저장된 Authorization 값을 요청시 가져오기
+// 프론트단에서 가지고 있는 고유한 토큰값을 서버단에서 사용 가능
+// request -> body, headers 등에 Authorization 담아 보내기
+// = 서버에 토큰을 보내준다!
 
-  // 실제 데이터 들어오면 바꾸기
-  const tempUserImageUrl = 'https://liveblocks.io/avatars/avatar-4.png';
+export async function POST(request: NextRequest) {
+  const result = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URI}/user/info`,
+    {
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYWNoZWwudWl1eEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzAzNTgyMDU1fQ.1uJOxOU0JdLTyR9koNtoYvLZTZ6h-yhhDJa3fG32Iz8',
+      },
+    }
+  );
+  const { id, nickname, imageUrl } = result.data.results;
+
   const user = {
-    id,
+    id: String(id),
     info: {
-      name,
-      color: cursorColor,
-      picture: tempUserImageUrl,
+      name: nickname,
+      color: '#fff',
+      picture: imageUrl,
     },
   };
+  console.log(user);
 
   if (!user) {
     return new Response('Unauthorized', { status: 401 });
@@ -31,7 +44,7 @@ export async function POST(request: NextRequest) {
   // userInfo is made available in Liveblocks presence hooks, e.g. useOthers
   // Start an auth session inside your endpoint
 
-  const session = liveblocks.prepareSession(`user.id`, {
+  const session = liveblocks.prepareSession(user.id, {
     userInfo: user.info,
   });
 
