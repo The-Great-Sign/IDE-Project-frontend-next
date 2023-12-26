@@ -84,7 +84,7 @@ const FileTree = () => {
             projectId: projectId,
             directories: null,
             files: findParentPath,
-            content: 'print("Hello, World!")',
+            content: '',
           });
 
           console.log(response2);

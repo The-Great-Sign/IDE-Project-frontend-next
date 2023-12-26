@@ -11,17 +11,12 @@ interface WebsocketProps {
   token: string;
 }
 
-interface StatusProps {
-  containerId: string;
-  status: 'PENDING' | 'RUNNING';
-}
-
 export const testWebsocket: WebsocketProps = {
   projectId: useProjectStore.getState().currentProject.id,
   token: useTokenStore.getState().accessToken,
 };
 
-type SubscribeProps = StompSubscription | null;
+export type SubscribeProps = StompSubscription | null;
 
 export interface ChattingType {
   messageType: 'ENTER' | 'EXIT' | 'TALK';
@@ -29,6 +24,13 @@ export interface ChattingType {
   content: string;
   currentUsers: number;
 }
+
+const getCurrentProjectId = () => {
+  const path = window.location.pathname;
+  const pathSegments = path.split('/');
+  const projectId = pathSegments[2];
+  return projectId;
+};
 
 export interface FileSocketReceivedType {
   event: string;
@@ -44,32 +46,20 @@ const initializeWebSocket = () => {
       ),
     connectHeaders: {
       Authorization: testWebsocket.token,
-      ProjectId: testWebsocket.projectId,
+      ProjectId: getCurrentProjectId(),
     },
   });
-
+  console.log('새로운 클라이언트', client);
   return client;
 };
 
-const subscribeLoading = (client: Client | null): SubscribeProps => {
+const subscribeChatting = (
+  client: Client | null,
+  projectId: string
+): SubscribeProps => {
   if (client) {
     return client.subscribe(
-      `/topic/project/${testWebsocket.projectId}/container-loading`,
-      ReceivedLoading => {
-        const data = JSON.parse(ReceivedLoading.body) as StatusProps;
-        useProjectStore.getState().setStatus(data.status);
-        console.log(`Received: ${ReceivedLoading.body}`);
-        console.log(useProjectStore.getState().status);
-      }
-    );
-  }
-  return null;
-};
-
-const subscribeChatting = (client: Client | null): SubscribeProps => {
-  if (client) {
-    return client.subscribe(
-      `/topic/project/${testWebsocket.projectId}/chat`,
+      `/topic/project/${projectId}/chat`,
       ReceivedMessage => {
         const messageData = JSON.parse(ReceivedMessage.body) as ChattingType;
 
@@ -81,10 +71,13 @@ const subscribeChatting = (client: Client | null): SubscribeProps => {
   return null;
 };
 
-const subscribeTerminal = (client: Client | null): SubscribeProps => {
+const subscribeTerminal = (
+  client: Client | null,
+  projectId: string
+): SubscribeProps => {
   if (client) {
     return client.subscribe(
-      `/user/queue/project/${testWebsocket.projectId}/terminal`,
+      `/user/queue/project/${projectId}/terminal`,
       ReceivedTerminal => {
         console.log('terminal connected');
         console.log(`Received: ${ReceivedTerminal.body}`);
@@ -94,10 +87,13 @@ const subscribeTerminal = (client: Client | null): SubscribeProps => {
   return null;
 };
 
-const subscribeFile = (client: Client | null): SubscribeProps => {
+const subscribeFile = (
+  client: Client | null,
+  projectId: string
+): SubscribeProps => {
   if (client) {
     return client.subscribe(
-      `/topic/project/${testWebsocket.projectId}/file`,
+      `/topic/project/${projectId}/file`,
       ReceivedFile => {
         console.log('file connected');
         console.log(`Received: ${ReceivedFile.body}`);
@@ -111,7 +107,6 @@ const subscribeFile = (client: Client | null): SubscribeProps => {
 
 export {
   initializeWebSocket,
-  subscribeLoading,
   subscribeChatting,
   subscribeTerminal,
   subscribeFile,

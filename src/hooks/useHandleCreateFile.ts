@@ -1,4 +1,4 @@
-import axiosInstance from '../api/axiosInstance';
+import axiosInstance from '../app/api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import useProjectStore from '@/store/useProjectStore';
@@ -29,7 +29,7 @@ const useHandleCreateFile = () => {
           projectId: projectId,
           directories: null,
           files: sendFilePath,
-          content: 'print("Hello, World!")',
+          content: '',
         });
         responseData = response.data;
       } else {
@@ -37,7 +37,7 @@ const useHandleCreateFile = () => {
           projectId: projectId,
           directories: sendFilePath,
           files: null,
-          content: 'print("Hello, World!")',
+          content: '',
         });
         responseData = response.data;
       }

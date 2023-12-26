@@ -11,11 +11,15 @@ import {
   ChattingSendButton,
 } from './Chatting.styles';
 import useGeneralChatStore from '@/store/useChattingStore';
-import { testWebsocket } from '@/app/api/websocket';
-import useProjectStore from '@/store/useProjectStore';
+import { getCurrentProjectId } from '../[projectId]/page';
+import { Client } from '@stomp/stompjs';
 
-const GeneralChatting = () => {
-  const client = useProjectStore.getState().cRef;
+interface GeneralChattingProps {
+  clientRef: React.RefObject<Client>;
+}
+
+const GeneralChatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
+  const client = clientRef.current;
   const [sendContent, setSendContent] = useState('');
   const messages = useGeneralChatStore(state => state.messages);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -34,7 +38,7 @@ const GeneralChatting = () => {
 
     if (client) {
       client.publish({
-        destination: `/app/project/${testWebsocket.projectId}/chat-create`,
+        destination: `/app/project/${getCurrentProjectId()}/chat-create`,
         body: JSON.stringify(sendMessage),
       });
       setSendContent('');

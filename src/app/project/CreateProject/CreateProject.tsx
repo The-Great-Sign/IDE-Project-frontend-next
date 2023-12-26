@@ -43,8 +43,6 @@ const CreateProject = () => {
         useProjectStore.getState().addProject(data.results);
         useProjectStore.getState().setProject(data.results);
         setIsCreated(true);
-        // const currentState = useProjectStore.getState();
-        // console.log("현재 프로젝트 상태:", currentState.projects);
       } else {
         alert(data.message);
       }
@@ -65,7 +63,6 @@ const CreateProject = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log(createData);
     postCreateProject(createData);
   };
 

@@ -17,26 +17,30 @@ export interface ProjectProps {
 }
 
 interface ProjectState {
-  executeProject: ExecuteState;
+  executeState: ExecuteState;
   setExecuteState: (execute: ExecuteState) => void;
+
   status: 'PENDING' | 'RUNNING';
   setStatus: (currentstatus: 'PENDING' | 'RUNNING') => void;
+
   currentProject: ProjectProps;
   projects: ProjectProps[];
+  pp: string;
   setProject: (project: ProjectProps) => void;
+  setProjectId: (id: string) => void;
   addProject: (project: ProjectProps) => void;
   cRef: Client | null;
   setClient: (cref: Client | null) => void;
 }
 
 const useProjectStore = create<ProjectState>(set => ({
-  executeProject: {
+  executeState: {
     // 실행 요청 결과
     success: false,
     message: '',
     results: 'PENDING',
   },
-  setExecuteState: (execute: ExecuteState) => set({ executeProject: execute }),
+  setExecuteState: (execute: ExecuteState) => set({ executeState: execute }),
 
   status: 'PENDING',
   setStatus: (currentstatus: 'PENDING' | 'RUNNING') =>
@@ -51,8 +55,10 @@ const useProjectStore = create<ProjectState>(set => ({
     createdAt: '',
     updatedAt: '',
   },
+  pp: '',
   projects: [], // 프로젝트 목록
   setProject: (project: ProjectProps) => set({ currentProject: project }),
+  setProjectId: (id: string) => set({ pp: id }),
   addProject: (project: ProjectProps) =>
     set(state => ({
       projects: [...state.projects, project as ProjectProps],
