@@ -28,6 +28,9 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import axiosInstance from '@/app/api/axiosInstance';
 import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
+import axios from 'axios';
+import useTokenStore from '@/store/useTokenStore';
+import useUserStore from '@/store/useUserStore';
 
 interface ReceivedTerminalType {
   success: boolean;
@@ -53,15 +56,33 @@ const Ide = () => {
   const { isvisibleDiv } = useVisibleDiv();
   const { setFileTree } = useFileTreeStore();
 
-  const postEnterProject = async (projectId: string) => {
+  useEffect(() => {
+    const storedAccessToken = localStorage.getItem('accessToken');
+
+    if (storedAccessToken) {
+      // 로컬 스토리지에서 토큰을 가져와 상태에 저장
+      useTokenStore.getState().setAccessToken(storedAccessToken);
+      console.log(storedAccessToken);
+      useUserStore.getState().setLogin(true);
+      fetchUserInfo();
+    }
+  }, []);
+
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
     try {
-      const response = await axiosInstance.post(
-        `/api/projects/${projectId}/run`
-      );
-      const data = response.data;
-      setExecute(data.results);
+      axiosInstance.defaults.headers.common['Authorization'] =
+        localStorage.getItem('accessToken');
+      console.log('혹시 여기 있나');
+      console.log(useTokenStore.getState().accessToken);
+      const response = await axiosInstance.get('/user/info');
+
+      const { id, nickname, imageUrl } = response.data.results;
+      console.log(response);
+      useUserStore.getState().setUser(id, nickname, imageUrl);
+      console.log(useUserStore.getState().imageUrl);
     } catch (error) {
-      console.error(error);
+      console.error('사용자 정보를 가져오는 데 실패했습니다.', error);
     }
   };
 
@@ -114,6 +135,29 @@ const Ide = () => {
   };
 
   useEffect(() => {
+    const postEnterProject = async (projectId: string) => {
+      try {
+        console.log(localStorage.getItem('accessToken'));
+        const response = await axios.post(
+          `http://ec2-43-203-40-200.ap-northeast-2.compute.amazonaws.com:8080/api/projects/${projectId}/run`,
+          {},
+
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              Authorization: localStorage.getItem('accessToken'),
+            },
+          }
+        );
+        console.log(localStorage.getItem('accessToken'));
+        const data = response.data;
+        setExecute(data.results);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     xtermRef.current = new XTerm();
     if (terminalRef.current && xtermRef.current) {
       xtermRef.current.open(terminalRef.current);
@@ -140,11 +184,6 @@ const Ide = () => {
               getCurrentProjectId()
             );
             subscribeFile(clientRef.current, getCurrentProjectId());
-            checkFileTree(getCurrentProjectId()).then(response => {
-              if (response) {
-                setFileTree(response.data.results);
-              }
-            });
           };
         }
         clientRef.current.activate();
@@ -152,7 +191,15 @@ const Ide = () => {
     }
 
     return () => {};
-  }, [execute, setFileTree]);
+  }, [execute]);
+
+  useEffect(() => {
+    checkFileTree(getCurrentProjectId()).then(response => {
+      if (response) {
+        setFileTree(response.data.results);
+      }
+    });
+  }, [setFileTree]);
 
   return execute == 'RUNNING' ? (
     <main>
