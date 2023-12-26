@@ -1,20 +1,20 @@
 'use client';
 
-import { SmallButton } from '@/components/Button/Button';
+import { ExitBtn, SmallButton } from '@/components/Button/Button';
 import StyledLink from '@/components/StyledLink/StyledLink';
 import {
   IDEBtnDiv,
   IDEHeaderContainer,
   IDELogo,
+  LeftBox,
   RightBox,
   StyleAiOutlineComment,
 } from './IDEHeader.styles';
 import { FaPlay } from 'react-icons/fa6';
 import { FaCheckCircle } from 'react-icons/fa';
 import axiosInstance from '@/app/api/axiosInstance';
-import { useFileStore } from '@/store/useFileStore';
-import useProjectStore from '@/store/useProjectStore';
-import { useFileTreeStore } from '@/store/useFileTreeStore';
+// import { useFileStore } from '@/store/useFileStore';
+// import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
 import { getCurrentProjectId } from '../[projectId]/page';
 import { useVisibleChat } from '@/store/useChattingStore';
@@ -25,33 +25,34 @@ interface IDEHeaderProps {
 
 const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
   const { toggleChat } = useVisibleChat();
-  const { files, selectedFileId } = useFileStore();
-  const projectId = useProjectStore.getState().currentProject.id;
-  const { findNodePath } = useFileTreeStore();
-  const handleSave = async () => {
-    if (selectedFileId) {
-      const selectedFile = files.find(f => f.id === selectedFileId);
+  // const { files, selectedFileId } = useFileStore();
+  // const { findNodePath } = useFileTreeStore();
 
-      if (selectedFile) {
-        const filePath = findNodePath(selectedFileId); // 전체 파일 경로 찾기
-        if (filePath) {
-          try {
-            await axiosInstance.post('/api/files', {
-              projectId: projectId,
-              directories: null,
-              files: filePath,
-              content: selectedFile.content,
-            });
-            console.log('selectedFile.content: ', selectedFile.content);
-            alert('파일이 저장되었습니다.');
-          } catch (error) {
-            console.error('파일 저장 중 오류 발생:', error);
-            alert('파일 저장에 실패했습니다.');
-          }
-        }
-      }
-    }
-  };
+  // [TO DO] 구현 필요
+  // const handleSave = async () => {
+  //   if (selectedFileId) {
+  //     const selectedFile = files.find(f => f.id === selectedFileId);
+
+  //     if (selectedFile) {
+  //       const filePath = findNodePath(selectedFileId); // 전체 파일 경로 찾기
+  //       if (filePath) {
+  //         try {
+  //           await axiosInstance.post('/api/v2/files', {
+  //             // fileId 제대로 받아오기
+  //             fileId,
+  //             path: filePath,
+  //             content: selectedFile.content,
+  //           });
+  //           console.log('selectedFile.content: ', selectedFile.content);
+  //           alert('파일이 저장되었습니다.');
+  //         } catch (error) {
+  //           console.error('파일 저장 중 오류 발생:', error);
+  //           alert('파일 저장에 실패했습니다.');
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
   const handleClose = async () => {
     const confirmClose = confirm('프로젝트를 종료하시겠습니까?');
@@ -71,15 +72,17 @@ const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
 
   return (
     <IDEHeaderContainer>
-      <StyledLink onClick={handleClose} href="#">
-        뒤로가기
-      </StyledLink>
-      <IDELogo>
-        <StyledLink href="/">DJIDE</StyledLink>
-      </IDELogo>
+      <LeftBox>
+        <ExitBtn onClick={handleClose} href="#" size="small">
+          🅧
+        </ExitBtn>
+        <IDELogo>
+          <StyledLink href="/">DJIDE</StyledLink>
+        </IDELogo>
+      </LeftBox>
       <IDEBtnDiv>
         <SmallButton
-          onClick={handleSave}
+          // onClick={handleSave}
           aria-label="save"
           variant="contained"
           size="small"
@@ -93,7 +96,7 @@ const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
         </SmallButton>
       </IDEBtnDiv>
       <RightBox>
-        <StyleAiOutlineComment onClick={toggleChat} />
+        <StyleAiOutlineComment onClick={toggleChat} size={30} />
       </RightBox>
     </IDEHeaderContainer>
   );
