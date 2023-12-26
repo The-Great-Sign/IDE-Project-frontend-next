@@ -1,8 +1,5 @@
 import { create } from 'zustand';
 
-// 랜덤 라이브커서 색 생성
-const hex = '#' + Math.round(Math.random() * 0xffffff).toString(16);
-
 const randId = Math.floor(Math.random() * 100);
 interface UserState {
   id: string;

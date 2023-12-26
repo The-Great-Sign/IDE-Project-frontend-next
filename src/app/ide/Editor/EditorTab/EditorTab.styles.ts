@@ -34,7 +34,6 @@ export const FileInfo = styled.div`
 `;
 
 export const CloseIcon = styled(AiOutlineClose)`
-  color: white;
   cursor: pointer;
   width: 13px;
 `;
@@ -45,6 +44,5 @@ export const FileClose = styled.div`
   width: 35px;
   justify-content: center;
   align-items: center;
-  color: #fff;
   cursor: pointer;
 `;
