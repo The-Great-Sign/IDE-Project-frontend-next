@@ -19,6 +19,10 @@ const Chatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
   const [activeTab, setActiveTab] = useState<string>('채팅');
   const users = useGeneralChatStore(state => state.users);
 
+  // useEffect(() => {
+  //   setActiveTab(`채팅 (${users})`);
+  // }, [users]);
+
   const handleClick = (tab: string) => {
     setActiveTab(tab);
   };

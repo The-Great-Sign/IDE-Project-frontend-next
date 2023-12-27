@@ -65,6 +65,7 @@ const Ide = () => {
   const router = useRouter();
 
   useEffect(() => {
+    localStorage.removeItem('invitedProjectId');
     const storedAccessToken = useTokenStore.getState().accessToken;
     if (storedAccessToken) {
       reloadTokenSetting(storedAccessToken);
