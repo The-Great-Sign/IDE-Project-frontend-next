@@ -21,13 +21,12 @@ export const Node = ({
   tree,
 }: NodeRendererProps<FileNodeType>) => {
   const { updateNodeName } = useFileTreeStore();
-
   const handleOpenFile = useHandleOpenFile();
   const handleCreateFileRequest = useHandleCreateFile();
   const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
   //파일 생성 버튼 클릭 시 바로 실행되는 로직
-  const onCreateFile = async (newNodeName: string) => {
+  const handleCreateFile = async (newNodeName: string) => {
     const fileNode = {
       ...node.data,
       name: newNodeName,
@@ -41,21 +40,26 @@ export const Node = ({
   };
 
   //파일 삭제 버튼 클릭 시 바로 실행되는 로직
-  const onDeleteFile = async () => {
+  const handleDeleteFile = async () => {
     try {
       const success = await handleDeleteFileRequest(node.data);
 
       if (success) {
-        // 서버에서 받아온 파일 id 값으로 바꾸기
-        const roomId = node.id;
-        const response = await axiosInstance.delete(
-          `/api/live-blocks/rooms/file-${roomId}`
-        );
-        console.log(response);
         tree.delete(node.id);
         alert('삭제 성공');
-      } else {
-        alert('라이브블록 : 파일 삭제에 문제가 있습니다.');
+
+        // 30초 후에 Liveblocks와 room 관련 처리 실행
+        setTimeout(async () => {
+          const roomId = node.id;
+          try {
+            const response = await axiosInstance.delete(
+              `/api/live-blocks/rooms/file-${roomId}`
+            );
+            console.log('Liveblocks room 삭제 성공', response);
+          } catch (error) {
+            console.error('Liveblocks room 삭제 중 오류 발생', error);
+          }
+        }, 30000);
       }
     } catch (error) {
       console.error('Error deleting file:', error);
@@ -70,17 +74,17 @@ export const Node = ({
   };
 
   // 파일 이름 입력 완료 처리
-  const onInputComplete = (newName: string) => {
+  const handleInputComplete = (newName: string) => {
     handleFileOpenAndUpdate(node.id, newName);
   };
 
   //enter or blur 클릭 시 서버 및 파일트리 렌더링 처리
   const handleFileAdd = (fileId: string, newName: string) => {
     if (isCorrectName(newName) === true) {
-      onCreateFile(newName);
+      handleCreateFile(newName);
       updateNodeName(fileId, newName);
       node.submit(newName); //이때 서버로도 메시지 보내야 함
-      onInputComplete(newName);
+      handleInputComplete(newName);
     } else {
       node.reset();
       tree.delete(node.id);
@@ -164,7 +168,7 @@ export const Node = ({
             <button onClick={() => node.edit()} title="Rename...">
               <MdEdit />
             </button>
-            <button onClick={onDeleteFile} title="Delete">
+            <button onClick={handleDeleteFile} title="Delete">
               <RxCross2 />
             </button>
           </div>
