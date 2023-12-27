@@ -56,6 +56,8 @@ const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
     }
   };
 
+  const handleRun = () => {};
+
   const handleClose = async () => {
     const confirmClose = confirm('프로젝트를 종료하시겠습니까?');
     if (confirmClose) {
@@ -92,7 +94,12 @@ const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
           <FaCheckCircle />
           저장
         </SmallButton>
-        <SmallButton aria-label="run code" variant="contained" size="small">
+        <SmallButton
+          onClick={handleRun}
+          aria-label="run code"
+          variant="contained"
+          size="small"
+        >
           <FaPlay />
           실행
         </SmallButton>
