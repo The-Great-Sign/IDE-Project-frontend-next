@@ -1,34 +1,31 @@
 import { create } from 'zustand';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
+import { addNodeToTree, removeNodeById } from '@/utils/filetree/fileTreeUtils';
+import { FileSocketReceivedType } from '@/app/api/websocket';
 
-const data: FileNodeType[] = [
-  {
-    id: '1',
-    name: 'test',
-    children: [{ id: 'c1-1', name: 'test.html' }],
-  },
-  {
-    id: '2',
-    name: 'src',
-    children: [
-      { id: 'c2-1', name: 'App.js' },
-      { id: 'c2-2', name: 'index.js' },
-      { id: 'c2-3', name: 'styles.css' },
-    ],
-  },
-  { id: '3', name: 'package.json' },
-  { id: '4', name: 'README.md' },
-];
+import { processWebSocketFileEvent } from '@/utils/filetree/fileTreeSocketUtils';
+import {
+  findFilePath,
+  findFilePathByName,
+} from '@/utils/filetree/findNodeUtils';
 
 interface FileTreeState {
+  file: FileNodeType | null;
   fileTree: FileNodeType[];
   setFileTree: (fileTree: FileNodeType[]) => void;
   updateNodeName: (nodeId: string, newName: string) => void;
-  addNode: (newNode: FileNodeType, parentId: string | null) => void;
+  addNode: (newNode: FileNodeType, parentId?: string | null) => void;
+  deleteNode: (nodeids: string | null) => void;
+  findNodePath: (nodeid: string | number | null) => string | null | number;
+  findNodePathByName: (nodename: string) => string | null;
+  handleWebSocketFileEvent: (fileData: FileSocketReceivedType) => void;
+  isNewNode: boolean;
+  setIsNewNode: (boolean: boolean) => void;
 }
 
 export const useFileTreeStore = create<FileTreeState>(set => ({
-  fileTree: data,
+  file: null,
+  fileTree: [],
   setFileTree: fileTree => set({ fileTree }),
   updateNodeName: (nodeId, newName) =>
     set(state => ({
@@ -36,8 +33,34 @@ export const useFileTreeStore = create<FileTreeState>(set => ({
         return node.id === nodeId ? { ...node, name: newName } : node;
       }),
     })),
-  addNode: newNode =>
+  addNode: (newNode: FileNodeType, parentId?: string | null) =>
+    set(state => {
+      return {
+        fileTree: parentId
+          ? addNodeToTree(state.fileTree, newNode, parentId)
+          : [...state.fileTree, newNode],
+      };
+    }),
+
+  deleteNode: nodeId =>
     set(state => ({
-      fileTree: [...state.fileTree, newNode],
+      fileTree: removeNodeById(state.fileTree, nodeId),
     })),
+
+  findNodePath: (nodeid: string | number | null) => {
+    const state: FileTreeState = useFileTreeStore.getState();
+    return findFilePath(state.fileTree, nodeid);
+  },
+  findNodePathByName: (nodename: string) => {
+    const state: FileTreeState = useFileTreeStore.getState();
+    return findFilePathByName(state.fileTree, nodename);
+  },
+
+  handleWebSocketFileEvent: (fileData: FileSocketReceivedType) => {
+    set(state => ({
+      fileTree: processWebSocketFileEvent(state.fileTree, fileData),
+    }));
+  },
+  isNewNode: false,
+  setIsNewNode: isNewNode => set({ isNewNode }),
 }));

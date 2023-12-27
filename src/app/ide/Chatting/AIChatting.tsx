@@ -1,29 +1,124 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AIChattingDiv,
   ChattingMessages,
-  // ChattingMessage, ChattingName, ChattingContent,
+  ChattingMessage,
+  ChattingName,
+  ChattingContent,
   ChattingInputForm,
   ChattingInput,
   ChattingSendButton,
+  CodeReviewBtn,
 } from './Chatting.styles';
+import { AIType, useAIChatStore } from '@/store/useChattingStore';
+import { useFileStore } from '@/store/useFileStore';
+import axiosInstance from '@/app/api/axiosInstance';
 
 const AIChatting = () => {
+  const [question, setQuestion] = useState<string>('');
+  const AImessages = useAIChatStore(state => state.AImessages);
+  const { files, selectedFileId } = useFileStore();
+
+  const postSimpleQuestion = async (question: string) => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/ask`,
+        { question: question }
+      );
+      const data = response.data;
+      if (data.success) {
+        useAIChatStore.getState().addAIMessage(data);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postCodeReview = async (fileId: string) => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/review-file/${fileId}`
+      );
+      const data = response.data;
+      if (data.success) {
+        useAIChatStore.getState().addAIMessage(data);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleQuestion = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setQuestion(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const questionMessage = {
+      success: true,
+      message: '질문',
+      results: question,
+    };
+    console.log(questionMessage);
+    useAIChatStore.getState().addAIMessage(questionMessage);
+    postSimpleQuestion(question);
+    setQuestion('');
+  };
+
+  const handleReview = () => {
+    const selectedFile = files.find(f => f.id === selectedFileId);
+    if (selectedFile) {
+      const questionMessage = {
+        success: true,
+        message: '질문',
+        results: '현재 파일 코드리뷰 해줘',
+      };
+      useAIChatStore.getState().addAIMessage(questionMessage);
+      postCodeReview(selectedFile?.id);
+    } else if (selectedFileId === null) {
+      alert('코드리뷰할 파일을 선택해주세요!');
+    } else {
+      alert('다시 시도해주세요!');
+    }
+  };
+
   return (
     <AIChattingDiv>
+      <CodeReviewBtn onClick={handleReview} type="button">
+        코드 리뷰
+      </CodeReviewBtn>
       <ChattingMessages>
-        {/* {messages.map((message) => {
-          const { id, name, content } = message;
-          <ChattingMessage id={id}>
-            <ChattingName>{name}</ChattingName>
-            <ChattingContent>{content}</ChattingContent>
-          </ChattingMessage>
-        })} */}
+        {AImessages.map((AImessage: AIType, index: number) => {
+          const { message, results } = AImessage;
+          return (
+            <ChattingMessage key={index}>
+              {message == '질문' ? (
+                <>
+                  <ChattingName>나</ChattingName>
+                  <ChattingContent>{results}</ChattingContent>
+                </>
+              ) : (
+                <>
+                  <ChattingName>Chat GPT</ChattingName>
+                  <ChattingContent>{results}</ChattingContent>
+                </>
+              )}
+            </ChattingMessage>
+          );
+        })}
       </ChattingMessages>
 
-      <ChattingInputForm>
-        <ChattingInput placeholder="채팅을 입력하세요" />
-        <ChattingSendButton>전송</ChattingSendButton>
+      <ChattingInputForm onSubmit={handleSubmit}>
+        <ChattingInput
+          placeholder="채팅을 입력하세요"
+          value={question}
+          onChange={handleQuestion}
+        />
+        <ChattingSendButton type="submit">전송</ChattingSendButton>
       </ChattingInputForm>
     </AIChattingDiv>
   );

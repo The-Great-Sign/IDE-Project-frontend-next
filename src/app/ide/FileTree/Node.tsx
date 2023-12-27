@@ -1,118 +1,187 @@
-import { AiFillFolder, AiFillFolderOpen, AiOutlineFile } from 'react-icons/ai';
-import { NodeRendererProps } from 'react-arborist';
-import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
-import { MdEdit } from 'react-icons/md';
-import { RxCross2 } from 'react-icons/rx';
-import { FileDiv, NodeContainer } from './FileTree.styles';
 import React from 'react';
-import axiosInstance from '@/app/api/axiosInstance';
-import useCurrentOpenFile from '@/store/useCurrentOpenFile';
-import { findNowFilePath } from '@/utils/fileTreeUtils';
+import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
+import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
+import { RxCross2 } from 'react-icons/rx';
+import { NodeRendererProps } from 'react-arborist';
+import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
+import { findLanguage } from '@/utils/filetree/findFileLangUtils';
+import { isCorrectName } from '@/utils/filetree/fileTreeUtils';
+import useHandleOpenFile from '@/hooks/useHandleOpenFile';
+import LanguageIcon from './LanguageIcon';
+import useHandleCreateFile from '@/hooks/useHandleCreateFile';
+import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';
+import axiosInstance from '@/app/api/axiosInstance';
+import { useContextMenuStore } from '@/store/useContextMenuStore';
 
 export const Node = ({
   node,
   style,
   dragHandle,
   tree,
-}: NodeRendererProps<FileNodeType>) => {
+}: NodeRendererProps<FileNodeType> & {
+  // handleHoveredId?: (id: string) => void;
+}) => {
   const { updateNodeName } = useFileTreeStore();
+  const handleOpenFile = useHandleOpenFile();
+  const handleCreateFileRequest = useHandleCreateFile();
+  const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
-  const handleOpenFile = async () => {
+  //파일 생성 버튼 클릭 시 바로 실행되는 로직
+  const handleCreateFile = async (newNodeName: string) => {
+    const fileNode = {
+      ...node.data,
+      name: newNodeName,
+    };
+
+    await handleCreateFileRequest(fileNode as FileNodeType, newNodeName);
+
+    if (node.data.name === '') {
+      useFileTreeStore.getState().deleteNode(node.id);
+    }
+  };
+
+  //파일 삭제 버튼 클릭 시 바로 실행되는 로직
+  const handleDeleteFile = async () => {
     try {
-      findNowFilePath(node);
-      const filePath = useCurrentOpenFile.getState().files;
-      const { data } = await axiosInstance.post('/api/files', {
-        //여기에 현재 파일 경로 보내기
-        //그리고 생성한 프로젝트 아이디 담아 보내기
-        name: filePath,
-        description: 'description',
-        programmingLanguage: 'PYTHON',
-        password: 'password',
-      });
+      const success = await handleDeleteFileRequest(node.data);
 
-      //응답받은 filename, content 담아두기
-      useCurrentOpenFile.getState().setContent(data.results.id);
-      //설정 후 렌더링 필요
+      if (success) {
+        tree.delete(node.id);
+        alert('삭제 성공');
 
-      return data;
+        // 30초 후에 Liveblocks와 room 관련 처리 실행
+        setTimeout(async () => {
+          const roomId = node.id;
+          try {
+            const response = await axiosInstance.delete(
+              `/api/live-blocks/rooms/file-${roomId}`
+            );
+            console.log('Liveblocks room 삭제 성공', response);
+          } catch (error) {
+            console.error('Liveblocks room 삭제 중 오류 발생', error);
+          }
+        }, 30000);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error deleting file:', error);
+      alert('파일트리 : 파일 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 파일 열기 및 이름 업데이트 처리
+  const handleFileOpenAndUpdate = (fileId: string, newName: string) => {
+    const language = findLanguage(newName.split('.').at(-1) || 'python');
+    handleOpenFile(fileId, newName, language);
+  };
+
+  // 파일 이름 입력 완료 처리
+  const handleInputComplete = (newName: string) => {
+    handleFileOpenAndUpdate(node.id, newName);
+  };
+
+  //enter or blur 클릭 시 서버 및 파일트리 렌더링 처리
+  const handleFileAdd = (fileId: string, newName: string) => {
+    if (isCorrectName(newName) === true) {
+      handleCreateFile(newName);
+      updateNodeName(fileId, newName);
+      node.submit(newName); //이때 서버로도 메시지 보내야 함
+      handleInputComplete(newName);
+    } else {
+      node.reset();
+      tree.delete(node.id);
     }
   };
 
   return (
-    <NodeContainer className="node-container" style={style} ref={dragHandle}>
-      <FileDiv
-        className="node-content"
-        onClick={() => node.isInternal && node.toggle()}
+    <>
+      <NodeContainer
+        className="node-container"
+        style={style}
+        ref={dragHandle}
+        onMouseOver={() => useContextMenuStore.getState().setHoveredId(node.id)}
       >
-        {node.isLeaf ? (
-          <>
-            <AiOutlineFile size="18px" style={{ margin: '0 2px 0 16px' }} />
-          </>
-        ) : (
-          <>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              {node.isOpen ? (
-                <>
-                  <MdArrowDropDown />
-                  <AiFillFolderOpen
-                    size="18px"
-                    style={{ margin: '0 2px 0 0 ' }}
-                  />
-                </>
-              ) : (
-                <>
-                  <MdArrowRight />{' '}
-                  <AiFillFolder size="18px" style={{ margin: '0 2px 0 0' }} />
-                </>
-              )}
-            </div>
-          </>
-        )}
-
-        {/* node text */}
-        <span
-          className="node-text"
-          onClick={handleOpenFile}
-          onDoubleClick={(e: React.MouseEvent<HTMLSpanElement>) => {
+        <FileDiv
+          className="node-content"
+          onClick={(e: React.MouseEvent) => {
             e.preventDefault();
-            node.edit();
+            node.isInternal
+              ? node.toggle()
+              : handleFileOpenAndUpdate(node.id, node.data.name);
           }}
         >
-          {node.isEditing ? (
-            <input
-              type="text"
-              defaultValue={node.data.name}
-              onFocus={e => e.currentTarget.select()}
-              onBlur={() => node.reset()}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === 'Escape') node.reset();
-                if (e.key === 'Enter') {
-                  updateNodeName(node.id, e.currentTarget.value);
-                  node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
-                }
-              }}
-              autoFocus
-            />
+          {node.data.type === 'FILE' ? (
+            <>
+              {node.data.isDirty ? <IsDirty /> : <IsNotDirty />}
+              <LanguageIcon
+                language={findLanguage(
+                  String(node.data.name.split('.').at(-1))
+                )}
+              />
+            </>
           ) : (
-            <span>{node.data.name}</span>
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                {node.isOpen ? (
+                  <>
+                    <MdArrowDropDown />
+                    <AiFillFolderOpen
+                      size="18px"
+                      style={{ margin: '0 2px 0 0 ' }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <MdArrowRight />{' '}
+                    <AiFillFolder size="18px" style={{ margin: '0 2px 0 0' }} />
+                  </>
+                )}
+              </div>
+            </>
           )}
-        </span>
-      </FileDiv>
 
-      <div className="file-actions">
-        <div className="folderFileActions">
-          <button onClick={() => node.edit()} title="Rename...">
-            <MdEdit />
-          </button>
-          <button onClick={() => tree.delete(node.id)} title="Delete">
-            <RxCross2 />
-          </button>
+          {/* node text */}
+          <span
+            className="node-text"
+            onDoubleClick={(e: React.MouseEvent<HTMLSpanElement>) => {
+              e.preventDefault();
+              node.edit();
+            }}
+          >
+            {node.isEditing ? (
+              <input
+                type="text"
+                defaultValue={node.data.name}
+                onFocus={e => e.currentTarget.select()}
+                onBlur={() => {
+                  handleFileAdd(node.id, node.data.name);
+                }}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === 'Escape') node.reset();
+                  if (e.key === 'Enter') {
+                    handleFileAdd(node.id, e.currentTarget.value);
+                  }
+                }}
+                autoFocus
+              />
+            ) : (
+              <span>{node.data.name}</span>
+            )}
+          </span>
+        </FileDiv>
+
+        <div className="file-actions">
+          <div className="folderFileActions">
+            {/* <button onClick={() => node.edit()} title="Rename...">
+              <MdEdit />
+            </button> */}
+            <button onClick={handleDeleteFile} title="Delete">
+              <RxCross2 />
+            </button>
+          </div>
         </div>
-      </div>
-    </NodeContainer>
+      </NodeContainer>
+    </>
   );
 };

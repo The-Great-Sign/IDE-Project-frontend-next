@@ -2,16 +2,20 @@
 
 import { ReactNode } from 'react';
 import { RoomProvider } from '@/liveblocks.config';
-// import { useSearchParams } from 'next/navigation';
 import { ClientSideSuspense } from '@liveblocks/react';
 import { Loading } from '@/app/Loading';
 
-export function Room({ children }: { children: ReactNode }) {
-  // const roomId = useOverrideRoomId('nextjs-yjs-codemirror');
-  // [TO DO] 각 룸 id에 각 unique projectId 넣어주기
+export function Room({
+  children,
+  roomId,
+}: {
+  children: ReactNode;
+  roomId: string;
+}) {
+  // Room ID를 파일 ID로 설정
   return (
     <RoomProvider
-      id={'nextjs-yjs-codemirror'}
+      id={`file-${roomId}`}
       initialPresence={{
         cursor: null,
       }}
@@ -31,9 +35,9 @@ export function Room({ children }: { children: ReactNode }) {
 //   const params = useSearchParams();
 //   const roomIdParam = params.get('roomId');
 
-//   const overrideRoomId = useMemo(() => {
-//     return roomIdParam ? `${roomId}-${roomIdParam}` : roomId;
-//   }, [roomId, roomIdParam]);
+// const overrideRoomId = useMemo(() => {
+//   return roomIdParam ? `${roomId}-${roomIdParam}` : roomId;
+// }, [roomId, roomIdParam]);
 
 //   return overrideRoomId;
 // }

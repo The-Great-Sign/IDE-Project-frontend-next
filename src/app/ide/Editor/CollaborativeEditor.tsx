@@ -1,104 +1,88 @@
-/* eslint-disable prefer-const */
 'use client';
 
-import * as Y from 'yjs';
-import { yCollab } from 'y-codemirror.next';
-import { EditorView, basicSetup } from 'codemirror';
-import { EditorState } from '@codemirror/state';
-import { python } from '@codemirror/lang-python';
-// import { javascript } from '@codemirror/lang-javascript';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { EditorView } from 'codemirror';
 import LiveblocksProvider from '@liveblocks/yjs';
-import { TypedLiveblocksProvider, useRoom, useSelf } from '@/liveblocks.config';
-// import { Undo } from '@/app/ide/Editor/Undo';
-import { materialDark } from 'cm6-theme-material-dark';
-import {
-  Editor,
-  EditorContainer,
-  // EditorHeader,
-  EditorTab,
-  FileClose,
-  FileInfo,
-  FileTab,
-} from './CollaborativeEditor.styles';
+import { useRoom, useSelf } from '@/liveblocks.config';
+import { Editor, EditorContainer } from './CollaborativeEditor.styles';
+import { createEditorState } from './CreateEditorState';
+import { useFileStore } from '@/store/useFileStore';
+import useThemeStore from '@/store/useThemeStore';
+interface CollaborativeEditorProps {
+  fileId: string;
+}
 
-// Collaborative code editor with undo/redo, live cursors, and live avatars
-export function CollaborativeEditor() {
+export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
+  fileId,
+}) => {
+  const { files, updateFileContent } = useFileStore();
+  const file = files.find(f => f.id === fileId);
   const room = useRoom();
-  const [element, setElement] = useState<HTMLElement>();
-  // const [yUndoManager, setYUndoManager] = useState<Y.UndoManager>();
-
   // Get user info from Liveblocks authentication endpoint
   const userInfo = useSelf(me => me.info);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<EditorView | null>(null);
+  const isDarkMode = useThemeStore(state => state.isDarkMode);
+  // const [yUndoManager, setYUndoManager] = useState<Y.UndoManager>();
 
-  const ref = useCallback((node: HTMLElement | null) => {
-    if (!node) return;
-    setElement(node);
-  }, []);
-
-  // Set up Liveblocks Yjs provider and attach CodeMirror editor
   useEffect(() => {
-    let provider: TypedLiveblocksProvider;
-    let ydoc: Y.Doc;
-    let view: EditorView;
+    if (!file || !editorRef.current || !room || !userInfo) return;
 
-    if (!element || !room || !userInfo) {
-      return;
-    }
+    const ytext = file.yDoc.getText('codemirror');
+    // Yjs 변경 이벤트 리스너
+    const yTextListener = () => {
+      const newContent = ytext.toString();
+      updateFileContent(fileId, newContent);
+    };
 
-    // Create Yjs provider and document
-    // eslint-disable-next-line prefer-const
-    ydoc = new Y.Doc();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    provider = new LiveblocksProvider(room as any, ydoc);
-    const ytext = ydoc.getText('codemirror');
-    const undoManager = new Y.UndoManager(ytext);
+    ytext.observe(yTextListener);
+    // const undoManager = new Y.UndoManager(ytext);
     // setYUndoManager(undoManager);
 
-    // Attach user info to Yjs
+    const provider = new LiveblocksProvider(room, file.yDoc);
     provider.awareness.setLocalStateField('user', {
       name: userInfo.name,
       color: userInfo.color,
       colorLight: userInfo.color + '80', // 6-digit hex code at 50% opacity
     });
 
-    // Set up CodeMirror and extensions
-    const state = EditorState.create({
-      doc: ytext.toString(),
-      extensions: [
-        basicSetup,
-        python(),
-        // javascript(),
-        yCollab(ytext, provider.awareness, { undoManager }),
-        materialDark,
-      ],
-    });
+    if (viewRef.current) {
+      viewRef.current.destroy(); // 이전 EditorView 인스턴스 제거
+    }
 
-    // Attach CodeMirror to element
-    view = new EditorView({
+    const state = createEditorState(
+      file.id,
+      file.content,
+      file.language,
+      provider,
+      isDarkMode
+    );
+
+    viewRef.current = new EditorView({
       state,
-      parent: element,
+      parent: editorRef.current,
     });
 
     return () => {
-      ydoc?.destroy();
-      provider?.destroy();
-      view?.destroy();
+      if (provider) {
+        provider.destroy();
+      }
+      if (viewRef.current) {
+        viewRef.current.destroy();
+        viewRef.current = null;
+      }
+      if (ytext) ytext.unobserve(yTextListener);
     };
-  }, [element, room, userInfo]);
+  }, [fileId, isDarkMode, file?.yDoc, updateFileContent, room]);
+
+  if (!file) return null;
 
   return (
     <EditorContainer>
       {/* <EditorHeader>
         <div>{yUndoManager ? <Undo yUndoManager={yUndoManager} /> : null}</div>
       </EditorHeader> */}
-      <EditorTab>
-        <FileTab>
-          <FileInfo>현재 열린 파일.py</FileInfo>
-          <FileClose>x</FileClose>
-        </FileTab>
-      </EditorTab>
-      <Editor ref={ref}></Editor>
+      <Editor ref={editorRef}></Editor>
     </EditorContainer>
   );
-}
+};

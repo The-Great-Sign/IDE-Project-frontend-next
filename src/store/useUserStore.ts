@@ -1,34 +1,27 @@
 import { create } from 'zustand';
 
-// 랜덤 라이브커서 색 생성
-const hex = '#' + Math.round(Math.random() * 0xffffff).toString(16);
-
-// 랜덤 이름 생성
-const names = ['Dehan', 'Musfiq', 'Rahim', 'Sohel', 'MOhit', 'Rachel'];
-const randInt = Math.floor(Math.random() * names.length);
-const name = names[randInt];
-
-// 랜덤 ID 생성 -> 실제 유저 데이터로 바꿀 예정
 const randId = Math.floor(Math.random() * 100);
-
 interface UserState {
-  id: number;
-  name: string;
-  imageUrl: string | null;
+  id: string;
+  name: string | null;
+  imageUrl: string;
   cursorColor: string;
-  setUser: (id: number, name: string, imageUrl: string) => void;
-  isLoggedIn: boolean;
-  toggleLogin: () => void;
+  setUser: (id: string, name: string, imageUrl: string) => void;
+  email: string;
+  setUserEmail: (email: string) => void;
+  setNewName: (newName: string) => void;
 }
 
 const useUserStore = create<UserState>(set => ({
-  id: randId,
-  name: name,
-  imageUrl: null,
-  cursorColor: hex,
-  setUser: (id, name, imageUrl) => set({ id, name, imageUrl }),
-  isLoggedIn: false,
-  toggleLogin: () => set(state => ({ isLoggedIn: !state.isLoggedIn })),
+  id: String(randId),
+  name: '로그인안됨',
+  imageUrl: 'https://liveblocks.io/avatars/avatar-4.png',
+  cursorColor: '#00A86B',
+  setUser: (id, name, imageUrl) =>
+    set({ id: id, name: name, imageUrl: imageUrl }),
+  setNewName: (newName: string) => set({ name: newName }),
+  email: '',
+  setUserEmail: (email: string) => set({ email: email }),
 }));
 
 export default useUserStore;

@@ -1,14 +1,15 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { FONTS } from '@/constants/fonts';
 import { COLORS } from '@/constants/colors';
+import { ContextMenu, ContextMenuItem } from 'rctx-contextmenu';
 
 export const FileTreeConatiner = styled.div`
   width: 100%;
   box-sizing: border-box;
   flex-direction: column;
-  padding: 15px;
+  padding: 15px 20px;
   border-top: 1px solid ${COLORS.primary};
-  border-right: 1px solid ${COLORS.primary};
+
   border-left: 1px solid ${COLORS.primary};
   align-items: center;
   height: calc(100vh - 51px);
@@ -36,30 +37,49 @@ export const NodeContainer = styled.div`
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(64, 78, 237, 0.2);
   }
 
   &:hover .file-actions {
     display: block;
   }
 
+  .file-actions button {
+    color: ${props => props.theme.colors.text};
+
   .node-text {
-    margin: '0px 3px';
+    margin: 0px 2px;
   }
 `;
 
-export const FileDiv = styled.div`
+interface FileDivProps {
+  isNodeDirty?: boolean;
+}
+export const FileDiv = styled.div<FileDivProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: ${props => (props.isNodeDirty ? 'red' : 'inherit')};
+`;
+
+export const TopContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-right: 100px;
+`;
+
+export const ProjectName = styled.div`
+  padding-left: 10px;
+  font-weight: 500;
 `;
 
 // 파일 생성
 
 export const CreateFileDiv = styled.div`
-  width: 100%;
   display: flex;
-  justify-content: right;
 `;
 
 export const FileButton = styled.button`
@@ -67,9 +87,34 @@ export const FileButton = styled.button`
   background: none;
   border-radius: 5px;
   cursor: pointer;
-  padding: 5px;
+
+  color: ${props => props.theme.colors.text};
 
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(64, 78, 237, 0.2);
   }
+`;
+
+export const IsDirty = styled.div`
+  margin-left: 4px;
+  width: 7px;
+  height: 7px;
+  background: red;
+  border-radius: 50%;
+  display: inline;
+`;
+
+export const IsNotDirty = styled(IsDirty)`
+  background: none;
+`;
+
+export const StyledContextMenuItem = styled(ContextMenuItem)`
+  color: ${props => props.theme.colors.text};
+  &:hover {
+    background: ${props => props.theme.colors.hoverGray} !important;
+  }
+`;
+
+export const StyledContextMenu = styled(ContextMenu)`
+  background: ${props => props.theme.colors.contextMenu} !important;
 `;

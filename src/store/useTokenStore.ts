@@ -1,19 +1,32 @@
+import { getJwtExpiration } from '@/utils/token/tokenExpiryTimeUtils';
 import { create } from 'zustand';
 
 interface TokenState {
-  accessToken: string | null;
-  tokenExpiryTime: string | null;
-  setAccessToken: (
-    accessToken: string | null,
-    tokenExpiryTime: string | null
-  ) => void;
+  accessToken: string;
+  tokenExpiryTime: Date | null;
+  setAccessToken: (accessToken: string) => void;
+  isLoggedIn: boolean;
+  toggleLogin: () => void;
+  setLogin: (state: boolean) => void;
 }
 
+const initAccessToken = () => {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+  return window.localStorage.getItem('accessToken') ?? '';
+};
+
 const useTokenStore = create<TokenState>(set => ({
-  accessToken: null,
+  accessToken: initAccessToken(),
   tokenExpiryTime: null,
-  setAccessToken: (token, expiryTime) =>
-    set({ accessToken: token, tokenExpiryTime: expiryTime }),
+  setAccessToken: accessToken => {
+    const expiryTime = getJwtExpiration(accessToken);
+    set({ accessToken, tokenExpiryTime: expiryTime });
+  },
+  isLoggedIn: false,
+  toggleLogin: () => set(state => ({ isLoggedIn: !state.isLoggedIn })),
+  setLogin: (state: boolean) => set({ isLoggedIn: state }),
 }));
 
 export default useTokenStore;

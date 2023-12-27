@@ -1,3 +1,5 @@
+import { COLORS } from '@/constants/colors';
+import { FONTS } from '@/constants/fonts';
 import styled from 'styled-components';
 
 export const IDEContainer = styled.div`
@@ -30,10 +32,42 @@ export const CodeContainer = styled.div`
 `;
 
 export const Section = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  max-height: calc(100vh - 50px);
   width: 100%;
+  height: 100%;
   overflow: hidden;
+  border-left: 1px solid ${COLORS.primary};
+  height: 100vh;
+`;
+
+export const EditorBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 50%;
+`;
+
+export const EditorMain = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 60px;
+  font-size: ${FONTS.lg};
+  font-weight: 600;
+`;
+
+export const LoadingDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const LoadingMessage = styled.div`
+  text-align: center;
+  display: block;
 `;

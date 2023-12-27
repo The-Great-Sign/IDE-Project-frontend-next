@@ -1,5 +1,4 @@
-import { COLORS } from '@/constants/colors';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 export const EditorContainer = styled.div`
   display: flex;
@@ -7,6 +6,7 @@ export const EditorContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 500px;
   overflow: hidden;
 `;
 
@@ -18,41 +18,8 @@ export const EditorHeader = styled.div`
 `;
 
 export const Editor = styled.div`
+  height: 100%;
   position: relative;
   flex-grow: 1;
   overflow: auto;
-`;
-
-export const EditorTab = styled.div`
-  width: 100%;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  border-top: 1px solid ${COLORS.primary};
-  border-bottom: 1px solid ${COLORS.primary};
-  flex-direction: row;
-  justify-content: space-evenly;
-`;
-
-export const FileTab = styled.div`
-  width: 100%;
-  text-align: center;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-right: 1px solid ${COLORS.primary};
-  white-space: nowrap;
-`;
-
-export const FileInfo = styled.div`
-  padding-left: 10px;
-`;
-
-export const FileClose = styled.div`
-  display: flex;
-  height: 35px;
-  width: 35px;
-  justify-content: center;
-  align-items: center;
 `;

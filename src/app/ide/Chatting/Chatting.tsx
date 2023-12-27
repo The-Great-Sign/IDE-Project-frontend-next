@@ -1,4 +1,5 @@
-import { useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { Resizable } from 're-resizable';
 import {
   ChattingContainer,
@@ -7,12 +8,22 @@ import {
 } from './Chatting.styles';
 import GeneralChatting from './GeneralChatting';
 import AIChatting from './AIChatting';
+import { Client } from '@stomp/stompjs';
+import { useGeneralChatStore } from '@/store/useChattingStore';
 
-const Chatting = () => {
+interface GeneralChattingProps {
+  clientRef: React.RefObject<Client>;
+}
+
+const Chatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
   const [activeTab, setActiveTab] = useState<string>('채팅');
+  const users = useGeneralChatStore(state => state.users);
+
+  useEffect(() => {
+    setActiveTab(`채팅 (${users})`);
+  }, [users]);
 
   const handleClick = (tab: string) => {
-    // true: 채팅, false: AI
     setActiveTab(tab);
   };
 
@@ -32,26 +43,28 @@ const Chatting = () => {
         bottomLeft: false,
         topLeft: false,
       }}
-      minWidth={'140px'}
-      maxWidth={'400px'}
     >
       <ChattingContainer>
         <ChattingHeader>
-          {/* {`채팅 (${CurrentUsers})`} */}
           <ChattingTab
-            onClick={() => handleClick('채팅')}
-            $isActive={activeTab === '채팅'}
+            onClick={() => handleClick(`채팅 (${users})`)}
+            isActive={activeTab === `채팅 (${users})`}
           >
-            채팅
+            {`채팅 (${users})`}
           </ChattingTab>
           <ChattingTab
             onClick={() => handleClick('AI✨')}
-            $isActive={activeTab === 'AI✨'}
+            isActive={activeTab === 'AI✨'}
           >
             AI✨
           </ChattingTab>
         </ChattingHeader>
-        {activeTab === '채팅' ? <GeneralChatting /> : <AIChatting />}
+
+        {activeTab === `채팅 (${users})` ? (
+          <GeneralChatting clientRef={clientRef} />
+        ) : (
+          <AIChatting />
+        )}
       </ChattingContainer>
     </Resizable>
   );

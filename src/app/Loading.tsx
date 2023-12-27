@@ -1,17 +1,19 @@
-import React from 'react';
-import styles from './Loading.module.css';
-import Image from 'next/image';
-
+import { COLORS } from '@/constants/colors';
+import { ThreeDots } from 'react-loader-spinner';
+import { LoadingDiv } from './Loading.styles';
 export function Loading() {
   return (
-    <div className={styles.loading}>
-      <Image
-        src="https://liveblocks.io/loading.svg"
-        alt="Loading"
-        width={100}
-        height={100}
-        priority={true}
+    <LoadingDiv>
+      <ThreeDots
+        visible={true}
+        height="60"
+        width="60"
+        color={`${COLORS.primary}`}
+        radius="9"
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
       />
-    </div>
+    </LoadingDiv>
   );
 }

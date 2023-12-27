@@ -8,37 +8,12 @@ import {
   AiOutlineGoogle,
 } from 'react-icons/ai';
 import { ButtonBox, LoginBox, LoginConatiner, Logo } from './Login.styles';
-import { BigButton } from '../../components/Button/Button';
-import axiosInstance from '../api/axiosInstance';
-import useTokenStore from '../../store/useTokenStore';
-import useUserStore from '../../store/useUserStore';
-import { useRouter } from 'next/navigation';
+import { BigButton } from '@/components/Button/Button';
 
 const LoginPage = () => {
-  const router = useRouter();
-
-  const handleLogin = async () => {
-    try {
-      // const { data } = await axiosInstance.get('/oauth2/authorization/google');
-      const { data } = await axiosInstance.post('/api/projects', {
-        name: 'ProjectName',
-        description: 'description',
-        programmingLanguage: 'PYTHON',
-        password: 'password',
-      });
-
-      const accessToken = `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnb29nbGUuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTcwNDAyNTAyMX0.BCX-iztywjozVUx3Mkz2Oip0NUIo8SScModeV1Bq6Uo`;
-      //res.headers['authorization'];
-      useTokenStore.getState().setAccessToken(accessToken, '10000');
-      useUserStore.getState().setUser(data.id, '대징이', data.imageUrl);
-      useUserStore.getState().toggleLogin();
-      console.log(useUserStore.getState().isLoggedIn);
-      router.push('/');
-
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
+  const handleGoogleLogin = () => {
+    const googleLoginURL = `${process.env.NEXT_PUBLIC_BACKEND_URI}/oauth2/authorization/google?redirect_uri=http://localhost:3000&mode=login`;
+    window.location.href = googleLoginURL;
   };
 
   return (
@@ -58,15 +33,16 @@ const LoginPage = () => {
             <h2>로그인</h2>
 
             <ButtonBox>
-              <BigButton onClick={handleLogin}>
+              <BigButton onClick={handleGoogleLogin}>
                 <AiOutlineGoogle />
                 <span>구글로 계속하기</span>
               </BigButton>
-              <BigButton>
+
+              <BigButton disabled>
                 <AiOutlineGithub />
                 <span>깃허브로 계속하기</span>
               </BigButton>
-              <BigButton>
+              <BigButton disabled>
                 <AiOutlineApple />
                 <span>애플로 계속하기</span>
               </BigButton>

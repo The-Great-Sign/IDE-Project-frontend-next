@@ -1,4 +1,10 @@
+import useTokenStore from '@/store/useTokenStore';
 import axios from 'axios';
+import {
+  isTokenBeingRefreshed,
+  isTokenExpired,
+  refreshToken,
+} from './token/fetchRefreshToken';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -6,12 +12,24 @@ const headers = {
 };
 
 const axiosInstance = axios.create({
-  baseURL: 'http://ec2-43-203-40-200.ap-northeast-2.compute.amazonaws.com:8080',
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URI,
   headers: headers,
   withCredentials: true,
 });
 
-axiosInstance.defaults.headers.common['Authorization'] =
-  `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBnb29nbGUuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTcwNDAyNTAyMX0.BCX-iztywjozVUx3Mkz2Oip0NUIo8SScModeV1Bq6Uo`;
+axiosInstance.interceptors.request.use(async config => {
+  if (!isTokenBeingRefreshed() && isTokenExpired()) {
+    await refreshToken();
+  }
+  const token = useTokenStore.getState().accessToken;
+
+  if (token) {
+    config.headers['Authorization'] = useTokenStore.getState().accessToken;
+  }
+  return config;
+});
+
+// axiosInstance.defaults.headers.common['Authorization'] =
+//   useTokenStore.getState().accessToken;
 
 export default axiosInstance;

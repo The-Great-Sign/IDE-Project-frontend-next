@@ -1,18 +1,11 @@
-import { UserAvatars } from '../Editor/Avatars';
-import {
-  RightBox,
-  CurrentUserBox,
-  StyleAiOutlineComment,
-} from './IDEHeader.styles';
+import { UserAvatars } from '../Editor/Avatars/Avatars';
+import { CurrentUserBox } from './IDEHeader.styles';
 
 const CurrentUser = () => {
   return (
-    <RightBox>
-      <CurrentUserBox>
-        <UserAvatars />
-      </CurrentUserBox>
-      <StyleAiOutlineComment />
-    </RightBox>
+    <CurrentUserBox>
+      <UserAvatars />
+    </CurrentUserBox>
   );
 };
 
