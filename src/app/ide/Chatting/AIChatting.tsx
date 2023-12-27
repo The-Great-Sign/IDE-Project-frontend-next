@@ -10,9 +10,9 @@ import {
   ChattingSendButton,
   CodeReviewBtn,
 } from './Chatting.styles';
-import axios from 'axios';
 import { AIType, useAIChatStore } from '@/store/useChattingStore';
 import { useFileStore } from '@/store/useFileStore';
+import axiosInstance from '@/app/api/axiosInstance';
 
 const AIChatting = () => {
   const [question, setQuestion] = useState<string>('');
@@ -21,18 +21,9 @@ const AIChatting = () => {
 
   const postSimpleQuestion = async (question: string) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/ask`,
-        {
-          question: question,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: localStorage.getItem('accessToken'),
-          },
-        }
+        question
       );
       const data = response.data;
       if (data.success) {
@@ -47,16 +38,8 @@ const AIChatting = () => {
 
   const postCodeReview = async (fileId: string) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/review-file/${fileId}`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: localStorage.getItem('accessToken'),
-          },
-        }
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/review-file/${fileId}`
       );
       const data = response.data;
       if (data.success) {
@@ -88,6 +71,12 @@ const AIChatting = () => {
   const handleReview = () => {
     const selectedFile = files.find(f => f.id === selectedFileId);
     if (selectedFile) {
+      const questionMessage = {
+        success: true,
+        message: '질문',
+        results: '현재 파일 코드리뷰 해줘',
+      };
+      useAIChatStore.getState().addAIMessage(questionMessage);
       postCodeReview(selectedFile?.id);
     } else if (selectedFileId === null) {
       alert('코드리뷰할 파일을 선택해주세요!');
