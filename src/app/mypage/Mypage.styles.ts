@@ -69,6 +69,17 @@ export const UserName = styled.div`
   color: ${props => props.theme.colors.text};
 `;
 
+export const NameInput = styled.input`
+  padding: 10px 15px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow:
+    0 1px 1px rgba(128, 128, 128, 0.15),
+    0 2px 2px rgba(128, 128, 128, 0.15),
+    0 4px 4px rgba(128, 128, 128, 0.05);
+`;
+
 export const StyledButton = styled(Button)`
   width: max-content;
   border: none;
