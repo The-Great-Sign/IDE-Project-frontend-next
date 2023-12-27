@@ -45,7 +45,7 @@ interface ReceivedTerminalType {
   content: string;
 }
 
-export const getCurrentProjectId = () => {
+const getCurrentProjectId = () => {
   if (typeof window !== 'undefined') {
     const path = window.location.pathname;
     const pathSegments = path.split('/');

@@ -1,7 +1,7 @@
 import axiosInstance from '../app/api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
-import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
+import { getCurrentProjectId } from '@/app/api/websocket';
 
 const useHandleCreateFile = () => {
   const projectId = getCurrentProjectId();

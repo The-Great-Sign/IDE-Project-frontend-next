@@ -11,12 +11,13 @@ import {
   InviteTitle,
   ModalBackdrop,
 } from './Invite.styles';
-import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
+
 import axiosInstance from '@/app/api/axiosInstance';
 import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
 import useTokenStore from '@/store/useTokenStore';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
+import { getCurrentProjectId } from '@/app/api/websocket';
 
 interface EnterProps {
   password: string;
