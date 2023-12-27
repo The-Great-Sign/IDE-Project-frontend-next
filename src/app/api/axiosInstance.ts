@@ -1,6 +1,10 @@
 import useTokenStore from '@/store/useTokenStore';
 import axios from 'axios';
-import { refreshToken } from './auth';
+import {
+  isTokenBeingRefreshed,
+  isTokenExpired,
+  refreshToken,
+} from './token/fetchRefreshToken';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -14,15 +18,18 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async config => {
-  await refreshToken();
+  if (!isTokenBeingRefreshed() && isTokenExpired()) {
+    await refreshToken();
+  }
   const token = useTokenStore.getState().accessToken;
+
   if (token) {
     config.headers['Authorization'] = useTokenStore.getState().accessToken;
   }
   return config;
 });
 
-axiosInstance.defaults.headers.common['Authorization'] =
-  useTokenStore.getState().accessToken;
+// axiosInstance.defaults.headers.common['Authorization'] =
+//   useTokenStore.getState().accessToken;
 
 export default axiosInstance;
