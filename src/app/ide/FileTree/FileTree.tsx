@@ -70,7 +70,7 @@ const FileTree = () => {
       isDirty: false,
       isOpened: true,
       filePath: findNodePathByName(''),
-      parentId: parentId,
+      parentId: parentId === null ? 'root' : parentId,
     };
 
     addNode(newNode, parentId);

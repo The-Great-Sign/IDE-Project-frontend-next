@@ -18,16 +18,15 @@ export const processWebSocketFileEvent = (
 
     // 새 파일 노드 생성
     const newNode: FileNodeType = {
-      //여기서 id를 서버 응답으로 설정
+      // 여기서 id를 서버 응답으로 설정
       id: String(fileId),
       name: path.split('/').pop() || '',
       type: type === 'DIRECTORY' ? 'DIRECTORY' : 'FILE',
-      children: type === 'DIRECTORY' ? [] : undefined,
       parentId: parentNodeId,
       isDirty: false,
       filePath: parentPath + '/' + name,
+      ...(type === 'DIRECTORY' && { children: [] }),
     };
-    console.log(newNode);
 
     // 파일 트리에 노드 추가
     return addNodeToTreeWebSocket(fileTree, newNode, parentNodeId);

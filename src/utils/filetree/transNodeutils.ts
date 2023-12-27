@@ -23,13 +23,11 @@ export const transformToFileNodeType = (
       isDirty: false,
       isOpened: false,
       filePath: node.path,
-      //here
       parentId: node.id,
+      ...(node.type === 'DIRECTORY' &&
+        node.children && { children: transformToFileNodeType(node.children) }),
     };
 
-    if (node.type === 'DIRECTORY' && node.children) {
-      fileNode.children = transformToFileNodeType(node.children);
-    }
     return fileNode;
   });
 };

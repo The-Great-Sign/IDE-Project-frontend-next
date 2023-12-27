@@ -96,11 +96,12 @@ export const Node = ({
       <NodeContainer className="node-container" style={style} ref={dragHandle}>
         <FileDiv
           className="node-content"
-          onClick={() =>
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
             node.isInternal
               ? node.toggle()
-              : handleFileOpenAndUpdate(node.id, node.data.name)
-          }
+              : handleFileOpenAndUpdate(node.id, node.data.name);
+          }}
         >
           {node.data.type === 'FILE' ? (
             <>
