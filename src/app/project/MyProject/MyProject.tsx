@@ -6,9 +6,9 @@ import { ProjectView } from '../Project.styles';
 import axiosInstance from '../../api/axiosInstance';
 
 const MyProject = () => {
-  const [isCreate, setIsCreate] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const handleClick = () => {
-    setIsCreate(true);
+    setIsModalOpen(true);
   };
   useEffect(() => {
     const fetchProjects = async () => {
@@ -30,7 +30,7 @@ const MyProject = () => {
         <button type="button" onClick={handleClick}>
           프로젝트 생성
         </button>
-        {isCreate && <CreateProject />}
+        {isModalOpen && <CreateProject setIsModalOpen={setIsModalOpen} />}
       </div>
     </ProjectView>
   );

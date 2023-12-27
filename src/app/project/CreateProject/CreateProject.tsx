@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 import useProjectStore from '@/store/useProjectStore';
 import axiosInstance from '@/app/api/axiosInstance';
 import {
+  ModalBackdrop,
   CreateProjectButton,
-  // CreateProjectClose,
+  CreateProjectClose,
   CreateProjectContainer,
   CreateProjectDescription,
   CreateProjectForm,
-  // CreateProjectHead,
-  // CreateProjectHeader,
+  CreateProjectHead,
+  CreateProjectHeader,
   CreateProjectInputTitle,
   CreateProjectLanguage,
-  CreateProjectPassword,
-  CreateProjectTitle,
+  CreateProjectInput,
 } from './CreateProject.styles';
 import EnterProject from '../EnterProject/EnterProject';
 
@@ -24,8 +24,12 @@ interface CreateProjectProps {
   password: string;
 }
 
-const CreateProject = () => {
-  const [isCreated, setIsCreated] = useState(false);
+interface CreateProps {
+  setIsModalOpen: (value: boolean) => void;
+  // 여기에 다른 props 타입 정의 가능
+}
+const CreateProject = ({ setIsModalOpen }: CreateProps) => {
+  const [isCreated, setIsCreated] = useState<boolean>(false);
   const [createData, setCreateData] = useState<CreateProjectProps>({
     name: '',
     description: '',
@@ -51,8 +55,14 @@ const CreateProject = () => {
     }
   };
 
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
   const handleInput = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setCreateData({
@@ -67,48 +77,49 @@ const CreateProject = () => {
   };
 
   return isCreated ? (
-    <EnterProject />
+    <EnterProject setIsModalOpen={setIsModalOpen} />
   ) : (
-    <CreateProjectContainer>
-      {/* <CreateProjectHeader>
-        <CreateProjectHead />
-        <CreateProjectClose />
-      </CreateProjectHeader> */}
+    <ModalBackdrop>
+      <CreateProjectContainer>
+        <CreateProjectHeader>
+          <CreateProjectHead>프로젝트 생성</CreateProjectHead>
+          <CreateProjectClose onClick={handleClose}>x</CreateProjectClose>
+        </CreateProjectHeader>
 
-      <CreateProjectForm onSubmit={handleSubmit}>
-        <CreateProjectInputTitle>언어 선택</CreateProjectInputTitle>
-        <CreateProjectLanguage
-          name="programmingLanguage"
-          value={createData.programmingLanguage}
-          onChange={handleInput}
-        >
-          <option value="PYTHON">PYTHON</option>
-          <option value="JAVA">JAVA</option>
-          <option value="CPP">CPP</option>
-        </CreateProjectLanguage>
+        <CreateProjectForm onSubmit={handleSubmit}>
+          <CreateProjectInputTitle>언어 선택</CreateProjectInputTitle>
+          <CreateProjectLanguage
+            name="programmingLanguage"
+            value={createData.programmingLanguage}
+            onChange={handleInput}
+          >
+            <option value="PYTHON">PYTHON</option>
+            <option value="JAVA">JAVA</option>
+            <option value="CPP">CPP</option>
+          </CreateProjectLanguage>
 
-        <CreateProjectInputTitle>프로젝트 이름</CreateProjectInputTitle>
-        <CreateProjectTitle type="text" name="name" onChange={handleInput} />
+          <CreateProjectInputTitle>프로젝트 이름</CreateProjectInputTitle>
+          <CreateProjectInput type="text" name="name" onChange={handleInput} />
 
-        <CreateProjectInputTitle>프로젝트 비밀번호</CreateProjectInputTitle>
-        <CreateProjectPassword
-          type="password"
-          name="password"
-          placeholder="설정할 비밀번호를 입력하세요"
-          onChange={handleInput}
-        />
+          <CreateProjectInputTitle>프로젝트 비밀번호</CreateProjectInputTitle>
+          <CreateProjectInput
+            type="password"
+            name="password"
+            placeholder="설정할 비밀번호를 입력하세요"
+            onChange={handleInput}
+          />
 
-        <CreateProjectInputTitle>프로젝트 설명</CreateProjectInputTitle>
-        <CreateProjectDescription
-          type="text"
-          name="description"
-          placeholder="프로젝트에 대한 간단한 설명을 작성하세요"
-          onChange={handleInput}
-        />
+          <CreateProjectInputTitle>프로젝트 설명</CreateProjectInputTitle>
+          <CreateProjectDescription
+            name="description"
+            placeholder="프로젝트에 대한 간단한 설명을 작성하세요"
+            onChange={handleInput}
+          />
 
-        <CreateProjectButton type="submit">생성하기</CreateProjectButton>
-      </CreateProjectForm>
-    </CreateProjectContainer>
+          <CreateProjectButton type="submit">생성하기</CreateProjectButton>
+        </CreateProjectForm>
+      </CreateProjectContainer>
+    </ModalBackdrop>
   );
 };
 
