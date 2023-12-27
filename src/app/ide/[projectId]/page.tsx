@@ -14,7 +14,9 @@ import {
   EditorMain,
   IDEContainer,
   IDEContentCode,
+  LoadingDiv,
   Section,
+  LoadingMessage,
 } from '../page.styles';
 import IDEHeader from '../Header/IDEHeader';
 import FileTree from '../FileTree/FileTree';
@@ -24,7 +26,6 @@ import EditorTab from '../Editor/EditorTab/EditorTab';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
 import ShowEditor from '../Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
-import LoadingProject from '@/app/project/EnterProject/LoadingProject/LoadingProject';
 import { checkFileTree } from '@/app/api/filetree/updateFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
@@ -36,6 +37,7 @@ import { useVisibleChat } from '@/store/useChattingStore';
 import { TerminalContainer } from '../Terminal/Terminal.styles';
 import { Resizable } from 're-resizable';
 import axiosInstance from '../../api/axiosInstance';
+import { Loading } from '@/app/Loading';
 
 interface ReceivedTerminalType {
   success: boolean;
@@ -229,7 +231,13 @@ const Ide = () => {
       </IDEContainer>
     </main>
   ) : (
-    <LoadingProject />
+    <LoadingDiv>
+      <Loading />
+      <LoadingMessage>
+        프로젝트 생성중입니다
+        <br />약 40초정도 소요됩니다
+      </LoadingMessage>
+    </LoadingDiv>
   );
 };
 

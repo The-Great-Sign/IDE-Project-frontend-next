@@ -1,8 +1,8 @@
 'use client';
 
 import MainHeader from '@/components/MainHeader/MainHeader';
-import InvitedProject from './InvitedProject/InvitedProject';
-import MyProject from './MyProject/MyProject';
+import InvitedProject from './InvitedProject';
+import MyProject from './MyProject';
 
 const ProjectPage = () => {
   return (

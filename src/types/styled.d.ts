@@ -13,6 +13,9 @@ declare module 'styled-components' {
       loginTitle: string;
       contextMenu: string;
       hoverGray: string;
+      boxShadow: string;
+      menuHover: string;
+      boxbg: string;
     };
   }
 }

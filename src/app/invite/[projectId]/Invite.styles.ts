@@ -75,8 +75,7 @@ export const InviteEnterButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-
   &:hover {
-    background-color: #0056b3; // Darker blue on hover
+    background: #2232ea;
   }
 `;

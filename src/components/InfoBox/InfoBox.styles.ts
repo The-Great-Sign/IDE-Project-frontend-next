@@ -7,7 +7,7 @@ export const InfoBox = styled.div`
   flex-direction: column;
   justify-content: center; // 수직 방향으로 가운데 정렬
   align-items: center; // 수평 방향으로 가운데 정렬
-  width: 18%; // 필요에 따라 너비 조정
+  width: 18%;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;

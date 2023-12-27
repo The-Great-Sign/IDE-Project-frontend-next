@@ -73,7 +73,20 @@ const CreateProject = ({ setIsModalOpen }: CreateProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    postCreateProject(createData);
+    if (createData.name.length >= 10 || createData.description.length >= 100) {
+      alert('프로젝트 이름은 10자, 설명은 100자 이내로 작성해주세요.');
+    } else if (createData.password.length < 4) {
+      alert('비밀번호를 4자 이상 입력해주세요.');
+    } else if (
+      createData.name.length == 0 ||
+      createData.description.length == 0
+    ) {
+      alert('프로젝트 정보를 입력해주세요.');
+    } else if (createData.password.length > 11) {
+      alert('비밀번호는 10자 이내로 입력해주세요.');
+    } else {
+      postCreateProject(createData);
+    }
   };
 
   return isCreated ? (
@@ -99,7 +112,12 @@ const CreateProject = ({ setIsModalOpen }: CreateProps) => {
           </CreateProjectLanguage>
 
           <CreateProjectInputTitle>프로젝트 이름</CreateProjectInputTitle>
-          <CreateProjectInput type="text" name="name" onChange={handleInput} />
+          <CreateProjectInput
+            type="text"
+            name="name"
+            placeholder="프로젝트의 이름을 입력하세요 (10자 이내)"
+            onChange={handleInput}
+          />
 
           <CreateProjectInputTitle>프로젝트 비밀번호</CreateProjectInputTitle>
           <CreateProjectInput
@@ -112,7 +130,7 @@ const CreateProject = ({ setIsModalOpen }: CreateProps) => {
           <CreateProjectInputTitle>프로젝트 설명</CreateProjectInputTitle>
           <CreateProjectDescription
             name="description"
-            placeholder="프로젝트에 대한 간단한 설명을 작성하세요"
+            placeholder="프로젝트에 대한 간단한 설명을 작성하세요 (100자 이내)"
             onChange={handleInput}
           />
 
