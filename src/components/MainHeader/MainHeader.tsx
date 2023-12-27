@@ -1,6 +1,6 @@
 import useTokenStore from '@/store/useTokenStore';
 import LoginSignUpLink from './LoginSignUpLink/LoginSignUpLink';
-import { HeaderContainer, Logo } from './MainHeader.style';
+import { HeaderContainer, Logo, StyledLink } from './MainHeader.style';
 import UserInfo from './UserInfo/UserInfo';
 import useUserStore from '@/store/useUserStore';
 
@@ -10,7 +10,9 @@ const MainHeader = () => {
   return (
     <>
       <HeaderContainer>
-        <Logo>DJIDE</Logo>
+        <StyledLink href="/">
+          <Logo>DJIDE</Logo>
+        </StyledLink>
         {isLoggedIn && name !== '로그인안됨' ? (
           <UserInfo />
         ) : (

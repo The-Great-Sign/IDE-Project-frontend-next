@@ -11,6 +11,7 @@ declare module 'styled-components' {
       black: string;
       text: string;
       loginTitle: string;
+      boxbg: string;
     };
   }
 }
