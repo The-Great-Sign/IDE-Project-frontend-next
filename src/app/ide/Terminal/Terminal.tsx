@@ -4,6 +4,8 @@ import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
 import { getCurrentProjectId } from '../[projectId]/page';
 import 'xterm/css/xterm.css';
+import { Resizable } from 're-resizable';
+import { TerminalContainer } from './Terminal.styles';
 
 export interface Content {
   path: string;
@@ -59,20 +61,16 @@ const Terminal = ({
             }
           }
         } else if (data === '\x7f' || data === '\b') {
-          // 백스페이스 키 처리
           if (currentCommand.length > 0) {
-            // 현재 명령어에서 마지막 문자 제거
             currentCommand = currentCommand.slice(0, -1);
-            // xterm에도 반영 (커서 한 칸 뒤로 이동, 공백으로 덮기, 다시 커서 한 칸 뒤로 이동)
             if (xtermRef.current) {
               xtermRef.current.write('\b \b');
             }
           }
         } else {
-          // 키보드 입력 시 서버로 메시지 전송
           currentCommand += data;
           if (xtermRef.current) {
-            xtermRef.current.write(data); // 내 터미널에도 입력값 보여주기
+            xtermRef.current.write(data);
           }
         }
       });
@@ -83,7 +81,28 @@ const Terminal = ({
     }
   }, [currentPath, terminalRef, xtermRef]);
 
-  return <div ref={terminalRef} style={{ height: '300px', width: '100%' }} />;
+  return (
+    <Resizable
+      defaultSize={{
+        height: '300px',
+        width: '100%',
+      }}
+      enable={{
+        top: true,
+        right: false,
+        bottom: true,
+        left: false,
+        topRight: false,
+        bottomRight: false,
+        bottomLeft: false,
+        topLeft: false,
+      }}
+    >
+      <TerminalContainer>
+        <div ref={terminalRef} style={{ height: '300px', width: '100%' }} />
+      </TerminalContainer>
+    </Resizable>
+  );
 };
 
 export default Terminal;

@@ -2,15 +2,22 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import {
+  ModalBackdrop,
   EnterProjectAccess,
-  // EnterProjectClose,
+  EnterProjectClose,
   EnterProjectContainer,
   EnterProjectHeader,
+  EnterProjectHead,
   EnterProjectShare,
 } from './EnterProject.styles';
 import useProjectStore from '@/store/useProjectStore';
 
-const EnterProject = () => {
+interface EnterProps {
+  setIsModalOpen: (value: boolean) => void;
+  // 여기에 다른 props 타입 정의 가능
+}
+
+const EnterProject = ({ setIsModalOpen }: EnterProps) => {
   const router = useRouter();
   const projectId = useProjectStore.getState().currentProject.id;
 
@@ -30,17 +37,25 @@ const EnterProject = () => {
     router.push(`/ide/${projectId}`);
   };
 
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <EnterProjectContainer>
-      {/* <EnterProjectClose /> */}
-      <EnterProjectHeader>생성완료!</EnterProjectHeader>
-      <EnterProjectShare onClick={shareURL}>
-        초대 링크 공유하기
-      </EnterProjectShare>
-      <EnterProjectAccess type="button" onClick={handleEnter}>
-        입장하기
-      </EnterProjectAccess>
-    </EnterProjectContainer>
+    <ModalBackdrop>
+      <EnterProjectContainer>
+        <EnterProjectHeader>
+          <EnterProjectClose onClick={handleClose}>x</EnterProjectClose>
+        </EnterProjectHeader>
+        <EnterProjectHead>생성완료!</EnterProjectHead>
+        <EnterProjectShare onClick={shareURL}>
+          초대 링크 공유하기
+        </EnterProjectShare>
+        <EnterProjectAccess type="button" onClick={handleEnter}>
+          입장하기
+        </EnterProjectAccess>
+      </EnterProjectContainer>
+    </ModalBackdrop>
   );
 };
 
