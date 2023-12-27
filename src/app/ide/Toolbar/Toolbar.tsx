@@ -67,7 +67,6 @@ const Toolbar = () => {
                 alt={`프로필 이미지`}
                 width={IMAGE_SIZE}
                 height={IMAGE_SIZE}
-                layout="fixed"
               />
             </StyledImgDiv>
           </ToolBarUserDiv>
