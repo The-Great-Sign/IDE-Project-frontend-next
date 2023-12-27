@@ -4,7 +4,7 @@ import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useGeneralChatStore } from '@/store/useChattingStore';
 
-const getCurrentProjectId = () => {
+export const getCurrentProjectId = () => {
   if (typeof window !== 'undefined') {
     const path = window.location.pathname;
     const pathSegments = path.split('/');

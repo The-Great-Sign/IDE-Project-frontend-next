@@ -2,10 +2,11 @@
 import { useState, useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
-import { getCurrentProjectId } from '../[projectId]/page';
+
 import 'xterm/css/xterm.css';
 import { Resizable } from 're-resizable';
 import { TerminalContainer } from './Terminal.styles';
+import { getCurrentProjectId } from '@/app/api/websocket';
 
 export interface Content {
   path: string;
