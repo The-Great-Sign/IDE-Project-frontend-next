@@ -5,7 +5,6 @@ import { MainContainer, MainDiv, MainDivInfo } from './page.styles';
 import { BigButton } from '@/components/Button/Button';
 import { useRouter } from 'next/navigation';
 import useUserStore from '@/store/useUserStore';
-// import Image from 'next/image';
 
 const App = () => {
   const router = useRouter();
@@ -23,20 +22,12 @@ const App = () => {
     <>
       <MainHeader />
       <MainContainer>
-        <h2>대박징조 DJIDE PROJECT</h2>
-        <h2>
-          대징 IDE와
+        <h3>
+          대박징조 IDE와
           <br />
           함께 하는 페어 코딩
-        </h2>
+        </h3>
         <div>
-          {/* <Image
-            src="/public/images/meeting_mono.png"
-            alt="메인이미지"
-            width={400} // 실제 이미지의 너비
-            height={200}
-            layout="responsive"
-          /> */}
           <MainDiv>
             <MainDivInfo>
               <h2>채팅기능</h2>
