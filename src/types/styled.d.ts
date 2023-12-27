@@ -11,6 +11,8 @@ declare module 'styled-components' {
       black: string;
       text: string;
       loginTitle: string;
+      contextMenu: string;
+      hoverGray: string;
       boxShadow: string;
       menuHover: string;
       boxbg: string;

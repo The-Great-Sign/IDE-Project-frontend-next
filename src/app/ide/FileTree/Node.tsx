@@ -13,13 +13,16 @@ import LanguageIcon from './LanguageIcon';
 import useHandleCreateFile from '@/hooks/useHandleCreateFile';
 import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';
 import axiosInstance from '@/app/api/axiosInstance';
+import { useContextMenuStore } from '@/store/useContextMenuStore';
 
 export const Node = ({
   node,
   style,
   dragHandle,
   tree,
-}: NodeRendererProps<FileNodeType>) => {
+}: NodeRendererProps<FileNodeType> & {
+  // handleHoveredId?: (id: string) => void;
+}) => {
   const { updateNodeName } = useFileTreeStore();
   const handleOpenFile = useHandleOpenFile();
   const handleCreateFileRequest = useHandleCreateFile();
@@ -93,14 +96,20 @@ export const Node = ({
 
   return (
     <>
-      <NodeContainer className="node-container" style={style} ref={dragHandle}>
+      <NodeContainer
+        className="node-container"
+        style={style}
+        ref={dragHandle}
+        onMouseOver={() => useContextMenuStore.getState().setHoveredId(node.id)}
+      >
         <FileDiv
           className="node-content"
-          onClick={() =>
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
             node.isInternal
               ? node.toggle()
-              : handleFileOpenAndUpdate(node.id, node.data.name)
-          }
+              : handleFileOpenAndUpdate(node.id, node.data.name);
+          }}
         >
           {node.data.type === 'FILE' ? (
             <>
