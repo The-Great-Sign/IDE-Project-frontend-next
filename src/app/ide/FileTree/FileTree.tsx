@@ -3,6 +3,8 @@ import {
   FileButton,
   FileTreeConatiner,
   ProjectName,
+  StyledContextMenu,
+  StyledContextMenuItem,
   TopContainer,
 } from './FileTree.styles';
 import {
@@ -23,11 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
 import { getCurrentProjectId } from '../[projectId]/page';
-import {
-  ContextMenu,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from 'rctx-contextmenu';
+import { ContextMenuTrigger } from 'rctx-contextmenu';
 import { useContextMenuStore } from '@/store/useContextMenuStore';
 import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';
 
@@ -250,9 +248,11 @@ const FileTree = () => {
           </Tree>
         </ContextMenuTrigger>
       </FileTreeConatiner>
-      <ContextMenu id="my-context-menu-1">
-        <ContextMenuItem onClick={handleDeleteFile}>삭제하기</ContextMenuItem>
-      </ContextMenu>
+      <StyledContextMenu id="my-context-menu-1">
+        <StyledContextMenuItem onClick={handleDeleteFile}>
+          삭제하기
+        </StyledContextMenuItem>
+      </StyledContextMenu>
     </Resizable>
   );
 };

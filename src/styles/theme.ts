@@ -10,6 +10,8 @@ export const lightTheme: DefaultTheme = {
     black: '#000',
     text: '#333',
     loginTitle: '#333',
+    contextMenu: 'white',
+    hoverGray: '#F2F4F6',
   },
 };
 
@@ -23,5 +25,7 @@ export const darkTheme: DefaultTheme = {
     black: '#000',
     text: '#fff',
     loginTitle: '#333',
+    contextMenu: 'black',
+    hoverGray: '#363636',
   },
 };
