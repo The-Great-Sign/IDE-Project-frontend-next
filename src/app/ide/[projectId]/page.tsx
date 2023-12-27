@@ -33,11 +33,9 @@ import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 import { useRouter } from 'next/navigation';
-import useUserStore from '@/store/useUserStore';
 import { useVisibleChat } from '@/store/useChattingStore';
 import { TerminalContainer } from '../Terminal/Terminal.styles';
 import { Resizable } from 're-resizable';
-
 
 interface ReceivedTerminalType {
   success: boolean;
