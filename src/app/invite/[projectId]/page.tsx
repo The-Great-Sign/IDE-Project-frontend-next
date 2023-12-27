@@ -14,7 +14,7 @@ import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
 import axiosInstance from '@/app/api/axiosInstance';
 import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
-import useUserStore from '@/store/useUserStore';
+import useTokenStore from '@/store/useTokenStore';
 
 interface EnterProps {
   password: string;
@@ -54,7 +54,7 @@ const Invite = () => {
   };
 
   useEffect(() => {
-    if (useUserStore.getState().isLoggedIn == false) {
+    if (useTokenStore.getState().isLoggedIn == false) {
       useProjectStore.getState().setInvitedProjectId(getCurrentProjectId());
       router.push('/login');
     }
