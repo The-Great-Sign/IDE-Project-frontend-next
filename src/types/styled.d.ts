@@ -13,6 +13,7 @@ declare module 'styled-components' {
       loginTitle: string;
       boxShadow: string;
       menuHover: string;
+      boxbg: string;
     };
   }
 }
