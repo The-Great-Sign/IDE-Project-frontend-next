@@ -1,25 +1,27 @@
 import {
   AiOutlineCopy,
   AiOutlineShareAlt,
-  AiOutlineSound,
-  AiOutlineAudio,
   AiOutlineCode,
 } from 'react-icons/ai';
-import { BiMenu } from 'react-icons/bi';
 import {
   Div,
   ToolBarIconDiv,
-  ToolBarMenuDiv,
   ToolBarUserDiv,
   ToolbarContainer,
 } from './Toolbar.style';
 import { IconContext } from 'react-icons';
-import { UserProfile } from '../Header/IDEHeader.styles';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
 import { getCurrentProjectId } from '../[projectId]/page';
+import useUserStore from '@/store/useUserStore';
+
+import { IMAGE_SIZE } from '@/constants/userInfo';
+import {
+  StyledImgDiv,
+  StyledImage,
+} from '@/components/MainHeader/UserInfo/UserInfo.style';
 
 const Toolbar = () => {
-  const user = { name: '지원' };
+  const imgageUrl = useUserStore.getState().imageUrl;
   const { toggleDiv } = useVisibleDiv();
 
   const shareURL = async () => {
@@ -50,9 +52,6 @@ const Toolbar = () => {
         }}
       >
         <Div>
-          <ToolBarMenuDiv>
-            <BiMenu />
-          </ToolBarMenuDiv>
           <ToolBarIconDiv onClick={toggleDiv}>
             <AiOutlineCopy />
           </ToolBarIconDiv>
@@ -61,18 +60,20 @@ const Toolbar = () => {
           </ToolBarIconDiv>
         </Div>
         <Div>
+          <ToolBarUserDiv>
+            <StyledImgDiv>
+              <StyledImage
+                src={imgageUrl}
+                alt={`프로필 이미지`}
+                width={IMAGE_SIZE}
+                height={IMAGE_SIZE}
+                layout="fixed"
+              />
+            </StyledImgDiv>
+          </ToolBarUserDiv>
           <ToolBarIconDiv>
             <AiOutlineShareAlt onClick={shareURL} />
           </ToolBarIconDiv>
-          <ToolBarIconDiv>
-            <AiOutlineSound />
-          </ToolBarIconDiv>
-          <ToolBarIconDiv>
-            <AiOutlineAudio />
-          </ToolBarIconDiv>
-          <ToolBarUserDiv>
-            <UserProfile>{user.name}</UserProfile>
-          </ToolBarUserDiv>
         </Div>
       </IconContext.Provider>
     </ToolbarContainer>
