@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 import { FONTS } from '@/constants/fonts';
 import { AiOutlineComment } from 'react-icons/ai';
-import {
-  HeaderContainer,
-  Logo,
-} from '@/components/MainHeader/MainHeader.style';
+import { HeaderContainer } from '@/components/MainHeader/MainHeader.style';
 
 export const IDEHeaderContainer = styled(HeaderContainer)`
   height: 48px;
@@ -15,8 +12,9 @@ export const LeftBox = styled.div`
   display: flex;
 `;
 
-export const IDELogo = styled(Logo)`
+export const IDELogo = styled.div`
   font-size: ${FONTS.lg};
+  font-weight: 700;
 `;
 
 export const StyleAiOutlineComment = styled(AiOutlineComment)`
