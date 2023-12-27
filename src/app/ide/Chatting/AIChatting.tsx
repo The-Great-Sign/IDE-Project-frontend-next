@@ -24,6 +24,7 @@ const AIChatting = () => {
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/ask`,
         question
+
       );
       const data = response.data;
       if (data.success) {
