@@ -1,5 +1,6 @@
 import { FONTS } from '@/constants/fonts';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -15,4 +16,9 @@ export const Logo = styled.div`
   font-size: ${FONTS.lg};
   font-weight: 700;
   padding-left: 60px;
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${props => props.theme.colors.text};
 `;
