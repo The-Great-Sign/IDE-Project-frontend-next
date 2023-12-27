@@ -23,7 +23,7 @@ const AIChatting = () => {
     try {
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/ask`,
-        question
+        { question: question }
       );
       const data = response.data;
       if (data.success) {
@@ -63,6 +63,7 @@ const AIChatting = () => {
       message: '질문',
       results: question,
     };
+    console.log(questionMessage);
     useAIChatStore.getState().addAIMessage(questionMessage);
     postSimpleQuestion(question);
     setQuestion('');

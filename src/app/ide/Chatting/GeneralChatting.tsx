@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   GeneralChattingDiv,
   ChattingMessages,
@@ -19,14 +19,11 @@ interface GeneralChattingProps {
 }
 
 const GeneralChatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const client = clientRef.current;
   const [sendContent, setSendContent] = useState('');
   const messages = useGeneralChatStore(state => state.messages);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
 
   const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setSendContent(e.target.value);
@@ -34,19 +31,25 @@ const GeneralChatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const sendMessage = { content: sendContent };
+    if (sendContent === '') {
+      alert('채팅을 입력해주세요');
+    } else if (sendContent.length > 200) {
+      alert('채팅은 200자 이내로 입력해주세요');
+    } else {
+      const sendMessage = { content: sendContent };
 
-    if (client) {
-      client.publish({
-        destination: `/app/project/${getCurrentProjectId()}/chat-create`,
-        body: JSON.stringify(sendMessage),
-      });
-      setSendContent('');
+      if (client) {
+        client.publish({
+          destination: `/app/project/${getCurrentProjectId()}/chat-create`,
+          body: JSON.stringify(sendMessage),
+        });
+        setSendContent('');
+      }
     }
   };
   return (
     <GeneralChattingDiv>
-      <ChattingMessages>
+      <ChattingMessages ref={scrollRef}>
         {messages.map((message, index) => {
           const { messageType, userNickname, content, currentUsers } = message;
           console.log(messageType, userNickname, content, currentUsers);
