@@ -30,7 +30,6 @@ const Invite = () => {
       const response = await axiosInstance.post('/api/projects', enterData);
       const data = response.data;
       if (data.success) {
-        ///////// 결과값이 200? 400?
         console.log(data.message);
         router.push(`/ide/${getCurrentProjectId()}`);
       } else {

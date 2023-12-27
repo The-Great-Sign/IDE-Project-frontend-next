@@ -31,8 +31,6 @@ export const processWebSocketFileEvent = (
 
     // 파일 트리에 노드 추가
     return addNodeToTreeWebSocket(fileTree, newNode, parentNodeId);
-
-    //파일 생성 시 파일 열기 로직 여기에 추가
   } else if (event === 'DELETE') {
     // DELETE 이벤트 처리 로직
     const nodeId = findNodeIdByPath(fileTree, path);

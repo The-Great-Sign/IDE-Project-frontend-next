@@ -10,6 +10,8 @@ import {
 } from '@/app/api/websocket';
 import {
   ContentContainer,
+  EditorBox,
+  EditorMain,
   IDEContainer,
   IDEContentCode,
   Section,
@@ -31,6 +33,11 @@ import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 import { useRouter } from 'next/navigation';
+import useUserStore from '@/store/useUserStore';
+import { useVisibleChat } from '@/store/useChattingStore';
+import { TerminalContainer } from '../Terminal/Terminal.styles';
+import { Resizable } from 're-resizable';
+
 
 interface ReceivedTerminalType {
   success: boolean;
@@ -54,6 +61,7 @@ const Ide = () => {
 
   const { selectedFileId } = useFileStore();
   const { isvisibleDiv } = useVisibleDiv();
+  const { isvisibleChat } = useVisibleChat();
   const { setFileTree } = useFileTreeStore();
 
   const router = useRouter();
@@ -192,16 +200,42 @@ const Ide = () => {
           {isvisibleDiv ? <FileTree /> : <></>}
 
           <Section>
-            <EditorTab />
-            {selectedFileId && <ShowEditor fileId={selectedFileId} />}
-            <Terminal
-              clientRef={clientRef}
-              terminalRef={terminalRef}
-              xtermRef={xtermRef}
-              currentPath={currentPath}
-            />
+            <EditorBox>
+              <EditorTab />
+
+              {selectedFileId ? (
+                <ShowEditor fileId={selectedFileId} />
+              ) : (
+                <EditorMain>The Great IDE</EditorMain>
+              )}
+            </EditorBox>
+            <Resizable
+              defaultSize={{
+                height: '300px', // 초기 높이 설정
+                width: '100%',
+              }}
+              enable={{
+                top: true, // 위쪽으로만 리사이징 가능
+                right: false,
+                bottom: true,
+                left: false,
+                topRight: false,
+                bottomRight: false,
+                bottomLeft: false,
+                topLeft: false,
+              }}
+            >
+              <TerminalContainer>
+                <Terminal
+                  clientRef={clientRef}
+                  terminalRef={terminalRef}
+                  xtermRef={xtermRef}
+                  currentPath={currentPath}
+                />
+              </TerminalContainer>
+            </Resizable>
           </Section>
-          <Chatting clientRef={clientRef} />
+          {isvisibleChat ? <Chatting clientRef={clientRef} /> : <></>}
         </IDEContentCode>
       </IDEContainer>
     </main>

@@ -1,10 +1,13 @@
-import useGeneralChatStore from '@/store/useChattingStore';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import useTokenStore from '@/store/useTokenStore';
 import { Client, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { useGeneralChatStore } from '@/store/useChattingStore';
 
 const getCurrentProjectId = () => {
+  if (typeof window === 'undefined') {
+    return '';
+  }
   const path = window.location.pathname;
   const pathSegments = path.split('/');
   const projectId = pathSegments[2];
@@ -66,6 +69,7 @@ const subscribeChatting = (
         const messageData = JSON.parse(ReceivedMessage.body) as ChattingType;
 
         useGeneralChatStore.getState().addMessage(messageData);
+        useGeneralChatStore.getState().setUsers(messageData.currentUsers);
         console.log(`Received: ${ReceivedMessage.body}`);
       }
     );

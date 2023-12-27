@@ -6,7 +6,6 @@ import { BigButton } from '@/components/Button/Button';
 import { useRouter } from 'next/navigation';
 import useTokenStore from '@/store/useTokenStore';
 // import Image from 'next/image';
-// import ThemeToggleBtn from '@/components/ThemeToggleBtn/ThemeToggleBtn';
 
 const App = () => {
   const router = useRouter();
@@ -24,12 +23,12 @@ const App = () => {
     <>
       <MainHeader />
       <MainContainer>
+        <h2>대박징조 DJIDE PROJECT</h2>
         <h2>
           대징 IDE와
           <br />
           함께 하는 페어 코딩
         </h2>
-        {/* <ThemeToggleBtn /> */}
         <div>
           {/* <Image
             src="/public/images/meeting_mono.png"

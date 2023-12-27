@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
 import { MdArrowRight, MdArrowDropDown, MdEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
@@ -47,7 +46,7 @@ export const Node = ({
       const success = await handleDeleteFileRequest(node.data);
 
       if (success) {
-        // 서버에서 받아온 파일 id 값으로 바꾸기;
+        // 서버에서 받아온 파일 id 값으로 바꾸기
         const roomId = node.id;
         const response = await axiosInstance.delete(
           `/api/live-blocks/rooms/file-${roomId}`
@@ -56,11 +55,11 @@ export const Node = ({
         tree.delete(node.id);
         alert('삭제 성공');
       } else {
-        alert('파일 삭제에 문제가 있습니다.');
+        alert('라이브블록 : 파일 삭제에 문제가 있습니다.');
       }
     } catch (error) {
       console.error('Error deleting file:', error);
-      alert('파일 삭제 중 오류가 발생했습니다.');
+      alert('파일트리 : 파일 삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -73,6 +72,19 @@ export const Node = ({
   // 파일 이름 입력 완료 처리
   const onInputComplete = (newName: string) => {
     handleFileOpenAndUpdate(node.id, newName);
+  };
+
+  //enter or blur 클릭 시 서버 및 파일트리 렌더링 처리
+  const handleFileAdd = (fileId: string, newName: string) => {
+    if (isCorrectName(newName) === true) {
+      onCreateFile(newName);
+      updateNodeName(fileId, newName);
+      node.submit(newName); //이때 서버로도 메시지 보내야 함
+      onInputComplete(newName);
+    } else {
+      node.reset();
+      tree.delete(node.id);
+    }
   };
 
   return (
@@ -131,28 +143,12 @@ export const Node = ({
                 defaultValue={node.data.name}
                 onFocus={e => e.currentTarget.select()}
                 onBlur={() => {
-                  if (isCorrectName(node.data.name) === true) {
-                    handleCreateFileRequest(node.data, node.data.name);
-                    updateNodeName(node.id, node.data.name);
-                    node.submit(node.data.name);
-                    onInputComplete(node.data.name);
-                  } else {
-                    node.reset();
-                    tree.delete(node.id);
-                  }
+                  handleFileAdd(node.id, node.data.name);
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === 'Escape') node.reset();
                   if (e.key === 'Enter') {
-                    if (isCorrectName(e.currentTarget.value) === true) {
-                      onCreateFile(e.currentTarget.value);
-                      updateNodeName(node.id, e.currentTarget.value);
-                      node.submit(e.currentTarget.value); //이때 서버로도 메시지 보내야 함
-                      onInputComplete(e.currentTarget.value);
-                    } else {
-                      node.reset();
-                      tree.delete(node.id);
-                    }
+                    handleFileAdd(node.id, e.currentTarget.value);
                   }
                 }}
                 autoFocus
