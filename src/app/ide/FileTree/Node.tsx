@@ -1,6 +1,6 @@
 import React from 'react';
 import { AiFillFolder, AiFillFolderOpen } from 'react-icons/ai';
-import { MdArrowRight, MdArrowDropDown, MdEdit } from 'react-icons/md';
+import { MdArrowRight, MdArrowDropDown } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
 import { NodeRendererProps } from 'react-arborist';
 import { FileDiv, IsDirty, IsNotDirty, NodeContainer } from './FileTree.styles';
@@ -32,11 +32,11 @@ export const Node = ({
       name: newNodeName,
     };
 
+    await handleCreateFileRequest(fileNode as FileNodeType, newNodeName);
+
     if (node.data.name === '') {
       useFileTreeStore.getState().deleteNode(node.id);
     }
-
-    await handleCreateFileRequest(fileNode as FileNodeType, newNodeName);
   };
 
   //파일 삭제 버튼 클릭 시 바로 실행되는 로직
@@ -101,7 +101,6 @@ export const Node = ({
               ? node.toggle()
               : handleFileOpenAndUpdate(node.id, node.data.name)
           }
-          isNodeDirty={node.data.isDirty}
         >
           {node.data.type === 'FILE' ? (
             <>
@@ -165,9 +164,9 @@ export const Node = ({
 
         <div className="file-actions">
           <div className="folderFileActions">
-            <button onClick={() => node.edit()} title="Rename...">
+            {/* <button onClick={() => node.edit()} title="Rename...">
               <MdEdit />
-            </button>
+            </button> */}
             <button onClick={handleDeleteFile} title="Delete">
               <RxCross2 />
             </button>
