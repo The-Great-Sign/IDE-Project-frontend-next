@@ -27,12 +27,12 @@ import { useFileStore } from '@/store/useFileStore';
 import LoadingProject from '@/app/project/EnterProject/LoadingProject/LoadingProject';
 import { checkFileTree } from '@/app/api/filetree/updateFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
-import axiosInstance from '@/app/api/axiosInstance';
 import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
 import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
-import useUserStore from '@/store/useUserStore';
+import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
+import { useRouter } from 'next/navigation';
 import { useVisibleChat } from '@/store/useChattingStore';
 import { TerminalContainer } from '../Terminal/Terminal.styles';
 import { Resizable } from 're-resizable';
@@ -62,35 +62,16 @@ const Ide = () => {
   const { isvisibleChat } = useVisibleChat();
   const { setFileTree } = useFileTreeStore();
 
-  useEffect(() => {
-    const storedAccessToken = localStorage.getItem('accessToken');
+  const router = useRouter();
 
+  useEffect(() => {
+    const storedAccessToken = useTokenStore.getState().accessToken;
     if (storedAccessToken) {
-      // 로컬 스토리지에서 토큰을 가져와 상태에 저장
-      useTokenStore.getState().setAccessToken(storedAccessToken);
-      console.log(storedAccessToken);
-      useUserStore.getState().setLogin(true);
-      fetchUserInfo();
+      reloadTokenSetting(storedAccessToken);
+    } else {
+      router.push(`/`);
     }
   }, []);
-
-  // 사용자 정보를 가져오는 함수
-  const fetchUserInfo = async () => {
-    try {
-      axiosInstance.defaults.headers.common['Authorization'] =
-        localStorage.getItem('accessToken');
-      console.log('혹시 여기 있나');
-      console.log(useTokenStore.getState().accessToken);
-      const response = await axiosInstance.get('/user/info');
-
-      const { id, nickname, imageUrl } = response.data.results;
-      console.log(response);
-      useUserStore.getState().setUser(id, nickname, imageUrl);
-      console.log(useUserStore.getState().imageUrl);
-    } catch (error) {
-      console.error('사용자 정보를 가져오는 데 실패했습니다.', error);
-    }
-  };
 
   const subscribeLoading = (
     // 로딩 구독
@@ -143,7 +124,6 @@ const Ide = () => {
   useEffect(() => {
     const postEnterProject = async (projectId: string) => {
       try {
-        console.log(localStorage.getItem('accessToken'));
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/projects/${projectId}/run`,
           {},

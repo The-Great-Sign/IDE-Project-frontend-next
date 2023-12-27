@@ -4,12 +4,12 @@ import MainHeader from '@/components/MainHeader/MainHeader';
 import { MainContainer, MainDiv } from './page.styles';
 import { BigButton } from '@/components/Button/Button';
 import { useRouter } from 'next/navigation';
-import useUserStore from '@/store/useUserStore';
 import { InfoBox } from '@/components/InfoBox/InfoBox.styles';
+import useTokenStore from '@/store/useTokenStore';
 
 const App = () => {
   const router = useRouter();
-  const { isLoggedIn } = useUserStore();
+  const { isLoggedIn } = useTokenStore();
 
   const handleClick = () => {
     if (isLoggedIn) {
