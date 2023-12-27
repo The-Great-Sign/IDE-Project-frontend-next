@@ -17,7 +17,6 @@ import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
 import useTokenStore from '@/store/useTokenStore';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
-import axios from 'axios';
 
 interface EnterProps {
   password: string;
@@ -31,7 +30,7 @@ const Invite = () => {
 
   const getProjectName = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${
           process.env.NEXT_PUBLIC_BACKEND_URI
         }/api/projects/${getCurrentProjectId()}`
