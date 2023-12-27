@@ -42,7 +42,6 @@ export const UserInfo = () => {
             alt={`${name}의 프로필 이미지`}
             width={IMAGE_SIZE}
             height={IMAGE_SIZE}
-            layout="fixed"
           />
         </StyledImgDiv>
       </StyledLink>

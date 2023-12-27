@@ -2,12 +2,7 @@
 
 import MainHeader from '@/components/MainHeader/MainHeader';
 
-import {
-  MainContainer,
-  MainDiv,
-  MainDivInfo,
-  StartButton,
-} from './page.styles';
+import { MainContainer, MainDiv, StartButton } from './page.styles';
 
 import { useRouter } from 'next/navigation';
 import { InfoBox } from '@/components/InfoBox/InfoBox.styles';
@@ -29,7 +24,6 @@ const App = () => {
     <>
       <MainHeader />
       <MainContainer>
-
         <h2>대박징조 DJIDE PROJECT</h2>
         <h3>
           대박징조 IDE와
