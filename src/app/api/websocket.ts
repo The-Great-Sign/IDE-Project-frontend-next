@@ -11,6 +11,7 @@ const getCurrentProjectId = () => {
     const projectId = pathSegments[2];
     return projectId;
   }
+  return '';
 };
 
 interface WebsocketProps {
