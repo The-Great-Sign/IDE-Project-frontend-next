@@ -1,3 +1,4 @@
+import { BigButton } from '@/components/Button/Button';
 import styled from 'styled-components';
 
 const mainPageImageUrl = `/app/mainPageImage.png`;
@@ -12,7 +13,6 @@ export const MainContainer = styled.div`
   margin: 0 auto;
   padding-top: 50px;
   font-size: 2em; // 필요에 따라 폰트 크기 조절
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 `;
 
 export const MainDiv = styled.div`
@@ -23,7 +23,7 @@ export const MainDiv = styled.div`
   width: 100%; // 원하는 가로 길이로 설정
   margin: 0 auto; // 가로 중앙 정렬을 위해 자동 마진 사용
 
-  padding-top: 10vw;
+  padding-top: 5vw;
   padding-bottom: 5vw;
   text-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
   overflow: hidden; // 텍스트가 넘칠 경우 숨김
@@ -66,8 +66,7 @@ export const MainDivInfo = styled.div`
     text-overflow: ellipsis; // 텍스트가 넘칠 때 말줄임표 표시
   }
 `;
-export const BigButton = styled.button`
-  display: flex;
-  align-items: center;
-  overflow: hidden; // 버튼 내용이 넘칠 경우 숨김
+
+export const StartButton = styled(BigButton)`
+  font-size: 20px !important;
 `;
