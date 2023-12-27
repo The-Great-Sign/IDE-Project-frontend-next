@@ -5,13 +5,12 @@ import SockJS from 'sockjs-client';
 import { useGeneralChatStore } from '@/store/useChattingStore';
 
 const getCurrentProjectId = () => {
-  if (typeof window === 'undefined') {
-    return '';
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname;
+    const pathSegments = path.split('/');
+    const projectId = pathSegments[2];
+    return projectId;
   }
-  const path = window.location.pathname;
-  const pathSegments = path.split('/');
-  const projectId = pathSegments[2];
-  return projectId;
 };
 
 interface WebsocketProps {
