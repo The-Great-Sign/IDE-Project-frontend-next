@@ -18,6 +18,7 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
 import { getCurrentProjectId } from '../[projectId]/page';
 import { useVisibleChat } from '@/store/useChattingStore';
+import { Content } from '../Terminal/Terminal';
 
 interface IDEHeaderProps {
   clientRef: React.RefObject<Client>;
@@ -56,21 +57,34 @@ const IDEHeader: React.FC<IDEHeaderProps> = ({ clientRef }) => {
     }
   };
 
-  const handleRun = () => {};
+  const handleRun = () => {
+    if (selectedFileId) {
+      const selectedFile = files.find(f => f.id === selectedFileId);
+
+      if (selectedFile) {
+        const filePath = findNodePath(selectedFileId); // 전체 파일 경로 찾기
+        if (filePath) {
+          const content: Content = {
+            path: '/',
+            command: selectedFile.language + ' .' + filePath,
+          };
+          console.log('content', content);
+          if (clientRef.current) {
+            clientRef.current.publish({
+              destination: `/app/project/${getCurrentProjectId()}/terminal`,
+              body: JSON.stringify(content),
+            });
+          }
+        }
+      }
+    }
+  };
 
   const handleClose = async () => {
     const confirmClose = confirm('프로젝트를 종료하시겠습니까?');
-    if (confirmClose) {
-      try {
-        await axiosInstance.post(`/api/projects/${getCurrentProjectId()}/stop`);
-        console.log('프로젝트 종료');
-        if (clientRef.current) {
-          clientRef.current.deactivate();
-          window.location.href = '/project';
-        }
-      } catch (e) {
-        console.error(e);
-      }
+    if (confirmClose && clientRef.current) {
+      clientRef.current.deactivate();
+      window.location.href = '/project';
     }
   };
 

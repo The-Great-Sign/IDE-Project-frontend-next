@@ -7,6 +7,9 @@ interface UserState {
   imageUrl: string;
   cursorColor: string;
   setUser: (id: string, name: string, imageUrl: string) => void;
+  email: string;
+  setUserEmail: (email: string) => void;
+  setNewName: (newName: string) => void;
 }
 
 const useUserStore = create<UserState>(set => ({
@@ -16,6 +19,9 @@ const useUserStore = create<UserState>(set => ({
   cursorColor: '#00A86B',
   setUser: (id, name, imageUrl) =>
     set({ id: id, name: name, imageUrl: imageUrl }),
+  setNewName: (newName: string) => set({ name: newName }),
+  email: '',
+  setUserEmail: (email: string) => set({ email: email }),
 }));
 
 export default useUserStore;

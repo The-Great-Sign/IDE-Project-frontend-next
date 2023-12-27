@@ -1,8 +1,9 @@
 'use client';
 
 import MainHeader from '@/components/MainHeader/MainHeader';
-import { MainContainer, MainDiv } from './page.styles';
-import { BigButton } from '@/components/Button/Button';
+
+import { MainContainer, MainDiv, StartButton } from './page.styles';
+
 import { useRouter } from 'next/navigation';
 import { InfoBox } from '@/components/InfoBox/InfoBox.styles';
 import useTokenStore from '@/store/useTokenStore';
@@ -23,6 +24,7 @@ const App = () => {
     <>
       <MainHeader />
       <MainContainer>
+        <h2>대박징조 DJIDE PROJECT</h2>
         <h3>
           대박징조 IDE와
           <br />
@@ -48,7 +50,7 @@ const App = () => {
             </InfoBox>
           </MainDiv>
         </div>
-        <BigButton onClick={handleClick}>시작하기</BigButton>
+        <StartButton onClick={handleClick}>시작하기</StartButton>
       </MainContainer>
     </>
   );

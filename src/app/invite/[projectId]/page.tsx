@@ -1,14 +1,15 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   IDETitle,
   InviteContainer,
+  IDEContentContainer,
   InviteEnterButton,
   InviteForm,
   InvitePage,
   InvitePasswordInput,
-  InvitePasswordTitle,
   InviteTitle,
+  ModalBackdrop,
 } from './Invite.styles';
 import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
 import axiosInstance from '@/app/api/axiosInstance';
@@ -24,11 +25,33 @@ interface EnterProps {
 
 const Invite = () => {
   const router = useRouter();
-  const [password, setPassword] = React.useState<string>('');
+  const [projectName, setProjectName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const getProjectName = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${
+          process.env.NEXT_PUBLIC_BACKEND_URI
+        }/api/projects/${getCurrentProjectId()}`
+      );
+      const data = response.data;
+      if (data.success) {
+        setProjectName(data.results.name);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const postEnterProject = async (enterData: EnterProps) => {
     try {
-      const response = await axiosInstance.post('/api/projects', enterData);
+      const response = await axiosInstance.post(
+        '/api/projects/join',
+        enterData
+      );
       const data = response.data;
       if (data.success) {
         console.log(data.message);
@@ -54,6 +77,7 @@ const Invite = () => {
   };
 
   useEffect(() => {
+    getProjectName();
     //로그인 여부 확인
     const storedAccessToken = useTokenStore.getState().accessToken;
     if (storedAccessToken) {
@@ -63,7 +87,6 @@ const Invite = () => {
       localStorage.setItem('invitedProjectId', getCurrentProjectId());
       router.push(`/login`);
     }
-
     if (useTokenStore.getState().isLoggedIn == false) {
       useProjectStore.getState().setInvitedProjectId(getCurrentProjectId());
       router.push('/login');
@@ -72,15 +95,24 @@ const Invite = () => {
 
   return (
     <InvitePage>
-      <InviteContainer>
-        <IDETitle>DJIDE</IDETitle>
-        <InviteTitle>닉네임님의 프로젝트명 초대 링크</InviteTitle>
-        <InvitePasswordTitle>비밀번호</InvitePasswordTitle>
-        <InviteForm onSubmit={handleSubmit}>
-          <InvitePasswordInput type="password" onChange={handleInput} />
-          <InviteEnterButton type="submit">입장하기</InviteEnterButton>
-        </InviteForm>
-      </InviteContainer>
+      <ModalBackdrop>
+        <InviteContainer>
+          <IDETitle>DJIDE</IDETitle>
+          <IDEContentContainer>
+            <InviteTitle>
+              <strong>{projectName} </strong>
+            </InviteTitle>
+          </IDEContentContainer>
+          <InviteForm onSubmit={handleSubmit}>
+            <InvitePasswordInput
+              placeholder="비밀번호를 입력하세요"
+              type="password"
+              onChange={handleInput}
+            />
+            <InviteEnterButton type="submit">입장하기</InviteEnterButton>
+          </InviteForm>
+        </InviteContainer>
+      </ModalBackdrop>
     </InvitePage>
   );
 };

@@ -8,29 +8,22 @@ import {
   ChattingInputForm,
   ChattingInput,
   ChattingSendButton,
-  // CodeReviewBtn,
+  CodeReviewBtn,
 } from './Chatting.styles';
-import axios from 'axios';
 import { AIType, useAIChatStore } from '@/store/useChattingStore';
+import { useFileStore } from '@/store/useFileStore';
+import axiosInstance from '@/app/api/axiosInstance';
 
 const AIChatting = () => {
   const [question, setQuestion] = useState<string>('');
   const AImessages = useAIChatStore(state => state.AImessages);
+  const { files, selectedFileId } = useFileStore();
 
   const postSimpleQuestion = async (question: string) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/ask`,
-        {
-          question: question,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: localStorage.getItem('accessToken'),
-          },
-        }
+        { question: question }
       );
       const data = response.data;
       if (data.success) {
@@ -43,29 +36,21 @@ const AIChatting = () => {
     }
   };
 
-  // const postCodeReview = async (fileId: string) => {
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/review-file/${fileId}`,
-  //       {},
-  //       {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Access-Control-Allow-Origin': '*',
-  //           Authorization: localStorage.getItem('accessToken'),
-  //         },
-  //       }
-  //     );
-  //     const data = response.data;
-  //     if (data.success) {
-  //       useAIChatStore.getState().addAIMessage(data);
-  //     } else {
-  //       alert(data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const postCodeReview = async (fileId: string) => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/chatgpt/review-file/${fileId}`
+      );
+      const data = response.data;
+      if (data.success) {
+        useAIChatStore.getState().addAIMessage(data);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleQuestion = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuestion(e.target.value);
@@ -78,17 +63,34 @@ const AIChatting = () => {
       message: '질문',
       results: question,
     };
+    console.log(questionMessage);
     useAIChatStore.getState().addAIMessage(questionMessage);
     postSimpleQuestion(question);
     setQuestion('');
   };
 
-  // const handleReview = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   postCodeReview(fileId);
-  // };
+  const handleReview = () => {
+    const selectedFile = files.find(f => f.id === selectedFileId);
+    if (selectedFile) {
+      const questionMessage = {
+        success: true,
+        message: '질문',
+        results: '현재 파일 코드리뷰 해줘',
+      };
+      useAIChatStore.getState().addAIMessage(questionMessage);
+      postCodeReview(selectedFile?.id);
+    } else if (selectedFileId === null) {
+      alert('코드리뷰할 파일을 선택해주세요!');
+    } else {
+      alert('다시 시도해주세요!');
+    }
+  };
 
   return (
     <AIChattingDiv>
+      <CodeReviewBtn onClick={handleReview} type="button">
+        코드 리뷰
+      </CodeReviewBtn>
       <ChattingMessages>
         {AImessages.map((AImessage: AIType, index: number) => {
           const { message, results } = AImessage;
@@ -118,7 +120,6 @@ const AIChatting = () => {
         />
         <ChattingSendButton type="submit">전송</ChattingSendButton>
       </ChattingInputForm>
-      {/* <CodeReviewBtn onClick={handleReview} type='button'>코드 리뷰</CodeReviewBtn> */}
     </AIChattingDiv>
   );
 };

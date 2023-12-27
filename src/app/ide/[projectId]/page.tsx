@@ -14,7 +14,9 @@ import {
   EditorMain,
   IDEContainer,
   IDEContentCode,
+  LoadingDiv,
   Section,
+  LoadingMessage,
 } from '../page.styles';
 import IDEHeader from '../Header/IDEHeader';
 import FileTree from '../FileTree/FileTree';
@@ -24,18 +26,18 @@ import EditorTab from '../Editor/EditorTab/EditorTab';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
 import ShowEditor from '../Editor/ShowEditor';
 import { useFileStore } from '@/store/useFileStore';
-import LoadingProject from '@/app/project/EnterProject/LoadingProject/LoadingProject';
 import { checkFileTree } from '@/app/api/filetree/updateFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
-import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 import { useRouter } from 'next/navigation';
 import { useVisibleChat } from '@/store/useChattingStore';
 import { TerminalContainer } from '../Terminal/Terminal.styles';
 import { Resizable } from 're-resizable';
+import axiosInstance from '../../api/axiosInstance';
+import { Loading } from '@/app/Loading';
 
 interface ReceivedTerminalType {
   success: boolean;
@@ -65,6 +67,7 @@ const Ide = () => {
   const router = useRouter();
 
   useEffect(() => {
+    localStorage.removeItem('invitedProjectId');
     const storedAccessToken = useTokenStore.getState().accessToken;
     if (storedAccessToken) {
       reloadTokenSetting(storedAccessToken);
@@ -124,19 +127,9 @@ const Ide = () => {
   useEffect(() => {
     const postEnterProject = async (projectId: string) => {
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/projects/${projectId}/run`,
-          {},
-
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              Authorization: localStorage.getItem('accessToken'),
-            },
-          }
+        const response = await axiosInstance.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/projects/${projectId}/run`
         );
-        console.log(localStorage.getItem('accessToken'));
         const data = response.data;
         setExecute(data.results);
       } catch (error) {
@@ -238,7 +231,13 @@ const Ide = () => {
       </IDEContainer>
     </main>
   ) : (
-    <LoadingProject />
+    <LoadingDiv>
+      <Loading />
+      <LoadingMessage>
+        프로젝트 생성중입니다
+        <br />약 40초정도 소요됩니다
+      </LoadingMessage>
+    </LoadingDiv>
   );
 };
 

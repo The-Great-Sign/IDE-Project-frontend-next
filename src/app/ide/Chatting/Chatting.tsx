@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Resizable } from 're-resizable';
 import {
   ChattingContainer,
@@ -18,6 +18,10 @@ interface GeneralChattingProps {
 const Chatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
   const [activeTab, setActiveTab] = useState<string>('채팅');
   const users = useGeneralChatStore(state => state.users);
+
+  useEffect(() => {
+    setActiveTab(`채팅 (${users})`);
+  }, [users]);
 
   const handleClick = (tab: string) => {
     setActiveTab(tab);
@@ -44,17 +48,18 @@ const Chatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
         <ChattingHeader>
           <ChattingTab
             onClick={() => handleClick(`채팅 (${users})`)}
-            $isActive={activeTab === `채팅 (${users})`}
+            isActive={activeTab === `채팅 (${users})`}
           >
             {`채팅 (${users})`}
           </ChattingTab>
           <ChattingTab
             onClick={() => handleClick('AI✨')}
-            $isActive={activeTab === 'AI✨'}
+            isActive={activeTab === 'AI✨'}
           >
             AI✨
           </ChattingTab>
         </ChattingHeader>
+
         {activeTab === `채팅 (${users})` ? (
           <GeneralChatting clientRef={clientRef} />
         ) : (
