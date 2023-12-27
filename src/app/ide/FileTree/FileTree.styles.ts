@@ -54,7 +54,6 @@ export const NodeContainer = styled.div`
 interface FileDivProps {
   isNodeDirty?: boolean;
 }
-
 export const FileDiv = styled.div<FileDivProps>`
   display: flex;
   flex-direction: row;

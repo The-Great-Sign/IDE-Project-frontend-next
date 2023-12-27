@@ -1,6 +1,6 @@
 import { BigButton } from '@/components/Button/Button';
+import { FONTS } from '@/constants/fonts';
 import styled from 'styled-components';
-
 const mainPageImageUrl = `/app/mainPageImage.png`;
 
 export const MainContainer = styled.div`
@@ -12,17 +12,17 @@ export const MainContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   padding-top: 50px;
-  font-size: 2em; // 필요에 따라 폰트 크기 조절
+  font-size: ${FONTS.md};
 `;
 
 export const MainDiv = styled.div`
   text-align: center;
   display: flex;
+  gap: 10px;
   font-size: 0.5em; // 텍스트 크기가 너무 크면 조절
   justify-content: center;
   width: 100%; // 원하는 가로 길이로 설정
   margin: 0 auto; // 가로 중앙 정렬을 위해 자동 마진 사용
-
   padding-top: 5vw;
   padding-bottom: 5vw;
   text-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
