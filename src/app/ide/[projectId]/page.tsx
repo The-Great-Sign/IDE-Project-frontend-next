@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import Chatting from '../Chatting/Chatting';
+// import Chatting from '../Chatting/Chatting';
 import {
   LoadingStatusProps,
   SubscribeProps,
@@ -33,7 +33,7 @@ import { Terminal as XTerm } from 'xterm';
 import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
 import useUserStore from '@/store/useUserStore';
-import { useVisibleChat } from '@/store/useChattingStore';
+// import { useVisibleChat } from '@/store/useChattingStore';
 import { TerminalContainer } from '../Terminal/Terminal.styles';
 import { Resizable } from 're-resizable';
 
@@ -59,7 +59,7 @@ const Ide = () => {
 
   const { selectedFileId } = useFileStore();
   const { isvisibleDiv } = useVisibleDiv();
-  const { isvisibleChat } = useVisibleChat();
+  // const { isvisibleChat } = useVisibleChat();
   const { setFileTree } = useFileTreeStore();
 
   useEffect(() => {
@@ -253,7 +253,7 @@ const Ide = () => {
               </TerminalContainer>
             </Resizable>
           </Section>
-          {isvisibleChat ? <Chatting clientRef={clientRef} /> : <></>}
+          {/* {isvisibleChat ? <Chatting clientRef={clientRef} /> : <></>} */}
         </IDEContentCode>
       </IDEContainer>
     </main>
