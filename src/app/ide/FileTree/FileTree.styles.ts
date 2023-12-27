@@ -36,7 +36,7 @@ export const NodeContainer = styled.div`
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(64, 78, 237, 0.2);
   }
 
   &:hover .file-actions {
@@ -51,6 +51,7 @@ export const NodeContainer = styled.div`
     margin: 0px 2px;
   }
 `;
+
 interface FileDivProps {
   isNodeDirty?: boolean;
 }
@@ -58,15 +59,27 @@ export const FileDiv = styled.div<FileDivProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: ${props => (props.isNodeDirty ? 'red' : '')};
+  color: ${props => (props.isNodeDirty ? 'red' : 'inherit')};
+`;
+
+export const TopContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-right: 100px;
+`;
+
+export const ProjectName = styled.div`
+  padding-left: 10px;
+  font-weight: 500;
 `;
 
 // 파일 생성
 
 export const CreateFileDiv = styled.div`
-  width: 100%;
   display: flex;
-  justify-content: right;
 `;
 
 export const FileButton = styled.button`
@@ -74,7 +87,7 @@ export const FileButton = styled.button`
   background: none;
   border-radius: 5px;
   cursor: pointer;
-  padding: 5px;
+
   color: ${COLORS.primary};
 
   &:hover {
