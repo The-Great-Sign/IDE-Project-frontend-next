@@ -2,9 +2,13 @@
 
 import React from 'react';
 import useUserStore from '../../../store/useUserStore';
-import { UserInfoDiv, UserName } from './UserInfo.style';
-import Image from 'next/image';
-import styled from 'styled-components';
+import {
+  StyledImage,
+  StyledImgDiv,
+  StyledLogout,
+  UserInfoDiv,
+  UserName,
+} from './UserInfo.style';
 import StyledLink from '@/components/StyledLink/StyledLink';
 import { IMAGE_SIZE } from '@/constants/userInfo';
 import useTokenStore from '@/store/useTokenStore';
@@ -51,21 +55,3 @@ export const UserInfo = () => {
 };
 
 export default UserInfo;
-
-const StyledImage = styled(Image)`
-  width: ${IMAGE_SIZE}px;
-  height: ${IMAGE_SIZE}px;
-`;
-
-const StyledLogout = styled.div`
-  font-size: 0.8rem;
-  margin-left: 10px;
-  cursor: pointer;
-`;
-
-const StyledImgDiv = styled.div`
-  border-radius: 50%;
-  overflow: hidden;
-  width: ${IMAGE_SIZE}px;
-  height: ${IMAGE_SIZE}px;
-`;
