@@ -2,7 +2,7 @@ import { fetchUserInfo } from '@/app/api/user/fetchUserInfo';
 import useTokenStore from '@/store/useTokenStore';
 import { setCookie } from './cookieUtils';
 
-export const firstTokenStore = (
+export const storeTokenFromUrl = (
   accessTokenFromURL: string,
   refreshTokenFromURL: string
 ) => {
@@ -13,8 +13,4 @@ export const firstTokenStore = (
 
   useTokenStore.getState().setLogin(true);
   fetchUserInfo();
-
-  if (typeof window !== 'undefined') {
-    window.history.pushState({}, '', '/');
-  }
 };
