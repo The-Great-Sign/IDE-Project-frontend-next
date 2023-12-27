@@ -1,5 +1,5 @@
 import { RiMoonClearFill, RiSunFill } from 'react-icons/ri';
-import useThemeStore from '../../store/useThemeStore';
+import useThemeStore from '@/store/useThemeStore';
 import { IconContext } from 'react-icons';
 import { ThemeBtn } from './ThemeToggleBtn.style';
 

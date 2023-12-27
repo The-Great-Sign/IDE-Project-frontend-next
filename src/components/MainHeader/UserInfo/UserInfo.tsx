@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import useUserStore from '../../../store/useUserStore';
+import useUserStore from '@/store/useUserStore';
 import { UserInfoDiv, UserName } from './UserInfo.style';
 import Image from 'next/image';
 import styled from 'styled-components';
