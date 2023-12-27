@@ -2,6 +2,8 @@ import {
   CreateFileDiv,
   FileButton,
   FileTreeConatiner,
+  ProjectName,
+  TopContainer,
 } from './FileTree.styles';
 import {
   CreateHandler,
@@ -16,7 +18,7 @@ import { Resizable } from 're-resizable';
 import { AiOutlineFileAdd, AiOutlineFolderAdd } from 'react-icons/ai';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
@@ -26,8 +28,38 @@ const FileTree = () => {
   const { fileTree, deleteNode, addNode, findNodePathByName } =
     useFileTreeStore();
   const projectId = getCurrentProjectId();
+  const [projectName, setProjectName] = useState<string>('');
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
+
+  const getProjectName = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${
+          process.env.NEXT_PUBLIC_BACKEND_URI
+        }/api/projects/${getCurrentProjectId()}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            Authorization: localStorage.getItem('accessToken'),
+          },
+        }
+      );
+      const data = response.data;
+      if (data.success) {
+        setProjectName(data.results.name);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getProjectName();
+  });
 
   const onCreate: CreateHandler<FileNodeType> = ({ type, parentId }) => {
     const newNode: FileNodeType = {
@@ -115,26 +147,35 @@ const FileTree = () => {
         bottomLeft: false,
         topLeft: false,
       }}
+      minWidth={'180px'}
     >
       <FileTreeConatiner>
-        <CreateFileDiv>
-          <FileButton
-            onClick={() => {
-              treeRef.current?.createLeaf();
-            }}
-            title="New File..."
-          >
-            <AiOutlineFileAdd size="22px" />
-          </FileButton>
-          <FileButton
-            onClick={() => treeRef.current?.createInternal()}
-            title="New Folder..."
-          >
-            <AiOutlineFolderAdd size="22px" />
-          </FileButton>
-        </CreateFileDiv>
+        <TopContainer>
+          <ProjectName>
+            <span>{projectName}</span>
+          </ProjectName>
+          <CreateFileDiv>
+            <FileButton
+              onClick={() => {
+                treeRef.current?.createLeaf();
+              }}
+              title="New File..."
+            >
+              <AiOutlineFileAdd size="22px" />
+            </FileButton>
+            <FileButton
+              onClick={() => treeRef.current?.createInternal()}
+              title="New Folder..."
+            >
+              <AiOutlineFolderAdd size="22px" />
+            </FileButton>
+          </CreateFileDiv>
+        </TopContainer>
         <Tree
           className="react-aborist"
+          width={'100%'}
+          paddingTop={20}
+          rowHeight={24}
           onCreate={onCreate}
           onDelete={onDelete}
           onMove={onMove}
