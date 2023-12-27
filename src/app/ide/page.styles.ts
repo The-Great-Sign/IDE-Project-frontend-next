@@ -61,3 +61,13 @@ export const EditorMain = styled.div`
   font-size: ${FONTS.lg};
   font-weight: 600;
 `;
+
+export const LoadingDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const LoadingMessage = styled.div`
+  text-align: center;
+  display: block;
+`;

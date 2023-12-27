@@ -60,7 +60,7 @@ export const EnterProjectShare = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #0056b3; // Darker blue on hover
+    background: #2232ea;
   }
 `;
 
