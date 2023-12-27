@@ -14,7 +14,8 @@ import { getCurrentProjectId } from '@/app/ide/[projectId]/page';
 import axiosInstance from '@/app/api/axiosInstance';
 import { useRouter } from 'next/navigation';
 import useProjectStore from '@/store/useProjectStore';
-import useUserStore from '@/store/useUserStore';
+import useTokenStore from '@/store/useTokenStore';
+import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 
 interface EnterProps {
   password: string;
@@ -53,7 +54,17 @@ const Invite = () => {
   };
 
   useEffect(() => {
-    if (useUserStore.getState().isLoggedIn == false) {
+    //로그인 여부 확인
+    const storedAccessToken = useTokenStore.getState().accessToken;
+    if (storedAccessToken) {
+      //로그인 된 사용자라면 다시 invite로 비밀번호 입력하도록
+      reloadTokenSetting(storedAccessToken);
+    } else {
+      localStorage.setItem('invitedProjectId', getCurrentProjectId());
+      router.push(`/login`);
+    }
+
+    if (useTokenStore.getState().isLoggedIn == false) {
       useProjectStore.getState().setInvitedProjectId(getCurrentProjectId());
       router.push('/login');
     }

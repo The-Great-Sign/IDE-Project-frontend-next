@@ -10,9 +10,7 @@ export const checkFileTree = async (projectId: string) => {
       `/api/v2/projects/${projectId}/directory`
     );
     const transformedData = transformToFileNodeType(response.data.results);
-
     setFileTree(transformedData); // Zustand 스토어에 저장
-    console.log('바뀐 데이터 타입', transformedData);
 
     return response;
   } catch (error) {

@@ -4,12 +4,12 @@ import MainHeader from '@/components/MainHeader/MainHeader';
 import { MainContainer, MainDiv, MainDivInfo } from './page.styles';
 import { BigButton } from '@/components/Button/Button';
 import { useRouter } from 'next/navigation';
-import useUserStore from '@/store/useUserStore';
+import useTokenStore from '@/store/useTokenStore';
 // import Image from 'next/image';
 
 const App = () => {
   const router = useRouter();
-  const { isLoggedIn } = useUserStore();
+  const { isLoggedIn } = useTokenStore();
 
   const handleClick = () => {
     if (isLoggedIn) {

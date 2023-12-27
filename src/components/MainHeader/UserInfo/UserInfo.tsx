@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import useUserStore from '../../../store/useUserStore';
 import { UserInfoDiv, UserName } from './UserInfo.style';
@@ -5,14 +7,22 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import StyledLink from '@/components/StyledLink/StyledLink';
 import { IMAGE_SIZE } from '@/constants/userInfo';
+import useTokenStore from '@/store/useTokenStore';
+import { usePathname, useRouter } from 'next/navigation';
+import { deleteCookie } from '@/utils/token/cookieUtils';
 
 export const UserInfo = () => {
   const { name, imageUrl } = useUserStore();
 
+  const router = useRouter();
+  const pathName = usePathname();
+
   const handleLogout = () => {
-    useUserStore.getState().setLogin(false);
+    useTokenStore.getState().setLogin(false);
     localStorage.removeItem('accessToken');
+    deleteCookie('refreshToken');
     sessionStorage.clear();
+    router.push(pathName);
   };
 
   return (
