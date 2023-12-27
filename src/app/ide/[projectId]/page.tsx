@@ -29,13 +29,13 @@ import { checkFileTree } from '@/app/api/filetree/updateFileTree';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
-import axios from 'axios';
 import useTokenStore from '@/store/useTokenStore';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 import { useRouter } from 'next/navigation';
 import { useVisibleChat } from '@/store/useChattingStore';
 import { TerminalContainer } from '../Terminal/Terminal.styles';
 import { Resizable } from 're-resizable';
+import axiosInstance from '../../api/axiosInstance';
 
 interface ReceivedTerminalType {
   success: boolean;
@@ -125,19 +125,9 @@ const Ide = () => {
   useEffect(() => {
     const postEnterProject = async (projectId: string) => {
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/projects/${projectId}/run`,
-          {},
-
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              Authorization: localStorage.getItem('accessToken'),
-            },
-          }
+        const response = await axiosInstance.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/projects/${projectId}/run`
         );
-        console.log(localStorage.getItem('accessToken'));
         const data = response.data;
         setExecute(data.results);
       } catch (error) {
