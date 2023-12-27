@@ -134,7 +134,7 @@ const MyProject = () => {
                   <ContextMenuButton
                     onClick={() => handlePasswordChangeClick(myProject.id)}
                   >
-                    비밀번호 수정
+                    비밀번호 변경
                   </ContextMenuButton>
                   <ContextMenuButton
                     onClick={() => handleProjectDelete(myProject.id)}
