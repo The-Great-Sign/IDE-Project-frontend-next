@@ -10,10 +10,10 @@ import {
   LoginBox,
   LoginConatiner,
   Logo,
-  StyledImage,
+  // StyledImage,
 } from './Login.styles';
 import { BigButton } from '@/components/Button/Button';
-import Kakaoicon from '../../public/images/kakaoicon.png';
+// import Kakaoicon from '../../public/images/kakaoicon.png';
 import { StyledLink } from '@/components/MainHeader/MainHeader.style';
 
 const LoginPage = () => {
@@ -51,12 +51,12 @@ const LoginPage = () => {
               </BigButton>
 
               <KaKaoButton onClick={handleKakaoLogin}>
-                <StyledImage
+                {/* <StyledImage
                   src={Kakaoicon}
                   alt="카카오 아이콘"
                   width="24"
                   height="24"
-                />
+                /> */}
                 <span>카카오로 계속하기</span>
               </KaKaoButton>
               <AppleButton disabled>
