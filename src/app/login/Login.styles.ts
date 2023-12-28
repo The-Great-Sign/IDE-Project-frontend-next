@@ -12,8 +12,9 @@ export const LoginConatiner = styled.div`
 `;
 export const LoginBox = styled.div`
   width: 600px;
-  color: ${props => props.theme.colors.loginTitle};
-  background: ${props => props.theme.colors.headerBg};
+  background: ${props => props.theme.colors.boxbg};
+  color: ${props => props.theme.colors.text};
+  border : 1px solid ${props => props.theme.colors.headerBg}
   box-shadow:
     0 1px 1px rgba(128, 128, 128, 0.15),
     0 2px 2px rgba(128, 128, 128, 0.15),
@@ -35,6 +36,4 @@ export const ButtonBox = styled.div`
   justify-content: center;
   margin-bottom: 40px;
   margin-top: 40px;
-  background: ${props => props.theme.colors.boxbg};
-  color: ${props => props.theme.colors.text};
 `;
