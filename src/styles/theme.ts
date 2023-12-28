@@ -4,7 +4,7 @@ export const lightTheme: DefaultTheme = {
   colors: {
     primary: '#404EED',
     bg: '#F6F8F9',
-    headerBg: '#fff;',
+    headerBg: '#fff',
     btnHover: '#D9DCFB',
     btnText: '#333EBE',
     black: '#000',
@@ -32,6 +32,6 @@ export const darkTheme: DefaultTheme = {
     hoverGray: '#363636',
     boxShadow: '0 4px 8px rgba(255, 255, 255, 0.05)',
     menuHover: '#131519',
-    boxbg: '#2E2E2E',
+    boxbg: 'rgba(63, 63, 74,0.4)',
   },
 };

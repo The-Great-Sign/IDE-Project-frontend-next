@@ -1,3 +1,4 @@
+import { BigButton } from '@/components/Button/Button';
 import styled from 'styled-components';
 
 export const LoginConatiner = styled.div`
@@ -25,8 +26,8 @@ export const LoginBox = styled.div`
 `;
 
 export const Logo = styled.h1`
-  margin: -10rem 0 0 0;
-  margin-bottom: 3rem;
+  margin: -5rem 0 0 0;
+  margin-bottom: 0;
 `;
 
 export const ButtonBox = styled.div`
@@ -36,4 +37,17 @@ export const ButtonBox = styled.div`
   justify-content: center;
   margin-bottom: 40px;
   margin-top: 40px;
+`;
+
+export const KaKaoButton = styled(BigButton)`
+  background: #fee500 !important;
+  color: black !important;
+  &:hover {
+    background: #fff426 !important;
+  }
+`;
+
+export const AppleButton = styled(BigButton)`
+  background: ${props => props.theme.colors.text} !important;
+  border: 1px solid #000;
 `;
