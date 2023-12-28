@@ -14,6 +14,7 @@ import { IoIosMore } from 'react-icons/io';
 import { FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import PasswordChangeModal from './PasswordChangeModal/PasswordChangeModal';
+import { formatDateString } from '@/utils/formatDataString';
 
 interface MyProject {
   id: string;
@@ -127,7 +128,6 @@ const MyProject = () => {
               <MoreIcon onClick={e => handleMoreIconClick(myProject.id, e)}>
                 <IoIosMore />
               </MoreIcon>
-
               {/* 옵션 모달 */}
               {showOptions && selectedProjectId === myProject.id && (
                 <ContextMenu>
@@ -143,13 +143,11 @@ const MyProject = () => {
                   </ContextMenuButton>
                 </ContextMenu>
               )}
-
               {/* 기타 정보 - 최근 수정된 날짜 정보 넣기 */}
               <p>{myProject.name}</p>
               <p>{myProject.programmingLanguage}</p>
               <p>{myProject.description}</p>
-              <p>{myProject.updatedAt}</p>
-
+              <p>{formatDateString(myProject.updatedAt)}에 수정됨</p>
               <ProjectEnterButton
                 onClick={() => handleEnterProject(myProject.id)}
               >

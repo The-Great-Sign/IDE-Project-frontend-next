@@ -16,7 +16,7 @@ export const CreateProjectContainer = styled.div`
   border-radius: 10px;
   padding: 15px 20px;
   box-sizing: border-box;
-  z-index: 1000;
+  z-index: 20;
 `;
 
 export const ModalBackdrop = styled.div`
@@ -29,6 +29,7 @@ export const ModalBackdrop = styled.div`
   display: flex;
   align-items: center; // 세로 중앙 정렬
   justify-content: center; // 가로 중앙 정렬
+  z-index: 10; // 높은 z-index 값으로 다른 요소들보다 위에 표시
 `;
 
 export const CreateProjectHeader = styled.div`

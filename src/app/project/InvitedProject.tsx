@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ContextMenu, ContextMenuButton, ProjectView } from './Project.styles';
+// import { ContextMenu, ContextMenuButton, ProjectView } from './Project.styles';
 import axiosInstance from '../api/axiosInstance';
 import {
   EmptyProjectBox,
@@ -7,12 +7,14 @@ import {
   MyProjectView,
   ProjectHeader,
   ProjectInfoBox,
+  ProjectView,
 } from './Project.styles';
 import { ProjectEnterButton } from '@/components/Button/Button';
 import { IoIosMore } from 'react-icons/io';
 import { FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import PasswordChangeModal from './PasswordChangeModal/PasswordChangeModal';
+import { formatDateString } from '@/utils/formatDataString';
 
 interface InvitedProject {
   id: string;
@@ -57,11 +59,11 @@ const InvitedProject = () => {
     }
   };
 
-  const handlePasswordChangeClick = (projectId: string) => {
-    setSelectedProjectId(projectId); // projectId를 selectedProjectId로 설정
-    setIsPasswordModalOpen(true); // 비밀번호 변경 모달 열기
-    setShowOptions(false); // 컨텍스트 메뉴 닫기
-  };
+  // const handlePasswordChangeClick = (projectId: string) => {
+  //   setSelectedProjectId(projectId); // projectId를 selectedProjectId로 설정
+  //   setIsPasswordModalOpen(true); // 비밀번호 변경 모달 열기
+  //   setShowOptions(false); // 컨텍스트 메뉴 닫기
+  // };
 
   const handlePasswordChangeSubmit = async (newPassword: string) => {
     if (newPassword.length < 4) {
@@ -84,18 +86,18 @@ const InvitedProject = () => {
     }
   };
 
-  const handleProjectDelete = async (projectId: string) => {
-    const confirmDelete = window.confirm('프로젝트를 정말 삭제하시겠습니까?');
-    if (confirmDelete) {
-      try {
-        await axiosInstance.delete(`/api/projects/${projectId}`);
-        fetchProjects();
-        alert('프로젝트가 성공적으로 삭제되었습니다.');
-      } catch (e) {
-        console.log('프로젝트 삭제에 문제가 발생했습니다.', e);
-      }
-    }
-  };
+  // const handleProjectDelete = async (projectId: string) => {
+  //   const confirmDelete = window.confirm('프로젝트를 정말 삭제하시겠습니까?');
+  //   if (confirmDelete) {
+  //     try {
+  //       await axiosInstance.delete(`/api/projects/${projectId}`);
+  //       fetchProjects();
+  //       alert('프로젝트가 성공적으로 삭제되었습니다.');
+  //     } catch (e) {
+  //       console.log('프로젝트 삭제에 문제가 발생했습니다.', e);
+  //     }
+  //   }
+  // };
 
   const handleEnterProject = (projectId: string) => {
     router.push(`/ide/${projectId}`);
@@ -123,26 +125,21 @@ const InvitedProject = () => {
               </MoreIcon>
 
               {/* 옵션 모달 */}
-              {showOptions && selectedProjectId === invitedProject.id && (
+              {/* {showOptions && selectedProjectId === invitedProject.id && (
                 <ContextMenu>
-                  <ContextMenuButton
-                    onClick={() => handlePasswordChangeClick(invitedProject.id)}
-                  >
-                    비밀번호 변경
-                  </ContextMenuButton>
                   <ContextMenuButton
                     onClick={() => handleProjectDelete(invitedProject.id)}
                   >
                     프로젝트 삭제
                   </ContextMenuButton>
                 </ContextMenu>
-              )}
+              )} */}
 
               {/* 기타 정보 - 최근 수정된 날짜 정보 넣기 */}
               <p>{invitedProject.name}</p>
               <p>{invitedProject.programmingLanguage}</p>
               <p>{invitedProject.description}</p>
-              <p>{invitedProject.updatedAt}</p>
+              <p>{formatDateString(invitedProject.updatedAt)}에 수정됨</p>
 
               <ProjectEnterButton
                 onClick={() => handleEnterProject(invitedProject.id)}
