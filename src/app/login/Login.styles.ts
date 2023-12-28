@@ -1,5 +1,6 @@
 import { BigButton } from '@/components/Button/Button';
 import styled from 'styled-components';
+import Image from 'next/image';
 
 export const LoginConatiner = styled.div`
   display: flex;
@@ -43,11 +44,15 @@ export const KaKaoButton = styled(BigButton)`
   background: #fee500 !important;
   color: black !important;
   &:hover {
-    background: #fff426 !important;
+    background: #ffed4c !important;
   }
 `;
 
 export const AppleButton = styled(BigButton)`
   background: ${props => props.theme.colors.text} !important;
   border: 1px solid #000;
+`;
+
+export const StyledImage = styled(Image)`
+  margin-right: 5px;
 `;

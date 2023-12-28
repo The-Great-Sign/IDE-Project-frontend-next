@@ -4,7 +4,7 @@ import { FONTS, FONTS_WEIGHT } from '@/constants/fonts';
 import { COLORS } from '@/constants/colors';
 
 export const BigButton = styled(Button)`
-  width: 25.25rem;
+  width: 22rem;
   height: 3.25rem;
   margin: 0.75rem 0;
   display: flex;

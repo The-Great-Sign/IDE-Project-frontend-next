@@ -10,11 +10,10 @@ import {
   LoginBox,
   LoginConatiner,
   Logo,
+  StyledImage,
 } from './Login.styles';
 import { BigButton } from '@/components/Button/Button';
-import Image from 'next/image';
 import Kakaoicon from '../../public/images/kakaoicon.png';
-import { styled } from 'styled-components';
 import { StyledLink } from '@/components/MainHeader/MainHeader.style';
 
 const LoginPage = () => {
@@ -73,7 +72,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-const StyledImage = styled(Image)`
-  margin-right: 5px;
-`;
