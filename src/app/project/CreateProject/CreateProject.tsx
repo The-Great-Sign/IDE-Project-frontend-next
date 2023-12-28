@@ -82,7 +82,7 @@ const CreateProject = ({ setIsModalOpen }: CreateProps) => {
       createData.description.length == 0
     ) {
       alert('프로젝트 정보를 입력해주세요.');
-    } else if (createData.password.length > 11) {
+    } else if (createData.password.length > 10) {
       alert('비밀번호는 10자 이내로 입력해주세요.');
     } else {
       postCreateProject(createData);

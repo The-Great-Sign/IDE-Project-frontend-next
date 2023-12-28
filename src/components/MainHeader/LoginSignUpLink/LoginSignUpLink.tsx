@@ -6,7 +6,7 @@ const LoginSignUpLink = () => {
   return (
     <LoginSignUpDiv>
       <StyledLink href="/login">로그인</StyledLink>
-      <StyledLink href="/signUp">회원가입</StyledLink>
+      <StyledLink href="/login">회원가입</StyledLink>
     </LoginSignUpDiv>
   );
 };
