@@ -24,11 +24,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
       if (typeof window !== 'undefined') {
         if (localStorage.getItem('invitedProjectId')) {
-          const newUrl = `/ide/${localStorage.getItem('invitedProjectId')}`;
+          const newUrl = `/invite/${localStorage.getItem('invitedProjectId')}`;
           window.history.pushState({}, '', newUrl);
           window.location.reload();
-
-          // router.push(`/ide/${localStorage.getItem('invitedProjectId')}`);
         } else {
           window.history.pushState({}, '', '/');
         }

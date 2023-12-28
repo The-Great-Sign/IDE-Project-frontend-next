@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     "src/app/theme.js",
-    "declarations.d.ts"
+    "declarations.d.ts",
+    "typings.d.ts"
   ],
   "exclude": ["node_modules"]
 }
