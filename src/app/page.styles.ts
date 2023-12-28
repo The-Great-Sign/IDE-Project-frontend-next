@@ -12,7 +12,7 @@ export const MainContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   padding-top: 50px;
-  font-size: ${FONTS.md};
+  font-size: ${FONTS.lg};
 `;
 
 export const MainDiv = styled.div`
