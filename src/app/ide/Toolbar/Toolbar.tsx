@@ -23,7 +23,7 @@ import { getCurrentProjectId } from '@/app/api/websocket';
 
 const Toolbar = () => {
   const imgageUrl = useUserStore.getState().imageUrl;
-  const { toggleDiv } = useVisibleDiv();
+  const { toggleDiv, toggleTerminal } = useVisibleDiv();
 
   const shareURL = async () => {
     await navigator.clipboard
@@ -57,7 +57,7 @@ const Toolbar = () => {
             <AiOutlineCopy />
           </ToolBarIconDiv>
           <ToolBarIconDiv>
-            <AiOutlineCode />
+            <AiOutlineCode onClick={toggleTerminal} />
           </ToolBarIconDiv>
         </Div>
         <Div>
