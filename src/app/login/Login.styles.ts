@@ -35,4 +35,6 @@ export const ButtonBox = styled.div`
   justify-content: center;
   margin-bottom: 40px;
   margin-top: 40px;
+  background: ${props => props.theme.colors.boxbg};
+  color: ${props => props.theme.colors.text};
 `;
