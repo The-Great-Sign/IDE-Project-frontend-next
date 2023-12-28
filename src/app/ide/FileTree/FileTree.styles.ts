@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FONTS } from '@/constants/fonts';
 import { COLORS } from '@/constants/colors';
+import { ContextMenu, ContextMenuItem } from 'rctx-contextmenu';
 
 export const FileTreeConatiner = styled.div`
   width: 100%;
@@ -44,8 +45,7 @@ export const NodeContainer = styled.div`
   }
 
   .file-actions button {
-    color: ${COLORS.primary};
-  }
+    color: ${props => props.theme.colors.text};
 
   .node-text {
     margin: 0px 2px;
@@ -88,10 +88,10 @@ export const FileButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
 
-  color: ${COLORS.primary};
+  color: ${props => props.theme.colors.text};
 
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(64, 78, 237, 0.2);
   }
 `;
 
@@ -106,4 +106,15 @@ export const IsDirty = styled.div`
 
 export const IsNotDirty = styled(IsDirty)`
   background: none;
+`;
+
+export const StyledContextMenuItem = styled(ContextMenuItem)`
+  color: ${props => props.theme.colors.text};
+  &:hover {
+    background: ${props => props.theme.colors.hoverGray} !important;
+  }
+`;
+
+export const StyledContextMenu = styled(ContextMenu)`
+  background: ${props => props.theme.colors.contextMenu} !important;
 `;

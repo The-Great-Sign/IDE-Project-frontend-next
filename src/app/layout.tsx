@@ -9,11 +9,6 @@ import { useSearchParams } from 'next/navigation';
 import { storeTokenFromUrl } from '@/utils/token/storeTokenFromUrl';
 import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 import useTokenStore from '@/store/useTokenStore';
-import localFont from 'next/font/local';
-
-export const Pretendard = localFont({
-  src: '../public/fonts/PretendardVariable.woff2',
-});
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const theme = useThemeStore(state => state.theme);
@@ -46,7 +41,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   }, [params]);
 
   return (
-    <html lang="en" className={Pretendard.className}>
+    <html lang="en">
       <body>
         {theme && (
           <ThemeProvider theme={theme}>

@@ -11,7 +11,7 @@ import {
   ChattingSendButton,
 } from './Chatting.styles';
 import { useGeneralChatStore } from '@/store/useChattingStore';
-import { getCurrentProjectId } from '../[projectId]/page';
+import { getCurrentProjectId } from '@/app/api/websocket';
 import { Client } from '@stomp/stompjs';
 
 interface GeneralChattingProps {

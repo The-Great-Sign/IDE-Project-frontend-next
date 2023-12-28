@@ -3,6 +3,8 @@ import {
   FileButton,
   FileTreeConatiner,
   ProjectName,
+  StyledContextMenu,
+  StyledContextMenuItem,
   TopContainer,
 } from './FileTree.styles';
 import {
@@ -22,13 +24,18 @@ import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
-import { getCurrentProjectId } from '../[projectId]/page';
+import { getCurrentProjectId } from '@/app/api/websocket';
+import { ContextMenuTrigger } from 'rctx-contextmenu';
+import { useContextMenuStore } from '@/store/useContextMenuStore';
+import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';
 
 const FileTree = () => {
   const { fileTree, deleteNode, addNode, findNodePathByName } =
     useFileTreeStore();
   const projectId = getCurrentProjectId();
   const [projectName, setProjectName] = useState<string>('');
+
+  const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
   const treeRef = useRef<TreeApi<FileNodeType>>(null);
 
@@ -70,7 +77,7 @@ const FileTree = () => {
       isDirty: false,
       isOpened: true,
       filePath: findNodePathByName(''),
-      parentId: parentId,
+      parentId: parentId === null ? 'root' : parentId,
     };
 
     addNode(newNode, parentId);
@@ -131,6 +138,58 @@ const FileTree = () => {
     moveFile();
   };
 
+  const findNodeByIdWithoutP = (
+    nodes: FileNodeType[],
+    nodeId: string | null
+  ): FileNodeType | null => {
+    for (const node of nodes) {
+      if (node.id === nodeId) {
+        return node; // 찾은 노드 반환
+      }
+      if (node.children) {
+        const foundNode = findNodeByIdWithoutP(node.children, nodeId);
+        if (foundNode) {
+          return foundNode; // 자식 노드에서 찾은 노드 반환
+        }
+      }
+    }
+    return null; // 노드를 찾지 못했을 경우 null 반환
+  };
+
+  const handleDeleteFile = async () => {
+    try {
+      let success;
+      const deleteNodeId = useContextMenuStore.getState().hoveredId;
+      const nowFileTree = useFileTreeStore.getState().fileTree;
+      //nodeid로 node 찾기
+      const nowNode = findNodeByIdWithoutP(nowFileTree, deleteNodeId);
+
+      if (nowNode) {
+        success = await handleDeleteFileRequest(nowNode);
+      }
+
+      if (success) {
+        useFileTreeStore.getState().deleteNode(deleteNodeId);
+        alert('삭제 성공');
+
+        // 30초 후에 Liveblocks와 room 관련 처리 실행
+        setTimeout(async () => {
+          const roomId = deleteNodeId;
+          try {
+            const response = await axiosInstance.delete(
+              `/api/live-blocks/rooms/file-${roomId}`
+            );
+            console.log('Liveblocks room 삭제 성공', response);
+          } catch (error) {
+            console.error('Liveblocks room 삭제 중 오류 발생', error);
+          }
+        }, 30000);
+      }
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      alert('파일트리 : 파일 삭제 중 오류가 발생했습니다.');
+    }
+  };
   return (
     <Resizable
       defaultSize={{
@@ -171,22 +230,29 @@ const FileTree = () => {
             </FileButton>
           </CreateFileDiv>
         </TopContainer>
-        <Tree
-          className="react-aborist"
-          width={'100%'}
-          paddingTop={20}
-          rowHeight={24}
-          onCreate={onCreate}
-          onDelete={onDelete}
-          onMove={onMove}
-          ref={treeRef}
-          data={fileTree}
-        >
-          {nodeProps => (
-            <Node {...(nodeProps as NodeRendererProps<FileNodeType>)} />
-          )}
-        </Tree>
+        <ContextMenuTrigger id="my-context-menu-1">
+          <Tree
+            className="react-aborist"
+            width={'100%'}
+            paddingTop={20}
+            rowHeight={24}
+            onCreate={onCreate}
+            onDelete={onDelete}
+            onMove={onMove}
+            ref={treeRef}
+            data={fileTree}
+          >
+            {nodeProps => (
+              <Node {...(nodeProps as NodeRendererProps<FileNodeType>)} />
+            )}
+          </Tree>
+        </ContextMenuTrigger>
       </FileTreeConatiner>
+      <StyledContextMenu id="my-context-menu-1">
+        <StyledContextMenuItem onClick={handleDeleteFile}>
+          삭제하기
+        </StyledContextMenuItem>
+      </StyledContextMenu>
     </Resizable>
   );
 };
