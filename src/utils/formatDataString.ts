@@ -6,7 +6,8 @@ export const formatDateString = (inputDateString: string) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
-  const hours = date.getHours();
+  // 서버 시간 9시간이 느림
+  const hours = date.getHours() + 9;
   const minutes = date.getMinutes().toString().padStart(2, '0');
 
   // 오전/오후 구분
