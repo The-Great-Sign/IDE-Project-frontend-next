@@ -12,7 +12,7 @@ import {
 import StyledLink from '@/components/StyledLink/StyledLink';
 import { IMAGE_SIZE } from '@/constants/userInfo';
 import useTokenStore from '@/store/useTokenStore';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { deleteCookie } from '@/utils/token/cookieUtils';
 import { FiLogOut } from 'react-icons/fi';
 
@@ -20,7 +20,6 @@ export const UserInfo = () => {
   const { name, imageUrl } = useUserStore();
 
   const router = useRouter();
-  const pathName = usePathname();
 
   const handleLogout = () => {
     const confirmLogout = confirm('정말 로그아웃하시겠습니까?');
@@ -29,7 +28,7 @@ export const UserInfo = () => {
       localStorage.removeItem('accessToken');
       deleteCookie('refreshToken');
       sessionStorage.clear();
-      router.push(pathName);
+      router.push('/');
     }
   };
 
