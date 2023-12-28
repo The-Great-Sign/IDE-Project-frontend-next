@@ -64,11 +64,13 @@ export const ChattingMessage = styled.div`
   padding: 10px;
   background-color: gray;
   border-radius: 5px;
-  line-height: 1.5px;
+  line-height: 20px;
 `;
 
 export const ChattingName = styled.div`
   font-weight: bold;
+  height: 20px;
+  padding: 5px 0 1px 0;
 `;
 
 export const ChattingContent = styled.div`
@@ -78,6 +80,7 @@ export const ChattingContent = styled.div`
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-all;
+  padding: 3px 0 3px 0;
 `;
 
 export const ChattingInputForm = styled.form`
