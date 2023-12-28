@@ -24,7 +24,7 @@ import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { findNodeById } from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
-import { getCurrentProjectId } from '../[projectId]/page';
+import { getCurrentProjectId } from '@/app/api/websocket';
 import { ContextMenuTrigger } from 'rctx-contextmenu';
 import { useContextMenuStore } from '@/store/useContextMenuStore';
 import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';

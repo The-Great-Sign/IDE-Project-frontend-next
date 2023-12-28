@@ -15,7 +15,6 @@ export const lightTheme: DefaultTheme = {
     boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
     menuHover: '#f0f0f0',
     boxbg: '#fff',
-
   },
 };
 

@@ -11,7 +11,7 @@ import {
 } from './Toolbar.style';
 import { IconContext } from 'react-icons';
 import { useVisibleDiv } from '@/store/useVisibleDiv';
-import { getCurrentProjectId } from '../[projectId]/page';
+
 import useUserStore from '@/store/useUserStore';
 
 import { IMAGE_SIZE } from '@/constants/userInfo';
@@ -19,6 +19,7 @@ import {
   StyledImgDiv,
   StyledImage,
 } from '@/components/MainHeader/UserInfo/UserInfo.style';
+import { getCurrentProjectId } from '@/app/api/websocket';
 
 const Toolbar = () => {
   const imgageUrl = useUserStore.getState().imageUrl;

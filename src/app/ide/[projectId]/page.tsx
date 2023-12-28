@@ -45,11 +45,14 @@ interface ReceivedTerminalType {
   content: string;
 }
 
-export const getCurrentProjectId = () => {
-  const path = window.location.pathname;
-  const pathSegments = path.split('/');
-  const projectId = pathSegments[2];
-  return projectId;
+const getCurrentProjectId = () => {
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname;
+    const pathSegments = path.split('/');
+    const projectId = pathSegments[2];
+    return projectId;
+  }
+  return '';
 };
 
 const Ide = () => {

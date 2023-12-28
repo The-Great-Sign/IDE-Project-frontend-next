@@ -16,7 +16,7 @@ import axiosInstance from '@/app/api/axiosInstance';
 import { useFileStore } from '@/store/useFileStore';
 import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { Client } from '@stomp/stompjs';
-import { getCurrentProjectId } from '../[projectId]/page';
+import { getCurrentProjectId } from '@/app/api/websocket';
 import { useVisibleChat } from '@/store/useChattingStore';
 import { Content } from '../Terminal/Terminal';
 
