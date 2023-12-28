@@ -14,6 +14,7 @@ import { IMAGE_SIZE } from '@/constants/userInfo';
 import useTokenStore from '@/store/useTokenStore';
 import { usePathname, useRouter } from 'next/navigation';
 import { deleteCookie } from '@/utils/token/cookieUtils';
+import { FiLogOut } from 'react-icons/fi';
 
 export const UserInfo = () => {
   const { name, imageUrl } = useUserStore();
@@ -22,11 +23,14 @@ export const UserInfo = () => {
   const pathName = usePathname();
 
   const handleLogout = () => {
-    useTokenStore.getState().setLogin(false);
-    localStorage.removeItem('accessToken');
-    deleteCookie('refreshToken');
-    sessionStorage.clear();
-    router.push(pathName);
+    const confirmLogout = confirm('정말 로그아웃하시겠습니까?');
+    if (confirmLogout) {
+      useTokenStore.getState().setLogin(false);
+      localStorage.removeItem('accessToken');
+      deleteCookie('refreshToken');
+      sessionStorage.clear();
+      router.push(pathName);
+    }
   };
 
   return (
@@ -47,7 +51,7 @@ export const UserInfo = () => {
       </StyledLink>
 
       <StyledLogout onClick={handleLogout}>
-        <span>로그아웃</span>
+        <FiLogOut size={25} />
       </StyledLogout>
     </UserInfoDiv>
   );
