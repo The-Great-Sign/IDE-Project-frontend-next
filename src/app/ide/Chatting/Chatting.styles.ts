@@ -64,7 +64,6 @@ export const ChattingMessage = styled.div`
   padding: 10px;
   background-color: gray;
   border-radius: 5px;
-  line-height: 1.5px;
 `;
 
 export const ChattingName = styled.div`
