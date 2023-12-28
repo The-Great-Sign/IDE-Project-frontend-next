@@ -63,7 +63,7 @@ const Ide = () => {
   const [currentPath, setCurrentPath] = useState<string>('/');
 
   const { selectedFileId } = useFileStore();
-  const { isvisibleDiv } = useVisibleDiv();
+  const { isvisibleDiv, isvisibleTerminal } = useVisibleDiv();
   const { isvisibleChat } = useVisibleChat();
   const { setFileTree } = useFileTreeStore();
 
@@ -203,31 +203,36 @@ const Ide = () => {
                 <EditorMain>The Great IDE</EditorMain>
               )}
             </EditorBox>
-            <Resizable
-              defaultSize={{
-                height: '300px', // 초기 높이 설정
-                width: '100%',
-              }}
-              enable={{
-                top: true, // 위쪽으로만 리사이징 가능
-                right: false,
-                bottom: true,
-                left: false,
-                topRight: false,
-                bottomRight: false,
-                bottomLeft: false,
-                topLeft: false,
-              }}
-            >
-              <TerminalContainer>
-                <Terminal
-                  clientRef={clientRef}
-                  terminalRef={terminalRef}
-                  xtermRef={xtermRef}
-                  currentPath={currentPath}
-                />
-              </TerminalContainer>
-            </Resizable>
+
+            {isvisibleTerminal ? (
+              <Resizable
+                defaultSize={{
+                  height: '300px', // 초기 높이 설정
+                  width: '110%',
+                }}
+                enable={{
+                  top: true, // 위쪽으로만 리사이징 가능
+                  right: false,
+                  bottom: false,
+                  left: false,
+                  topRight: false,
+                  bottomRight: false,
+                  bottomLeft: false,
+                  topLeft: false,
+                }}
+              >
+                <TerminalContainer>
+                  <Terminal
+                    clientRef={clientRef}
+                    terminalRef={terminalRef}
+                    xtermRef={xtermRef}
+                    currentPath={currentPath}
+                  />
+                </TerminalContainer>
+              </Resizable>
+            ) : (
+              <></>
+            )}
           </Section>
           {isvisibleChat ? <Chatting clientRef={clientRef} /> : <></>}
         </IDEContentCode>

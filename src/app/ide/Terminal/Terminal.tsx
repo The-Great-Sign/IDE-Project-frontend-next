@@ -4,7 +4,6 @@ import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
 
 import 'xterm/css/xterm.css';
-import { Resizable } from 're-resizable';
 import { TerminalContainer } from './Terminal.styles';
 import { getCurrentProjectId } from '@/app/api/websocket';
 
@@ -83,26 +82,9 @@ const Terminal = ({
   }, [currentPath, terminalRef, xtermRef]);
 
   return (
-    <Resizable
-      defaultSize={{
-        height: '300px',
-        width: '100%',
-      }}
-      enable={{
-        top: true,
-        right: false,
-        bottom: true,
-        left: false,
-        topRight: false,
-        bottomRight: false,
-        bottomLeft: false,
-        topLeft: false,
-      }}
-    >
-      <TerminalContainer>
-        <div ref={terminalRef} style={{ height: '300px', width: '100%' }} />
-      </TerminalContainer>
-    </Resizable>
+    <TerminalContainer>
+      <div ref={terminalRef} style={{ height: '300px', width: '100%' }} />
+    </TerminalContainer>
   );
 };
 
