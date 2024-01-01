@@ -7,4 +7,7 @@ export const LoginSignUpDiv = styled.div`
   word-break: keep-all;
   justify-content: space-between;
   padding-right: 60px;
+  :hover {
+    text-decoration: underline;
+  }
 `;
