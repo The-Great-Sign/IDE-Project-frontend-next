@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import useProjectStore from '@/store/useProjectStore';
 import axiosInstance from '@/app/api/axiosInstance';
+import { ModalBackdrop } from '@/components/Modal/Modal.styles';
 import {
-  ModalBackdrop,
   CreateProjectButton,
   CreateProjectClose,
   CreateProjectContainer,
@@ -26,7 +26,6 @@ interface CreateProjectProps {
 
 interface CreateProps {
   setIsModalOpen: (value: boolean) => void;
-  // 여기에 다른 props 타입 정의 가능
 }
 const CreateProject = ({ setIsModalOpen }: CreateProps) => {
   const [isCreated, setIsCreated] = useState<boolean>(false);
@@ -39,11 +38,9 @@ const CreateProject = ({ setIsModalOpen }: CreateProps) => {
 
   const postCreateProject = async (createData: CreateProjectProps) => {
     try {
-      console.log(createData);
       const response = await axiosInstance.post('/api/projects', createData);
       const data = response.data;
       if (data.success) {
-        console.log(data.results);
         useProjectStore.getState().addProject(data.results);
         useProjectStore.getState().setProject(data.results);
         setIsCreated(true);

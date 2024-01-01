@@ -63,7 +63,6 @@ const AIChatting = () => {
       message: '질문',
       results: question,
     };
-    console.log(questionMessage);
     useAIChatStore.getState().addAIMessage(questionMessage);
     postSimpleQuestion(question);
     setQuestion('');
