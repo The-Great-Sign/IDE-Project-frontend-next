@@ -12,9 +12,9 @@ import {
   Logo,
   // StyledImage,
 } from './Login.styles';
-import { BigButton } from '@/components/Button/Button';
+import { BigButton } from '../../components/Button/Button';
 // import Kakaoicon from '../../public/images/kakaoicon.png';
-import { StyledLink } from '@/components/MainHeader/MainHeader.style';
+import StyledLink from '../../components/StyledLink/StyledLink';
 
 const LoginPage = () => {
   const handleGoogleLogin = () => {

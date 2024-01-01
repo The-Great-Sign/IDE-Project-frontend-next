@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const ThemeBtn = styled.button`
   position: fixed;
-  left: 50px;
-  bottom: 50px;
+  left: 30px;
+  bottom: 30px;
   background: none;
   border: none;
   cursor: pointer;

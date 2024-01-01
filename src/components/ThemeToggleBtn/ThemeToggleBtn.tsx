@@ -9,7 +9,7 @@ const ThemeToggleBtn = () => {
 
   return (
     <ThemeBtn onClick={toggleTheme}>
-      <IconContext.Provider value={{ color: iconColor, size: '25px' }}>
+      <IconContext.Provider value={{ color: iconColor, size: '23px' }}>
         {isDarkMode ? <RiSunFill /> : <RiMoonClearFill />}
       </IconContext.Provider>
     </ThemeBtn>

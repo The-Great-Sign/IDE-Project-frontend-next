@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-
 import useUserStore from '@/store/useUserStore';
 import MainHeader from '@/components/MainHeader/MainHeader';
 import {
@@ -33,19 +32,19 @@ const MyPage = () => {
 
   const handleUpdateUserName = async (updateUserName: string) => {
     try {
-      console.log(updateUserName);
+      if (updateUserName.length < 1 || updateUserName.length > 10) {
+        alert('이름은 1글자 이상, 10글자 이하로 입력해주세요.');
+        return;
+      }
       const response = await axiosInstance.patch(`/user/update/nickname`, {
         nickname: updateUserName,
       });
-      // 요청이 성공적으로 처리되었을 때의 로직
-      console.log('Nickname updated successfully:', response.data);
 
       if (response.data.success) {
         useUserStore.getState().setNewName(updateUserName);
       }
       setIsEditName(false);
     } catch (error) {
-      // 에러 처리 로직
       console.error('Error updating nickname:', error);
     }
   };
