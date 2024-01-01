@@ -33,7 +33,7 @@ const MyPage = () => {
   const handleUpdateUserName = async (updateUserName: string) => {
     try {
       if (updateUserName.length < 1 || updateUserName.length > 10) {
-        alert('은 1글자 이상, 10글자 이하로 입력해주세요.');
+        alert('이름은 1글자 이상, 10글자 이하로 입력해주세요.');
         return;
       }
       const response = await axiosInstance.patch(`/user/update/nickname`, {
