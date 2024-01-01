@@ -52,7 +52,7 @@ const GeneralChatting: React.FC<GeneralChattingProps> = ({ clientRef }) => {
       <ChattingMessages ref={scrollRef}>
         {messages.map((message, index) => {
           const { messageType, userNickname, content, currentUsers } = message;
-          console.log(messageType, userNickname, content, currentUsers);
+          console.log(currentUsers);
           return (
             <ChattingMessage key={index}>
               {messageType === 'TALK' ? (
