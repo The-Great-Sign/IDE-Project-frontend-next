@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { ModalBackdrop } from '@/components/Modal/Modal.styles';
 import {
-  ModalBackdrop,
   EnterProjectAccess,
   EnterProjectClose,
   EnterProjectContainer,
@@ -14,7 +14,6 @@ import useProjectStore from '@/store/useProjectStore';
 
 interface EnterProps {
   setIsModalOpen: (value: boolean) => void;
-  // 여기에 다른 props 타입 정의 가능
 }
 
 const EnterProject = ({ setIsModalOpen }: EnterProps) => {

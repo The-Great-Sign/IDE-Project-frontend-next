@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { ModalBackdrop } from '@/components/Modal/Modal.styles';
 import {
   IDETitle,
   InviteContainer,
@@ -9,7 +10,6 @@ import {
   InvitePage,
   InvitePasswordInput,
   InviteTitle,
-  ModalBackdrop,
 } from './Invite.styles';
 
 import axiosInstance from '@/app/api/axiosInstance';
@@ -55,7 +55,6 @@ const Invite = () => {
       );
       const data = response.data;
       if (data.success) {
-        console.log(data.message);
         router.push(`/ide/${getCurrentProjectId()}`);
       } else {
         alert(data.message);
