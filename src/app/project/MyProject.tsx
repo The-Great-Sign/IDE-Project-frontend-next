@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import CreateProject from './CreateProject/CreateProject';
-import { ContextMenu, ContextMenuButton, ProjectView } from './Project.styles';
+import {
+  ContextMenu,
+  ContextMenuButton,
+  EmptyView,
+  ProjectView,
+} from './Project.styles';
 import axiosInstance from '../api/axiosInstance';
 import {
   EmptyProjectBox,
@@ -54,20 +59,19 @@ const MyProject = () => {
     projectId: string,
     event: React.MouseEvent<HTMLDivElement>
   ) => {
-    console.log(`MoreIcon clicked for project ${projectId}`);
     event.stopPropagation();
     if (selectedProjectId === projectId) {
-      setShowOptions(!showOptions); // 이미 선택된 프로젝트일 경우 토글
+      setShowOptions(!showOptions);
     } else {
-      setShowOptions(true); // 새로운 프로젝트 선택
+      setShowOptions(true);
       setSelectedProjectId(projectId);
     }
   };
 
   const handlePasswordChangeClick = (projectId: string) => {
-    setSelectedProjectId(projectId); // projectId를 selectedProjectId로 설정
-    setIsPasswordModalOpen(true); // 비밀번호 변경 모달 열기
-    setShowOptions(false); // 컨텍스트 메뉴 닫기
+    setSelectedProjectId(projectId);
+    setIsPasswordModalOpen(true);
+    setShowOptions(false);
   };
 
   const handlePasswordChangeSubmit = async (newPassword: string) => {
@@ -84,8 +88,8 @@ const MyProject = () => {
         { password: newPassword }
       );
       alert('비밀번호가 성공적으로 변경되었습니다.');
-      setIsPasswordModalOpen(false); // 모달 닫기
-      fetchProjects(); // 프로젝트 목록 업데이트
+      setIsPasswordModalOpen(false);
+      fetchProjects();
     } catch (e) {
       console.log('비밀번호 변경에 문제가 발생했습니다.', e);
     }
@@ -119,7 +123,7 @@ const MyProject = () => {
 
       {myProjects.length === 0 ? (
         <EmptyProjectBox>
-          <p>텅</p>
+          <EmptyView>텅</EmptyView>
         </EmptyProjectBox>
       ) : (
         <MyProjectView>
@@ -128,7 +132,6 @@ const MyProject = () => {
               <MoreIcon onClick={e => handleMoreIconClick(myProject.id, e)}>
                 <IoIosMore />
               </MoreIcon>
-              {/* 옵션 모달 */}
               {showOptions && selectedProjectId === myProject.id && (
                 <ContextMenu>
                   <ContextMenuButton
@@ -143,7 +146,6 @@ const MyProject = () => {
                   </ContextMenuButton>
                 </ContextMenu>
               )}
-              {/* 기타 정보 - 최근 수정된 날짜 정보 넣기 */}
               <p>{myProject.name}</p>
               <p>{myProject.programmingLanguage}</p>
               <p>{myProject.description}</p>

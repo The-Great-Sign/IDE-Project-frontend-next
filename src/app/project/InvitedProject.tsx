@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-// import { ContextMenu, ContextMenuButton, ProjectView } from './Project.styles';
 import axiosInstance from '../api/axiosInstance';
 import {
   EmptyProjectBox,
+  EmptyView,
   MoreIcon,
   MyProjectView,
   ProjectHeader,
@@ -52,18 +52,12 @@ const InvitedProject = () => {
     console.log(`MoreIcon clicked for project ${projectId}`);
     event.stopPropagation();
     if (selectedProjectId === projectId) {
-      setShowOptions(!showOptions); // 이미 선택된 프로젝트일 경우 토글
+      setShowOptions(!showOptions);
     } else {
-      setShowOptions(true); // 새로운 프로젝트 선택
+      setShowOptions(true);
       setSelectedProjectId(projectId);
     }
   };
-
-  // const handlePasswordChangeClick = (projectId: string) => {
-  //   setSelectedProjectId(projectId); // projectId를 selectedProjectId로 설정
-  //   setIsPasswordModalOpen(true); // 비밀번호 변경 모달 열기
-  //   setShowOptions(false); // 컨텍스트 메뉴 닫기
-  // };
 
   const handlePasswordChangeSubmit = async (newPassword: string) => {
     if (newPassword.length < 4) {
@@ -79,25 +73,12 @@ const InvitedProject = () => {
         { password: newPassword }
       );
       alert('비밀번호가 성공적으로 변경되었습니다.');
-      setIsPasswordModalOpen(false); // 모달 닫기
-      fetchProjects(); // 프로젝트 목록 업데이트
+      setIsPasswordModalOpen(false);
+      fetchProjects();
     } catch (e) {
       console.log('비밀번호 변경에 문제가 발생했습니다.', e);
     }
   };
-
-  // const handleProjectDelete = async (projectId: string) => {
-  //   const confirmDelete = window.confirm('프로젝트를 정말 삭제하시겠습니까?');
-  //   if (confirmDelete) {
-  //     try {
-  //       await axiosInstance.delete(`/api/projects/${projectId}`);
-  //       fetchProjects();
-  //       alert('프로젝트가 성공적으로 삭제되었습니다.');
-  //     } catch (e) {
-  //       console.log('프로젝트 삭제에 문제가 발생했습니다.', e);
-  //     }
-  //   }
-  // };
 
   const handleEnterProject = (projectId: string) => {
     router.push(`/ide/${projectId}`);
@@ -112,7 +93,7 @@ const InvitedProject = () => {
 
       {invitedProjects.length === 0 ? (
         <EmptyProjectBox>
-          <p>텅</p>
+          <EmptyView>텅</EmptyView>
         </EmptyProjectBox>
       ) : (
         <MyProjectView>
@@ -123,19 +104,6 @@ const InvitedProject = () => {
               >
                 <IoIosMore />
               </MoreIcon>
-
-              {/* 옵션 모달 */}
-              {/* {showOptions && selectedProjectId === invitedProject.id && (
-                <ContextMenu>
-                  <ContextMenuButton
-                    onClick={() => handleProjectDelete(invitedProject.id)}
-                  >
-                    프로젝트 삭제
-                  </ContextMenuButton>
-                </ContextMenu>
-              )} */}
-
-              {/* 기타 정보 - 최근 수정된 날짜 정보 넣기 */}
               <p>{invitedProject.name}</p>
               <p>{invitedProject.programmingLanguage}</p>
               <p>{invitedProject.description}</p>
