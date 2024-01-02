@@ -10,15 +10,16 @@ import { useEffect } from 'react';
 
 const ProjectPage = () => {
   const router = useRouter();
-  const storedAccessToken = useTokenStore.getState().accessToken;
+  const { accessToken, isLoggedIn } = useTokenStore.getState();
 
   useEffect(() => {
-    if (storedAccessToken && useTokenStore.getState().isLoggedIn) {
-      reloadTokenSetting(storedAccessToken);
+    if (accessToken && isLoggedIn) {
+      reloadTokenSetting(accessToken);
     } else {
       router.push('/login');
     }
-  }, [storedAccessToken, router]);
+  }, [accessToken, router]);
+
   return (
     <>
       <MainHeader />
