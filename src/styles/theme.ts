@@ -30,7 +30,7 @@ export const darkTheme: DefaultTheme = {
     loginTitle: '#333',
     contextMenu: 'black',
     hoverGray: '#363636',
-    boxShadow: '0 4px 8px rgba(255, 255, 255, 0.05)',
+    boxShadow: '0 4px 8px rgba(255, 255, 255, 0.2)',
     menuHover: '#131519',
     boxbg: 'rgba(63, 63, 74,0.4)',
   },
