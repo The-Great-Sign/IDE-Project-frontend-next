@@ -27,6 +27,10 @@ export const MyProjectView = styled.div`
   justify-content: start;
 `;
 
+export const EmptyView = styled.h1`
+  font-size: 100px;
+`;
+
 export const Box = styled.div`
   display: flex;
   flex-direction: column;
