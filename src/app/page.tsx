@@ -21,10 +21,18 @@ import chatGPT from '@/public/images/main/chatGPT-logo.svg';
 import { BsChatLeftDots } from 'react-icons/bs';
 import { MdEditSquare } from 'react-icons/md';
 import { FaPlay } from 'react-icons/fa';
+import { useEffect } from 'react';
+import { reloadTokenSetting } from '@/utils/token/reloadTokenSetting';
 
 const App = () => {
   const router = useRouter();
-  const { isLoggedIn } = useTokenStore();
+  const { isLoggedIn, accessToken } = useTokenStore();
+
+  useEffect(() => {
+    if (isLoggedIn && accessToken) {
+      reloadTokenSetting(accessToken);
+    }
+  }, [accessToken, router]);
 
   const handleClick = () => {
     if (isLoggedIn) {
