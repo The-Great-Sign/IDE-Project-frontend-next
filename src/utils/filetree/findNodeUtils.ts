@@ -91,3 +91,21 @@ export const findFilePathByName = (
   }
   return null;
 };
+
+export const findNodeByIdWithoutP = (
+  nodes: FileNodeType[],
+  nodeId: string | null
+): FileNodeType | null => {
+  for (const node of nodes) {
+    if (node.id === nodeId) {
+      return node; // 찾은 노드 반환
+    }
+    if (node.children) {
+      const foundNode = findNodeByIdWithoutP(node.children, nodeId);
+      if (foundNode) {
+        return foundNode; // 자식 노드에서 찾은 노드 반환
+      }
+    }
+  }
+  return null; // 노드를 찾지 못했을 경우 null 반환
+};

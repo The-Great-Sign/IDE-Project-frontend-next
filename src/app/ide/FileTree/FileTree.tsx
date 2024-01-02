@@ -22,38 +22,33 @@ import { useFileTreeStore } from '@/store/useFileTreeStore';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { findNodeById } from '@/utils/filetree/findNodeUtils';
+import {
+  findNodeById,
+  findNodeByIdWithoutP,
+} from '@/utils/filetree/findNodeUtils';
 import axiosInstance from '@/app/api/axiosInstance';
-import { getCurrentProjectId } from '@/app/api/websocket';
+
 import { ContextMenuTrigger } from 'rctx-contextmenu';
 import { useContextMenuStore } from '@/store/useContextMenuStore';
 import useHandleDeleteFileRequest from '@/hooks/useHandleDeleteFile';
+import { fetchProjectName } from '@/app/api/filetree/fetchProjectName';
+import { moveFile } from '@/app/api/filetree/moveFile';
 
 const FileTree = () => {
-  const { fileTree, deleteNode, addNode, findNodePathByName } =
-    useFileTreeStore();
-  const projectId = getCurrentProjectId();
-  const [projectName, setProjectName] = useState<string>('');
-
+  const treeRef = useRef<TreeApi<FileNodeType>>(null);
   const handleDeleteFileRequest = useHandleDeleteFileRequest();
 
-  const treeRef = useRef<TreeApi<FileNodeType>>(null);
+  const [projectName, setProjectName] = useState<string>('');
+  const { fileTree, deleteNode, addNode, findNodePathByName } =
+    useFileTreeStore();
 
-  const getProjectName = async () => {
+  useEffect(() => {
+    renderProjectName();
+  });
+
+  const renderProjectName = async () => {
     try {
-      const response = await axiosInstance.get(
-        `${
-          process.env.NEXT_PUBLIC_BACKEND_URI
-        }/api/projects/${getCurrentProjectId()}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: localStorage.getItem('accessToken'),
-          },
-        }
-      );
-      const data = response.data;
+      const data = await fetchProjectName();
       if (data.success) {
         setProjectName(data.results.name);
       } else {
@@ -64,10 +59,7 @@ const FileTree = () => {
     }
   };
 
-  useEffect(() => {
-    getProjectName();
-  });
-
+  //파일 또는 폴더 생성 클릭 시 동작
   const onCreate: CreateHandler<FileNodeType> = ({ type, parentId }) => {
     const newNode: FileNodeType = {
       id: uuidv4(),
@@ -79,83 +71,25 @@ const FileTree = () => {
       filePath: findNodePathByName(''),
       parentId: parentId === null ? 'root' : parentId,
     };
-
     addNode(newNode, parentId);
-
     return newNode;
   };
 
+  //파일 또는 폴더 삭제 시 동작
   const onDelete: DeleteHandler<FileNodeType> = ({ ids }) => {
     deleteNode(ids[0]);
   };
 
+  //파일 드래그 앤 드랍 시 동작 -> 백엔드 미지원
   const onMove: MoveHandler<FileNodeType> = ({ dragIds, parentId }) => {
     const nowFileTree = useFileTreeStore.getState().fileTree;
     const state = useFileTreeStore.getState();
     const { node, befParentId } = findNodeById(nowFileTree, dragIds[0], '/');
 
-    const moveFile = async () => {
-      try {
-        let findParentPath;
-        //타입이 파일이고 같은 계층에 있지 않았을 때 움직일 수 있도록 한다.
-        if (node && node.type === 'FILE' && befParentId !== parentId) {
-          const nowFilePath = state.findNodePath(node.id);
-          const response = await axiosInstance.delete('/api/files', {
-            data: { projectId: projectId, path: nowFilePath },
-          });
-
-          //클라이언트 파일 트리에서 해당 노드 지우기
-          dragIds.forEach((id: string) =>
-            useFileTreeStore.getState().deleteNode(id)
-          );
-
-          //클라이언트 파일 트리에서 해당 노드 추가
-          useFileTreeStore.getState().addNode(node, parentId);
-
-          //해당 노드가 새로 생성될 경로 찾기
-          if (parentId) {
-            findParentPath = state.findNodePath(parentId) + '/' + node.name;
-          } else {
-            findParentPath = '/' + node.name;
-          }
-
-          const response2 = await axiosInstance.post('/api/files', {
-            projectId: projectId,
-            directories: null,
-            files: findParentPath,
-            content: '',
-          });
-
-          console.log(response2);
-
-          return response;
-        }
-      } catch (error) {
-        console.error('Error deleting file:', error);
-        alert('파일 삭제 중 오류가 발생했습니다.');
-      }
-    };
-    moveFile();
+    moveFile(node, parentId, befParentId, state, dragIds);
   };
 
-  const findNodeByIdWithoutP = (
-    nodes: FileNodeType[],
-    nodeId: string | null
-  ): FileNodeType | null => {
-    for (const node of nodes) {
-      if (node.id === nodeId) {
-        return node; // 찾은 노드 반환
-      }
-      if (node.children) {
-        const foundNode = findNodeByIdWithoutP(node.children, nodeId);
-        if (foundNode) {
-          return foundNode; // 자식 노드에서 찾은 노드 반환
-        }
-      }
-    }
-    return null; // 노드를 찾지 못했을 경우 null 반환
-  };
-
+  //context menu로 파일 삭제
   const handleDeleteFile = async () => {
     try {
       let success;
@@ -190,6 +124,7 @@ const FileTree = () => {
       alert('파일트리 : 파일 삭제 중 오류가 발생했습니다.');
     }
   };
+
   return (
     <Resizable
       defaultSize={{

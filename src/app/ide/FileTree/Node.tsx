@@ -20,9 +20,7 @@ export const Node = ({
   style,
   dragHandle,
   tree,
-}: NodeRendererProps<FileNodeType> & {
-  // handleHoveredId?: (id: string) => void;
-}) => {
+}: NodeRendererProps<FileNodeType>) => {
   const { updateNodeName } = useFileTreeStore();
   const handleOpenFile = useHandleOpenFile();
   const handleCreateFileRequest = useHandleCreateFile();
@@ -94,6 +92,49 @@ export const Node = ({
     }
   };
 
+  const renderFolderIcon = () =>
+    node.isOpen ? (
+      <>
+        <MdArrowDropDown />
+        <AiFillFolderOpen size="18px" style={{ margin: '0 2px 0 0 ' }} />
+      </>
+    ) : (
+      <>
+        <MdArrowRight />
+        <AiFillFolder size="18px" style={{ margin: '0 2px 0 0' }} />
+      </>
+    );
+
+  const renderFileIcon = () => (
+    <>
+      {node.data.isDirty ? <IsDirty /> : <IsNotDirty />}
+      <LanguageIcon
+        language={findLanguage(String(node.data.name.split('.').at(-1)))}
+      />
+    </>
+  );
+
+  const renderNodeContent = () =>
+    node.isEditing ? (
+      <input
+        type="text"
+        defaultValue={node.data.name}
+        onFocus={e => e.currentTarget.select()}
+        onBlur={() => {
+          handleFileAdd(node.id, node.data.name);
+        }}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Escape') node.reset();
+          if (e.key === 'Enter') {
+            handleFileAdd(node.id, e.currentTarget.value);
+          }
+        }}
+        autoFocus
+      />
+    ) : (
+      <span>{node.data.name}</span>
+    );
+
   return (
     <>
       <NodeContainer
@@ -112,36 +153,13 @@ export const Node = ({
           }}
         >
           {node.data.type === 'FILE' ? (
-            <>
-              {node.data.isDirty ? <IsDirty /> : <IsNotDirty />}
-              <LanguageIcon
-                language={findLanguage(
-                  String(node.data.name.split('.').at(-1))
-                )}
-              />
-            </>
+            renderFileIcon()
           ) : (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                {node.isOpen ? (
-                  <>
-                    <MdArrowDropDown />
-                    <AiFillFolderOpen
-                      size="18px"
-                      style={{ margin: '0 2px 0 0 ' }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <MdArrowRight />{' '}
-                    <AiFillFolder size="18px" style={{ margin: '0 2px 0 0' }} />
-                  </>
-                )}
-              </div>
-            </>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {renderFolderIcon()}
+            </div>
           )}
 
-          {/* node text */}
           <span
             className="node-text"
             onDoubleClick={(e: React.MouseEvent<HTMLSpanElement>) => {
@@ -149,33 +167,12 @@ export const Node = ({
               node.edit();
             }}
           >
-            {node.isEditing ? (
-              <input
-                type="text"
-                defaultValue={node.data.name}
-                onFocus={e => e.currentTarget.select()}
-                onBlur={() => {
-                  handleFileAdd(node.id, node.data.name);
-                }}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key === 'Escape') node.reset();
-                  if (e.key === 'Enter') {
-                    handleFileAdd(node.id, e.currentTarget.value);
-                  }
-                }}
-                autoFocus
-              />
-            ) : (
-              <span>{node.data.name}</span>
-            )}
+            {renderNodeContent()}
           </span>
         </FileDiv>
 
         <div className="file-actions">
           <div className="folderFileActions">
-            {/* <button onClick={() => node.edit()} title="Rename...">
-              <MdEdit />
-            </button> */}
             <button onClick={handleDeleteFile} title="Delete">
               <RxCross2 />
             </button>
