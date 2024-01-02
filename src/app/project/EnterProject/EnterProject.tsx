@@ -38,6 +38,7 @@ const EnterProject = ({ setIsModalOpen }: EnterProps) => {
 
   const handleClose = () => {
     setIsModalOpen(false);
+    window.location.reload();
   };
 
   return (
