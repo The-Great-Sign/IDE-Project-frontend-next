@@ -68,16 +68,16 @@ const Ide = () => {
   const { setFileTree } = useFileTreeStore();
 
   const router = useRouter();
+  const { accessToken } = useTokenStore.getState();
 
   useEffect(() => {
     localStorage.removeItem('invitedProjectId');
-    const storedAccessToken = useTokenStore.getState().accessToken;
-    if (storedAccessToken) {
-      reloadTokenSetting(storedAccessToken);
+    if (accessToken) {
+      reloadTokenSetting(accessToken);
     } else {
       router.push(`/`);
     }
-  }, []);
+  }, [router, accessToken]);
 
   const subscribeLoading = (
     client: Client | null,

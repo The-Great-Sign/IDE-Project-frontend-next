@@ -6,7 +6,6 @@ interface TokenState {
   tokenExpiryTime: Date | null;
   setAccessToken: (accessToken: string) => void;
   isLoggedIn: boolean;
-  toggleLogin: () => void;
   setLogin: (state: boolean) => void;
 }
 
@@ -25,7 +24,6 @@ const useTokenStore = create<TokenState>(set => ({
     set({ accessToken, tokenExpiryTime: expiryTime });
   },
   isLoggedIn: false,
-  toggleLogin: () => set(state => ({ isLoggedIn: !state.isLoggedIn })),
   setLogin: (state: boolean) => set({ isLoggedIn: state }),
 }));
 
