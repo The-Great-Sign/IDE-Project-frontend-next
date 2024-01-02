@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
 import { Terminal as XTerm } from 'xterm';
 
@@ -25,8 +25,6 @@ const Terminal = ({
   xtermRef,
   currentPath,
 }: TerminalProps) => {
-  const [commands, setCommands] = useState<string[]>([]);
-
   useEffect(() => {
     if (terminalRef.current && xtermRef.current) {
       xtermRef.current.write('/: ');
@@ -37,7 +35,6 @@ const Terminal = ({
     if (terminalRef.current && xtermRef.current) {
       let currentCommand = '';
       const TerminalDataHandler = xtermRef.current.onData(data => {
-        console.log('data', data);
         if (data === '\r') {
           if (currentCommand === '' && xtermRef.current) {
             xtermRef.current.write('\r\n' + currentPath + ': ');
@@ -46,14 +43,11 @@ const Terminal = ({
               path: currentPath,
               command: currentCommand,
             };
-            console.log('content', content);
             if (clientRef.current) {
               clientRef.current.publish({
                 destination: `/app/project/${getCurrentProjectId()}/terminal`,
                 body: JSON.stringify(content),
               });
-              setCommands(prevCommands => [...prevCommands, currentCommand]);
-              console.log(commands);
               if (xtermRef.current) {
                 xtermRef.current.write('\r\n');
               }

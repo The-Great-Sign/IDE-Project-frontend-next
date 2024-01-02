@@ -68,19 +68,18 @@ const Ide = () => {
   const { setFileTree } = useFileTreeStore();
 
   const router = useRouter();
+  const { accessToken } = useTokenStore.getState();
 
   useEffect(() => {
     localStorage.removeItem('invitedProjectId');
-    const storedAccessToken = useTokenStore.getState().accessToken;
-    if (storedAccessToken) {
-      reloadTokenSetting(storedAccessToken);
+    if (accessToken) {
+      reloadTokenSetting(accessToken);
     } else {
       router.push(`/`);
     }
-  }, []);
+  }, [router, accessToken]);
 
   const subscribeLoading = (
-    // 로딩 구독
     client: Client | null,
     projectId: string
   ): SubscribeProps => {
@@ -101,12 +100,10 @@ const Ide = () => {
     xtermRef: React.RefObject<XTerm>,
     projectId: string
   ): SubscribeProps => {
-    // 터미널 구독
     if (client && xtermRef.current) {
       return client.subscribe(
         `/user/queue/project/${projectId}/terminal`,
         ReceivedTerminal => {
-          console.log(ReceivedTerminal);
           const { success, path, content } = JSON.parse(
             ReceivedTerminal.body
           ) as ReceivedTerminalType;
@@ -119,8 +116,6 @@ const Ide = () => {
             xtermRef.current.write(path + ': ');
           }
           setCurrentPath(path);
-          console.log(`path: ${path}, content: ${content}`);
-          console.log(`currentPath: ${path}, content: ${content}`);
         }
       );
     }
@@ -148,16 +143,11 @@ const Ide = () => {
     postEnterProject(projectId);
 
     if (execute == 'PENDING') {
-      // 로딩 연결
-      console.log('pending');
       if (clientRef.current == null) {
-        // 웹소캣 연결
         clientRef.current = initializeWebSocket();
         const client = clientRef.current;
         if (client) {
           client.onConnect = () => {
-            // 연결되면
-            console.log('connected');
             subscribeLoading(clientRef.current, getCurrentProjectId());
             subscribeChatting(clientRef.current, getCurrentProjectId());
             subscribeTerminal(
