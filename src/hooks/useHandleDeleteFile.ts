@@ -1,7 +1,7 @@
 import axiosInstance from '../app/api/axiosInstance';
 import { FileNodeType } from '@/types/IDE/FileTree/FileDataTypes';
 
-interface DeleteNodeResponseProps {
+export interface DeleteNodeResponseProps {
   success: boolean;
   message: string;
   results: string;
