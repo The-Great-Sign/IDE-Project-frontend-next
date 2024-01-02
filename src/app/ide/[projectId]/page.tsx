@@ -68,11 +68,11 @@ const Ide = () => {
   const { setFileTree } = useFileTreeStore();
 
   const router = useRouter();
-  const { isLoggedIn, accessToken } = useTokenStore.getState();
+  const { accessToken } = useTokenStore.getState();
 
   useEffect(() => {
     localStorage.removeItem('invitedProjectId');
-    if (isLoggedIn && accessToken) {
+    if (accessToken) {
       reloadTokenSetting(accessToken);
     } else {
       router.push(`/`);

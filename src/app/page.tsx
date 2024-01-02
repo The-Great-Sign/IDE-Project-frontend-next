@@ -29,7 +29,7 @@ const App = () => {
   const { isLoggedIn, accessToken } = useTokenStore();
 
   useEffect(() => {
-    if (isLoggedIn && accessToken) {
+    if (accessToken) {
       reloadTokenSetting(accessToken);
     }
   }, [accessToken, router]);
