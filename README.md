@@ -68,7 +68,7 @@
 </td>
 <td width="300" align="left">
 <ul></ul>
-<li>코드 에디터,<br> 동시 편집 구현</li>
+<li>코드 에디터, 동시 편집 구현</li>
 <li>프로젝트 페이지 담당(프로젝트 삭제, 비밀번호 변경, 목록 UI)</li>
 <li>다크/라이트 테마 구현,</li>
 <li>개발 환경설정(Github Actions, Husky, Next.js 환경구축)</li>
