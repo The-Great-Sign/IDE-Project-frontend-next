@@ -1,23 +1,26 @@
-## IDE-Project-frontend-next
-
-<div align="">
-
+<div>
+ 
 # ChatGPT가 탑재된 컨테이너 기반 협업용 Web IDE
 
 > 구름톤 트레이닝 풀스택 개발자 2회차 과정 <br>
 > 개발 기간 : 2023.12.01 ~ 2023.12.28
 
-## 배포 주소
+<br>
 
-> 백엔드 서버 : https://www.thegreatide.site <br>
-> 프론트엔드 서버 : https://the-greate-ide.vercel.app
+## 👀 배포 주소
 
+> 프론트엔드 서버 : https://the-greate-ide.vercel.app <br>
+> 백엔드 서버 : https://www.thegreatide.site 
 
-## 참고 
- [팀 노션](https://www.notion.so/fd328dd60a27471c98e76f077c0cc0f5)<br>
- [Backend Repository](https://github.com/The-Great-Sign/IDE-Project-backend)
+<br>
 
-## 팀 소개
+## 📝 팀 문서
+> 😃 [팀 노션](https://www.notion.so/fd328dd60a27471c98e76f077c0cc0f5)<br>
+> 👉 [백엔드 저장소](https://github.com/The-Great-Sign/IDE-Project-backend)
+
+<br>
+
+## 😎 팀 소개
 
 <table width="500" align="center">
 <tbody>
@@ -106,15 +109,24 @@
 </tbody>
 </table>
 
-## 프로젝트 소개
+<br>
+
+## ☁️ 프로젝트 소개
 
 
-### 🔍 프로젝트 컨셉
+### 1. 프로젝트 컨셉
 
-> 📌 실시간 협업용 web IDE <br>
-> 📌 chatGPT를 활용한 빠른 코드 리뷰
+- 실시간 협업용 Web IDE <br>
+- chatGPT를 활용한 빠른 코드 리뷰
 
-### 🔍 기술 스택
+### 2. 기술 스택
+
+<div>
+ <img width="400" src="https://github.com/The-Great-Sign/IDE-Project-frontend-next/assets/103404125/ca850470-2c2a-4696-9ace-3979b6d6912d"/>
+ <img width="264" src="https://github.com/The-Great-Sign/IDE-Project-frontend-next/assets/103404125/50790841-7169-4d99-ad51-5892db18fec4"/>
+</div>
+
+<br>
 
 <img src="https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=Typescript&logoColor=white"/> 
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/> <img src= "https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white"/>
@@ -122,10 +134,12 @@
   <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"/><br>
 <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
 
+<br>
 
-## 주요 기능
+### 3. 주요 기능
 
 ### ✨ 소셜 로그인
+
 ![로그인](https://github.com/The-Great-Sign/IDE-Project-frontend-next/assets/92130993/40c09297-28e7-45bb-a1e1-707d565c9ab3)
 구글, 카카오 소셜 로그인을 통해 사용자는 번거로운 회원가입 / 로그인 과정을 거치지 않고 서비스를 이용할 수 있습니다. axios 인터셉터를 활용해 토큰 만료 5분 전 리프레시 토큰을 자동으로 받아오도록 구현해 사용자 경험을 향상시켰습니다. 또한 각 페이지 별 로그인하지 않은 사용자는 로그인 페이지로 이동되도록 구현했습니다.
 
@@ -137,6 +151,7 @@ react-arborist 라이브러리, 웹소켓을 활용해 다른 사용자의 파�
 ![코드에디터](https://github.com/The-Great-Sign/IDE-Project-frontend-next/assets/103404125/fbeafa42-bbd0-4684-add2-ca827f9cd0ef.gif)
 
 codemirror, liveblocks, yjs 라이브러리를 이용해 다중 유저, 다중 파일 상황에서도 충돌없는 동시편집이 가능하게 구현했습니다. 각 파일을 누르면 현재 파일을 보고 있는 사용자가 상단에 표시되고 편집시 각 사용자의 커서 위치가 표시, 커서 hover시 유저 이름이 나타납니다. 뒤로가기, 임시 저장이 가능하며 저장 버튼을 누를시 서버에 코드가 저장이 됩니다. codemirror를 이용한 다양한 언어별 자동완성과 코드 접기, 코드 검색 등 기본 코드 에디터 기능이 가능합니다.
+
 
 ### ✨ 프로젝트 생성, 관리
 
