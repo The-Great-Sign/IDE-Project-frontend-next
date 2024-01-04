@@ -9,7 +9,7 @@ import {
   findFilePathByName,
 } from '@/utils/filetree/findNodeUtils';
 
-interface FileTreeState {
+export interface FileTreeState {
   file: FileNodeType | null;
   fileTree: FileNodeType[];
   setFileTree: (fileTree: FileNodeType[]) => void;
