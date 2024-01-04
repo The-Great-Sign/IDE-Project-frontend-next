@@ -23,21 +23,17 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const isDarkMode = useThemeStore(state => state.isDarkMode);
-  // const [yUndoManager, setYUndoManager] = useState<Y.UndoManager>();
 
   useEffect(() => {
     if (!file || !editorRef.current || !room || !userInfo) return;
 
     const ytext = file.yDoc.getText('codemirror');
-    // Yjs 변경 이벤트 리스너
     const yTextListener = () => {
       const newContent = ytext.toString();
       updateFileContent(fileId, newContent);
     };
 
     ytext.observe(yTextListener);
-    // const undoManager = new Y.UndoManager(ytext);
-    // setYUndoManager(undoManager);
 
     const provider = new LiveblocksProvider(room, file.yDoc);
     provider.awareness.setLocalStateField('user', {
@@ -79,9 +75,6 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = ({
 
   return (
     <EditorContainer>
-      {/* <EditorHeader>
-        <div>{yUndoManager ? <Undo yUndoManager={yUndoManager} /> : null}</div>
-      </EditorHeader> */}
       <Editor ref={editorRef}></Editor>
     </EditorContainer>
   );

@@ -19,7 +19,7 @@ const EditorTab = () => {
           <FileInfo>{file.name}</FileInfo>
           <FileClose
             onClick={e => {
-              e.stopPropagation(); // Prevents triggering selectFile when closing
+              e.stopPropagation();
               closeFile(file.id);
             }}
           >

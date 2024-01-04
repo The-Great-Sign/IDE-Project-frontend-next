@@ -49,7 +49,7 @@ export const EmptyProjectBox = styled(Box)`
   padding: 0;
   margin-right: 50px;
   font-weight: ${FONTS_WEIGHT.medium};
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: ${PROPS => PROPS.theme.colors.boxShadow};
   border-radius: 10px;
 `;
 
@@ -64,7 +64,6 @@ export const ProjectInfoBox = styled(Box)`
   p {
     font-size: ${FONTS.sm};
     font-weight: ${FONTS_WEIGHT.medium};
-    /* color: ${COLORS.grey}; */
     margin: 10px 0;
     white-space: nowrap;
     overflow: hidden;

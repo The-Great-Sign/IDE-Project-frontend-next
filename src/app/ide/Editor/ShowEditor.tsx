@@ -16,5 +16,5 @@ const ShowEditor: React.FC<ShowEditorProps> = React.memo(({ fileId }) => {
   );
 });
 
-ShowEditor.displayName = 'ShowEditor'; // 디스플레이 이름 추가
+ShowEditor.displayName = 'ShowEditor';
 export default ShowEditor;
