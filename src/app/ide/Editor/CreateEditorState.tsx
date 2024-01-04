@@ -14,7 +14,6 @@ import { css } from '@codemirror/lang-css';
 import { TypedLiveblocksProvider } from '@/liveblocks.config';
 import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
 
-// 공통 Y.Doc 인스턴스를 생성하고 관리하는 로직
 const yDocs = new Map<string, Y.Doc>();
 
 export const getYDoc = (fileId: string): Y.Doc => {
@@ -42,7 +41,6 @@ export const createEditorState = (
   const nowLanguage = new Compartment();
   const themeExtension = isDarkMode ? githubDark : githubLight;
 
-  // 언어에 따른 에디터 확장 선택 함수
   const EXTENSIONS: { [key: string]: LanguageSupport } = {
     python: python(),
     javascript: javascript(),

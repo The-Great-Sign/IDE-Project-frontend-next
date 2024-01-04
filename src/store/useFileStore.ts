@@ -22,7 +22,6 @@ interface FileState {
   ) => void;
   closeFile: (fileId: string) => void;
   selectFile: (fileId: string) => void;
-  // [TO DO] 파일명 업데이트 고치기
   updateFileName: (fileId: string, newName: string) => void;
   updateFileContent: (fileId: string, newContent: string) => void;
 }
