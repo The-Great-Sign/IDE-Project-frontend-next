@@ -54,23 +54,16 @@
 <td width="300" align="left">
 <div align='center'>프론트엔드 팀장</div>
 <ul>
-<li>
-피그마 프로토타입 디자인
-</li>
-<li>
-소셜 로그인
-</li>
-<li>
-유저 마이페이지 
-</li>
-<li>
-동시편집 파일트리  </li>
+<li>피그마 프로토타입 디자인</li>
+<li>소셜 로그인</li>
+<li>유저 마이페이지</li>
+<li>동시편집 파일트리 </li>
 <li>GitHub Actions 환경구축</li>
 </ul>
 
 </td>
 <td width="300" align="left">
-<ul></ul>
+<ul>
 <li>코드 에디터, 동시 편집 구현</li>
 <li>프로젝트 페이지 담당(프로젝트 삭제, 비밀번호 변경, 목록 UI)</li>
 <li>다크/라이트 테마 구현,</li>
@@ -79,12 +72,14 @@
 </td>
 
 <td width="300" align="left">
+<ul>
 <li>프로젝트 생성 및 입장 페이지 구현</li>
 <li>초대된 사용자 입장 페이지 구현</li>
 <li>터미널 구현</li>
 <li>그룹 채팅 구현 </li>
 <li>ChatGPT 채팅 구현</li>
 <li>웹소켓 연결</li>
+</ul>
 </td>
 </tr>
 <tr>
